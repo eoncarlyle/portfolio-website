@@ -34,13 +34,13 @@ As a Site Reliability Engineer, my responsibilities include developing tools tha
 **State Economy Game/GDPLE**
 - Playable at [gdple.iainschmitt.com](https://gdple.iainschmitt.com)
 - U.S. state economy guessing game updated daily 
-- Frontend written in TypeScript/Preact, backend in TypeScript/Express backend, with Sqlite used for the database 
+- Frontend written in TypeScript/Preact, backend in TypeScript/Express, with Sqlite used for the database
 <br><br>
 
 **HumbleMarket**<br>
 - Prediction market web application supporting multi-outcome events
 - Frontend written in TypeScript/React, backend in Java/Spring backend, with MongoDB used for the database
-- Implemented automated market maker algsrithm to maintain market liquidity
+- Implemented automated market maker algorithms to maintain market liquidity
 - Hosted at [humblemarket.iainschmitt.com](https://humblemarket.iainschmitt.com)
 <br><br>
 
@@ -48,5 +48,5 @@ As a Site Reliability Engineer, my responsibilities include developing tools tha
 
 **Bachelor of Chemical Engineering**<br>
 **University of Minnesota, May 2021**<br>
-Graduated with high destinction, 3.92 GPA
+Graduated with high distinction, 3.92 GPA
 <br><br>

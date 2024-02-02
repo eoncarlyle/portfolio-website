@@ -29,7 +29,7 @@
 html,
 body {
   margin: 0;
-  font-family: system-ui, "Segoe UI", "Roboto", "Fira Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Mulish', sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
