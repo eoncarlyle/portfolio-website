@@ -34,7 +34,7 @@ As a Site Reliability Engineer, my responsibilities include developing tools tha
 **State Economy Game/GDPLE**
 - Playable at [gdple.iainschmitt.com](https://gdple.iainschmitt.com)
 - U.S. state economy guessing game updated daily 
-- Frontend written in TypeScript/Preact, backend in TypeScript/Express, with Sqlite used for the database
+- Frontend written in TypeScript/Preact, backend in TypeScript/Express, with Sqlite used for the database 
 <br><br>
 
 **HumbleMarket**<br>
@@ -43,6 +43,10 @@ As a Site Reliability Engineer, my responsibilities include developing tools tha
 - Implemented automated market maker algorithms to maintain market liquidity
 - Hosted at [humblemarket.iainschmitt.com](https://humblemarket.iainschmitt.com)
 <br><br>
+
+Programming Languages & Frameworks: Java, Spring, Python, Flask, JavaScript/TypeScript, React, Express, Preact
+DevOps Tools: Ansible, Fluent Bit, Prometheus, Grafana, GitLab CI/CD
+Other Utilities: Linux System Administration, Network Engineering, Apache ZooKeeper, MongoDB
 
 ## Education 
 
