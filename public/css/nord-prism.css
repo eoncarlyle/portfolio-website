@@ -4,7 +4,6 @@
  *
  * Ported for PrismJS by Zane Hitchcoxc (@zwhitchcox) and Gabriel Ramos (@gabrieluizramos)
  */
-@import "index.css";
 
  pre {
   background-color: var(--nord1);
