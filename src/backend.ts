@@ -19,7 +19,7 @@ export default class Backend {
     this.app.set("views", path.join(__dirname, "views"));
     this.app.use(express.static("public"));
 
-    const getMarkdownPath = (markdownFileName: string) => `./public/markdown/${markdownFileName}.md`
+    const getMarkdownPath = (markdownFileName: string) => `${this.contentPath}/markdown/${markdownFileName}.md`
     const getMarkdownText = (markdownFilePath: string) => stat(markdownFilePath).then(() => readFile(markdownFilePath, { encoding: "utf-8" })); 
 
     this.app.get("/", (req: Request, res: Response, next: NextFunction) => {
