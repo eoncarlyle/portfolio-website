@@ -10,21 +10,21 @@ As a Site Reliability Engineer, my responsibilities include developing tools tha
 <br><br>
 
 **Technical Analyst**<br>
-**RELEX Solutions: April 2021 — April 2022**<br>
+**RELEX Solutions: April 2021 - April 2022**<br>
 - Wrote and troubleshooted integrations between customer file servers and RELEX ETL infrastructure
 - Worked directly with customers to resolve ETL and SSO configuration challenges
 - Carried out multiple support handovers while maintaining customer referenceability
 <br><br>
 
 **Complex Chemical Systems Group, University of Minnesota**<br>
-**Undergraduate Research Assistant: April 2018 – February 2021**<br>
+**Undergraduate Research Assistant: April 2018 - February 2021**<br>
 - Wrote Python programs to analyze molecular geometric distributions across hundreds of thousands of simulation frames
 - Wrote programs for automated HPC simulation submission, control, and telemetry
 - Awarded paid research assistantship for progress shown in first two months
 <br><br>
 
 **Encephalo Investments**<br>
-**Software Development Intern: June 2020 – March 2021**<br>
+**Software Development Intern: June 2020 - March 2021**<br>
 - Wrote Python backtest framework for high-throughput evaluation of trading algorithms
 - Improved performance of analytics platform through profiling, re-writing slow methods in Cython
 - Created internal web application in Flask and React for sharing analytics workflow results
