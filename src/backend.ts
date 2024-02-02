@@ -17,10 +17,10 @@ export default class Backend {
     this.app.engine("handlebars", engine({ defaultLayout: false }));
     this.app.set("view engine", "handlebars");
     this.app.set("views", path.join(__dirname, "views"));
-    this.app.use(express.static("public"));
+    this.app.use(express.static(this.contentPath));
 
     const getMarkdownPath = (markdownFileName: string) => `${this.contentPath}/markdown/${markdownFileName}.md`
-    const getMarkdownText = (markdownFilePath: string) => stat(markdownFilePath).then(() => readFile(markdownFilePath, { encoding: "utf-8" })); 
+    const getMarkdownText = (markdownFilePath: string) => stat(markdownFilePath).then(() => readFile(markdownFilePath, { encoding: "utf-8" }));
 
     this.app.get("/", (req: Request, res: Response, next: NextFunction) => {
       getMarkdownText(getMarkdownPath("landing"))
