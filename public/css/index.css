@@ -5,7 +5,7 @@
 
 :root {
   --nord0: #2e3440;
-  --nord1: #3b4252; 
+  --nord1: #3b4252;
   --nord2: #434c5e;
   --nord3: #4c566a;
   --nord4: #d8dee9;
@@ -25,27 +25,33 @@
   --rule-height: 2pt;
 }
 
-
 html,
 body {
   margin: 0;
-  font-family: 'Mulish', sans-serif;
+  font-family: "Mulish", sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.7;
   width: 100%;
-  background-color: var(--nord0) 
+  background-color: var(--nord0);
 }
 
 .md-content {
   padding: var(--default-padding);
   max-width: var(--max-width);
   margin: auto;
+  padding-left: calc(100vw - 100%);
 }
 
-
-h1, h2, h3, h4, h5, h6, p, li {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+li {
   color: var(--nord5);
 }
 
