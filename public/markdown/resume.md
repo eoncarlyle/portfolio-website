@@ -51,7 +51,6 @@
 - Prediction market web application supporting multi-outcome events
 - Frontend written in TypeScript/React, backend in Java/Spring backend, with MongoDB used for the database
 - Implemented automated market maker algorithms to maintain market liquidity
-- Hosted at [humblemarket.iainschmitt.com](https://humblemarket.iainschmitt.com)
   <br><br>
 
 Programming Languages & Frameworks: Java, Spring, Python, Flask, JavaScript/TypeScript, React, Express, Preact<br>
