@@ -1,5 +1,3 @@
-# Iain Schmitt
-
 <hr></hr>
 
 ## Experience

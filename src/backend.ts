@@ -22,9 +22,15 @@ export default class Backend {
     const getMarkdownPath = (markdownFileName: string) => `${this.contentPath}/markdown/${markdownFileName}.md`
     const getMarkdownText = (markdownFilePath: string) => stat(markdownFilePath).then(() => readFile(markdownFilePath, { encoding: "utf-8" }));
 
-    this.app.get("/", (req: Request, res: Response, next: NextFunction) => {
+    this.app.get("/", (_req: Request, res: Response, next: NextFunction) => {
       getMarkdownText(getMarkdownPath("landing"))
         .then((markdownText: string) => res.render("default", { body: marked.parse(markdownText) }))
+        .catch(() => next());
+    });
+
+    this.app.get("/resume", (req: Request, res: Response, next: NextFunction) => {
+      getMarkdownText(getMarkdownPath("resume"))
+        .then((markdownText: string) => res.render("resume", { body: marked.parse(markdownText) }))
         .catch(() => next());
     });
 
@@ -39,7 +45,7 @@ export default class Backend {
       res.render("error", { errorCode: "404", body: "The page that you are looking for does not exist!" })
     });
 
-    this.app.use((err: Error, req: Request, res: Response) => {
+    this.app.use((_err: Error, _req: Request, res: Response) => {
       res.render("error", { errorCode: "500", body: "Internal server error" })
     });
   }
