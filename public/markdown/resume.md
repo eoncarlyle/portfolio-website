@@ -61,5 +61,4 @@ Other Utilities: Linux System Administration, Network Engineering, Apache ZooKee
 
 **Bachelor of Chemical Engineering**<br>
 **University of Minnesota, May 2021**<br>
-Graduated with high distinction, 3.92 GPA
 <br><br>
