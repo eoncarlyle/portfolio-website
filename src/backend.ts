@@ -14,7 +14,7 @@ export default class Backend {
     this.contentPath = contentPath;
     this.port = port;
 
-    this.app.engine("handlebars", engine({ defaultLayout: false }));
+    this.app.engine("handlebars", engine({ defaultLayout: "default" }));
     this.app.set("view engine", "handlebars");
     this.app.set("views", path.join(__dirname, "views"));
     this.app.use(express.static(this.contentPath));
@@ -24,7 +24,7 @@ export default class Backend {
 
     this.app.get("/", (_req: Request, res: Response, next: NextFunction) => {
       getMarkdownText(getMarkdownPath("landing"))
-        .then((markdownText: string) => res.render("default", { body: marked.parse(markdownText) }))
+        .then((markdownText: string) => res.render("directMarkdown", { body: marked.parse(markdownText) }))
         .catch(() => next());
     });
 
