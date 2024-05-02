@@ -35,6 +35,9 @@ body {
   line-height: 1.7;
   width: 100%;
   background-color: var(--nord0);
+  ::selection {
+    background: var(--nord3);
+  }
 }
 
 .md-content {
