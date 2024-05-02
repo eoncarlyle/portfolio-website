@@ -57,7 +57,6 @@ export default class Backend {
       },
     );
 
-    // custom 404 page
     this.app.use((_req: Request, res: Response) => {
       res.render("error", {
         errorCode: "404",
