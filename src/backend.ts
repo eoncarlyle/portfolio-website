@@ -47,7 +47,7 @@ export default class Backend {
     );
 
     this.app.get(
-      "/blog/:markdownFileName",
+      "/post/:markdownFileName",
       (req: Request, res: Response, next: NextFunction) => {
         getMarkdownText(getMarkdownPath(req.params.markdownFileName))
           .then((markdownText: string) =>
