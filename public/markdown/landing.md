@@ -2,7 +2,7 @@ Iain Schmitt's Portfolio
 ===
 <hr></hr>
 
-I'm a Site Reliability Engineer at RELEX Solutions based out of Minneapolis, Minnesota.
+I'm a Software Engineer at SPS Commerce based out of Minneapolis, Minnesota.
 The links below can be used to review my work or to get in contact with me.
 - <a href="/resume">Resume</a>
 - <a href="https://github.com/eoncarlyle">GitHub</a>
