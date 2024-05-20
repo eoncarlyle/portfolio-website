@@ -3,7 +3,7 @@
 ## Experience
 
 **Site Reliability Engineer**<br>
-**RELEX Solutions: April 2022 - Today**<br>
+**RELEX Solutions: April 2022 - May 2024**<br>
 
 - Developed Java and Python programs managing state of distributed applications
 - Wrote, maintained application used in automated production environment migration
