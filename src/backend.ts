@@ -9,7 +9,7 @@ import Base from "./base";
 type TemplateName = "directMarkdown" | "error" | "resumeMarkdown";
 
 export default class Backend {
-  public readonly base: Base;
+  private readonly base: Base;
   static scope = Scopes.Singleton();
 
   constructor(base = inject(Base)) {
@@ -17,36 +17,19 @@ export default class Backend {
   }
 
   private bindUtilityMiddleware() {
-    this.base.app.engine("handlebars", engine({ defaultLayout: "default" }));
-    this.base.app.set("view engine", "handlebars");
-    this.base.app.set("views", path.join(__dirname, "views"));
-    this.base.app.use(express.static(this.base.contentPath));
+    this.base.app.engine("handlebars", engine({ defaultLayout: "default" }))
+      .set("view engine", "handlebars")
+      .set("views", path.join(__dirname, "views"))
+      .use(express.static(this.base.contentPath));
   }
 
   private bindRouteMiddleware() {
-    this.base.app.get("/", this.renderMarkdown("landing"));
-    this.base.app.get("/resume", this.renderMarkdown("resume", "resumeMarkdown"));
-    this.base.app.get(
-      "/post/:markdownFileName",
-      (req: Request, res: Response, next: NextFunction) => {
-        this.getMarkdownTextFromFile(req.params.markdownFileName)
-          .then((markdownText: string) =>
-            res.render("directMarkdown", { body: marked.parse(markdownText) }),
-          )
-          .catch(() => next());
-      },
-    );
+    this.base.app.get("/", this.renderDefinedMarkdownSupplier("landing"))
+      .get("/resume", this.renderDefinedMarkdownSupplier("resume", "resumeMarkdown"))
+      .get("/post/:markdownFileName", this.renderParamaterisedMarkdownSupplier("markdownFileName"));
 
-    this.base.app.use((_req: Request, res: Response) => {
-      res.render("error", {
-        errorCode: "404",
-        body: "The page that you are looking for does not exist!",
-      });
-    });
-
-    this.base.app.use((_err: Error, _req: Request, res: Response) => {
-      res.render("error", { errorCode: "500", body: "Internal server error" });
-    });
+    this.base.app.use(this.render404Supplier())
+      .use(this.render500Supplier);
   }
 
 
@@ -60,7 +43,7 @@ export default class Backend {
     });
   }
 
-  private renderMarkdown = (
+  private renderDefinedMarkdownSupplier = (
     markdownFileName: string,
     templateName: TemplateName = "directMarkdown",
   ) => {
@@ -72,6 +55,31 @@ export default class Backend {
         .catch(() => next());
     };
   };
+
+  private renderParamaterisedMarkdownSupplier(paramName: string) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      this.getMarkdownTextFromFile(req.params[paramName])
+        .then((markdownText: string) =>
+          res.render("directMarkdown", { body: marked.parse(markdownText) }),
+        )
+        .catch(() => next());
+    }
+  }
+
+  private render404Supplier() {
+    return (_req: Request, res: Response) => {
+      res.render("error", {
+        errorCode: "404",
+        body: "The page that you are looking for does not exist!",
+      });
+    }
+  }
+
+  private render500Supplier() {
+    return (_err: Error, _req: Request, res: Response) => {
+      res.render("error", { errorCode: "500", body: "Internal server error" });
+    };
+  }
 
   private getMarkdownPath(markdownFileName: string) {
     return `${this.base.contentPath}/markdown/${markdownFileName}.md`;
