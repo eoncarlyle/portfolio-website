@@ -24,21 +24,8 @@ export default class Backend {
   }
 
   private bindRouteMiddleware() {
-    const renderMarkdown = (
-      markdownFileName: string,
-      templateName: TemplateName = "directMarkdown",
-    ) => {
-      return (_req: Request, res: Response, next: NextFunction) => {
-        this.getMarkdownTextFromFile(markdownFileName)
-          .then((markdownText: string) =>
-            res.render(templateName, { body: marked.parse(markdownText) }),
-          )
-          .catch(() => next());
-      };
-    };
-
-    this.base.app.get("/", renderMarkdown("landing"));
-    this.base.app.get("/resume", renderMarkdown("resume", "resumeMarkdown"));
+    this.base.app.get("/", this.renderMarkdown("landing"));
+    this.base.app.get("/resume", this.renderMarkdown("resume", "resumeMarkdown"));
     this.base.app.get(
       "/post/:markdownFileName",
       (req: Request, res: Response, next: NextFunction) => {
@@ -72,6 +59,19 @@ export default class Backend {
       );
     });
   }
+
+  private renderMarkdown = (
+    markdownFileName: string,
+    templateName: TemplateName = "directMarkdown",
+  ) => {
+    return (_req: Request, res: Response, next: NextFunction) => {
+      this.getMarkdownTextFromFile(markdownFileName)
+        .then((markdownText: string) =>
+          res.render(templateName, { body: marked.parse(markdownText) }),
+        )
+        .catch(() => next());
+    };
+  };
 
   private getMarkdownPath(markdownFileName: string) {
     return `${this.base.contentPath}/markdown/${markdownFileName}.md`;
