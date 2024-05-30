@@ -5,13 +5,11 @@ export default class Base {
   static scope = Scopes.Singleton();
   
   public readonly contentPath; 
-  public readonly logPath;
   public readonly port;
   public readonly app;
   
   constructor() {
     this.contentPath = process.argv.at(2) || "public";
-    this.logPath = "opt/portfolio.log";
     this.port = 4000;
     console.log(`Command line arguments: ${process.argv}`);
     
