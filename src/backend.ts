@@ -1,55 +1,48 @@
-import express, { Express, NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { engine } from "express-handlebars";
 import path from "path";
 import { readFile, stat } from "fs/promises";
 import marked from "marked";
+import { inject, Scopes } from "dioma";
+import Base from "./base";
+
+type TemplateName = "directMarkdown" | "error" | "resumeMarkdown";
 
 export default class Backend {
-  app: Express;
-  contentPath: string;
-  port: number;
+  public readonly base: Base;
+  static scope = Scopes.Singleton();
 
-  constructor(contentPath: string, port: number) {
-    this.app = express();
-    this.contentPath = contentPath;
-    this.port = port;
+  constructor(base = inject(Base)) {
+    this.base = base;
+  }
 
-    this.app.engine("handlebars", engine({ defaultLayout: "default" }));
-    this.app.set("view engine", "handlebars");
-    this.app.set("views", path.join(__dirname, "views"));
-    this.app.use(express.static(this.contentPath));
+  private bindUtilityMiddleware() {
+    this.base.app.engine("handlebars", engine({ defaultLayout: "default" }));
+    this.base.app.set("view engine", "handlebars");
+    this.base.app.set("views", path.join(__dirname, "views"));
+    this.base.app.use(express.static(this.base.contentPath));
+  }
 
-    const getMarkdownPath = (markdownFileName: string) =>
-      `${this.contentPath}/markdown/${markdownFileName}.md`;
-
-    const getMarkdownText = (markdownFilePath: string) =>
-      stat(markdownFilePath).then(() =>
-        readFile(markdownFilePath, { encoding: "utf-8" }),
-      );
-
-    this.app.get("/", (_req: Request, res: Response, next: NextFunction) => {
-      getMarkdownText(getMarkdownPath("landing"))
-        .then((markdownText: string) =>
-          res.render("directMarkdown", { body: marked.parse(markdownText) }),
-        )
-        .catch(() => next());
-    });
-
-    this.app.get(
-      "/resume",
-      (_req: Request, res: Response, next: NextFunction) => {
-        getMarkdownText(getMarkdownPath("resume"))
+  private bindRouteMiddleware() {
+    const renderMarkdown = (
+      markdownFileName: string,
+      templateName: TemplateName = "directMarkdown",
+    ) => {
+      return (_req: Request, res: Response, next: NextFunction) => {
+        this.getMarkdownTextFromFile(markdownFileName)
           .then((markdownText: string) =>
-            res.render("resume", { body: marked.parse(markdownText) }),
+            res.render(templateName, { body: marked.parse(markdownText) }),
           )
           .catch(() => next());
-      },
-    );
+      };
+    };
 
-    this.app.get(
-      "/blog/:markdownFileName",
+    this.base.app.get("/", renderMarkdown("landing"));
+    this.base.app.get("/resume", renderMarkdown("resume", "resumeMarkdown"));
+    this.base.app.get(
+      "/post/:markdownFileName",
       (req: Request, res: Response, next: NextFunction) => {
-        getMarkdownText(getMarkdownPath(req.params.markdownFileName))
+        this.getMarkdownTextFromFile(req.params.markdownFileName)
           .then((markdownText: string) =>
             res.render("directMarkdown", { body: marked.parse(markdownText) }),
           )
@@ -57,40 +50,35 @@ export default class Backend {
       },
     );
 
-    this.app.use((_req: Request, res: Response) => {
+    this.base.app.use((_req: Request, res: Response) => {
       res.render("error", {
         errorCode: "404",
         body: "The page that you are looking for does not exist!",
       });
     });
 
-    this.app.use((_err: Error, _req: Request, res: Response) => {
+    this.base.app.use((_err: Error, _req: Request, res: Response) => {
       res.render("error", { errorCode: "500", body: "Internal server error" });
     });
   }
 
+
   launch() {
-    this.app.listen(this.port, () => {
+    this.bindUtilityMiddleware();
+    this.bindRouteMiddleware();
+    this.base.app.listen(this.base.port, () => {
       console.log(
-        `[server]: Server is running at http://localhost:${this.port}`,
+        `[server]: Server is running at http://localhost:${this.base.port}`,
       );
     });
   }
 
-  static main() {
-    const contentPath = process.argv.at(2) || "public";
-    const port = Number(process.argv.at(3)) || 3000;
-    console.log(process.argv);
-    if (!contentPath) {
-      throw Error(
-        `Illegal arguments ${process.argv}, correct form "node index [contentPath] [port]`,
-      );
-    }
+  private getMarkdownPath(markdownFileName: string) {
+    return `${this.base.contentPath}/markdown/${markdownFileName}.md`;
+  }
 
-    console.log(
-      `Assumed content path from command-line arguments: ${contentPath}`,
-    );
-    console.log(`Assumed port number from command-line arguments: ${port}`);
-    new Backend(contentPath, port).launch();
+  private getMarkdownTextFromFile(markdownFileName: string) {
+    const path = this.getMarkdownPath(markdownFileName);
+    return stat(path).then(() => readFile(path, { encoding: "utf-8" }));
   }
 }

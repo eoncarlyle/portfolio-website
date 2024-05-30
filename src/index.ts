@@ -1,2 +1,5 @@
+import { inject } from "dioma";
 import Backend from "./backend";
-Backend.main()
+
+const backend = inject(Backend); 
+backend.launch();
