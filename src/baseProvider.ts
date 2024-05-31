@@ -1,18 +1,18 @@
 import express from "express"
 import { Scopes } from "dioma"
 
-export default class Base {
+export default class BaseProvider {
   static scope = Scopes.Singleton();
-  
-  public readonly contentPath; 
+
+  public readonly contentPath;
   public readonly port;
   public readonly app;
-  
+
   constructor() {
     this.contentPath = process.argv.at(2) || "public";
     this.port = 4000;
     console.log(`Command line arguments: ${process.argv}`);
-    
+
     if (!this.contentPath) {
       throw Error(
         `Illegal arguments ${process.argv}, correct form "node index [contentPath] [port]`,

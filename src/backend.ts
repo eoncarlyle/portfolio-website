@@ -4,43 +4,51 @@ import path from "path";
 import { readFile, stat } from "fs/promises";
 import marked from "marked";
 import { inject, Scopes } from "dioma";
-import Base from "./base";
+import BaseProvider from "./baseProvider";
 
 type TemplateName = "directMarkdown" | "error" | "resumeMarkdown";
 
 export default class Backend {
-  private readonly base: Base;
+  private readonly baseProvider: BaseProvider;
   static scope = Scopes.Singleton();
 
-  constructor(base = inject(Base)) {
-    this.base = base;
+  constructor(base = inject(BaseProvider)) {
+    this.baseProvider = base;
+    this.bindUtilityMiddleware();
+    this.bindRouteMiddleware();
+  }
+
+  public launch() {
+    this.baseProvider.app.listen(this.baseProvider.port, () => {
+      console.log(
+        `[server]: Server is running at http://localhost:${this.baseProvider.port}`,
+      );
+    });
   }
 
   private bindUtilityMiddleware() {
-    this.base.app.engine("handlebars", engine({ defaultLayout: "default" }))
+    this.baseProvider.app
+      .engine("handlebars", engine({ defaultLayout: "default" }))
       .set("view engine", "handlebars")
       .set("views", path.join(__dirname, "views"))
-      .use(express.static(this.base.contentPath));
+      .use(express.static(this.baseProvider.contentPath));
   }
 
   private bindRouteMiddleware() {
-    this.base.app.get("/", this.renderDefinedMarkdownSupplier("landing"))
-      .get("/resume", this.renderDefinedMarkdownSupplier("resume", "resumeMarkdown"))
-      .get("/post/:markdownFileName", this.renderParamaterisedMarkdownSupplier("markdownFileName"));
-
-    this.base.app.use(this.render404Supplier())
-      .use(this.render500Supplier);
-  }
-
-
-  launch() {
-    this.bindUtilityMiddleware();
-    this.bindRouteMiddleware();
-    this.base.app.listen(this.base.port, () => {
-      console.log(
-        `[server]: Server is running at http://localhost:${this.base.port}`,
+    this.baseProvider.app
+      .get("/", this.renderDefinedMarkdownSupplier("landing"))
+      .get(
+        "/resume",
+        this.renderDefinedMarkdownSupplier("resume", "resumeMarkdown"),
+      )
+      .get(
+        "/post/:markdownFileName",
+        this.renderParamaterisedMarkdownSupplier("markdownFileName"),
       );
-    });
+
+    this.baseProvider.app
+      .use(this.render404Supplier())
+      .use(this.render500Supplier);
   }
 
   private renderDefinedMarkdownSupplier = (
@@ -63,7 +71,7 @@ export default class Backend {
           res.render("directMarkdown", { body: marked.parse(markdownText) }),
         )
         .catch(() => next());
-    }
+    };
   }
 
   private render404Supplier() {
@@ -72,7 +80,7 @@ export default class Backend {
         errorCode: "404",
         body: "The page that you are looking for does not exist!",
       });
-    }
+    };
   }
 
   private render500Supplier() {
@@ -82,7 +90,7 @@ export default class Backend {
   }
 
   private getMarkdownPath(markdownFileName: string) {
-    return `${this.base.contentPath}/markdown/${markdownFileName}.md`;
+    return `${this.baseProvider.contentPath}/markdown/${markdownFileName}.md`;
   }
 
   private getMarkdownTextFromFile(markdownFileName: string) {
