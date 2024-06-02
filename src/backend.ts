@@ -48,7 +48,7 @@ export default class Backend {
 
     this.baseProvider.app
       .use(this.render404Supplier())
-      .use(this.render500Supplier);
+      .use(this.render500Supplier());
   }
 
   private renderDefinedMarkdownSupplier = (
