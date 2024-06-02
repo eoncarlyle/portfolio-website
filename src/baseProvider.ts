@@ -16,7 +16,7 @@ export default class BaseProvider {
     const cliArgs = [process.argv.at(2), process.argv.at(3)];
     if (process.argv.length < 4 || !cliArgs[0] || !cliArgs[1])
       throw Error(
-        `Illegal arguments '${process.argv}', correct form "node index [contentPath] [logDirname]`,
+        `Illegal arguments "${process.argv}", correct form "node index [contentPath] [logDirname]`,
       );
 
     this.contentPath = cliArgs[0];
