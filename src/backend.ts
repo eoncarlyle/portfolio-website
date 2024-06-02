@@ -21,7 +21,7 @@ export default class Backend {
   public launch() {
     this.baseProvider.app.listen(this.baseProvider.port, () => {
       console.log(
-        `[server]: Server is running at http://localhost:${this.baseProvider.port}`,
+        `Server is running at http://localhost:${this.baseProvider.port}`,
       );
     });
   }
