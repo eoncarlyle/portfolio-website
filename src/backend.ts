@@ -31,6 +31,7 @@ export default class Backend {
       .engine("handlebars", engine({ defaultLayout: "default" }))
       .set("view engine", "handlebars")
       .set("views", path.join(__dirname, "views"))
+      .use(this.baseProvider.loggingMiddleware)
       .use(express.static(this.baseProvider.contentPath));
   }
 
@@ -76,7 +77,7 @@ export default class Backend {
 
   private render404Supplier() {
     return (_req: Request, res: Response) => {
-      res.render("error", {
+      res.status(404).render("error", {
         errorCode: "404",
         body: "The page that you are looking for does not exist!",
       });
@@ -85,7 +86,7 @@ export default class Backend {
 
   private render500Supplier() {
     return (_err: Error, _req: Request, res: Response) => {
-      res.render("error", { errorCode: "500", body: "Internal server error" });
+      res.status(500).render("error", { errorCode: "500", body: "Internal server error" });
     };
   }
 
