@@ -80,6 +80,7 @@ let main args =
         .CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
+                .UseUrls("http://localhost:4000")
                 .UseContentRoot(contentRoot)
                 .UseWebRoot(webRoot)
                 .Configure(Action<IApplicationBuilder> configureApp)
