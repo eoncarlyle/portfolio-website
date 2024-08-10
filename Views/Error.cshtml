@@ -1,14 +1,13 @@
-@model Portfolio.App.ErrorInput
 @{
-    Layout = "_Layout";
+  Layout = "_Layout";
 }
 <div class="error">
   <h1>
     Error
-    @Model.ErrorCode
+    @ViewData["ErrorCode"]
   </h1>
   <p>
-    @Model.Body
+    @ViewData["Body"]
   </p>
   <a href="/">Back to home</a>
 </div>

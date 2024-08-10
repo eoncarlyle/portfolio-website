@@ -12,23 +12,19 @@ open Giraffe
 open Giraffe.Razor
 open FSharp.Formatting.Markdown
 
-[<CLIMutable>]
-type ErrorInput = { ErrorCode: int; Body: string }
-
 let markdownHandler viewName markdownFileName =
     let fileContents =
-        File.ReadAllText $"./WebRoot/markdown/{markdownFileName}.md"
-        |> Markdown.ToHtml
-        |> Some
+        File.ReadAllText $"./WebRoot/markdown/{markdownFileName}.md" |> Markdown.ToHtml
 
-    publicResponseCaching 60 None >=> razorHtmlView viewName fileContents None None
+    let viewData = dict [ ("Body", box fileContents) ] |> Some
+    publicResponseCaching 60 None >=> razorHtmlView viewName None viewData None
 
 let directMarkdownHandler markdownFileName =
     markdownHandler "DirectMarkdown" markdownFileName
 
 let errorHandler errorCode body =
-    let model = { ErrorCode = errorCode; Body = body } |> Some
-    razorHtmlView "Error" model None None
+    let viewData = dict [ ("ErrorCode", box errorCode); ("Body", box body) ] |> Some
+    razorHtmlView "Error" None viewData None
 
 let webApp =
     choose
@@ -46,10 +42,7 @@ let internalErrorHandler (ex: Exception) (logger: ILogger) =
     clearResponse >=> setStatusCode 500 >=> errorHandler 500 "Internal server error"
 
 let configureCors (builder: CorsPolicyBuilder) =
-    builder
-        .WithOrigins("http://localhost:5000", "https://localhost:5001")
-        .AllowAnyMethod()
-        .AllowAnyHeader()
+    builder.WithOrigins("http://localhost:4000").AllowAnyMethod().AllowAnyHeader()
     |> ignore
 
 let configureApp (app: IApplicationBuilder) =
