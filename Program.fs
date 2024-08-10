@@ -28,7 +28,11 @@ let directMarkdownHandler markdownFileName =
 
 let errorHandler errorCode body =
     let model = { ErrorCode = errorCode; Body = body } |> Some
-    razorHtmlView "Error" model None None
+
+    let viewData =
+        dict [ ("ErrorCode", errorCode.ToString() |> box); ("Body", body |> box) ]
+    // Dictionary here
+    razorHtmlView "Error" None viewData None
 
 let webApp =
     choose
@@ -46,10 +50,7 @@ let internalErrorHandler (ex: Exception) (logger: ILogger) =
     clearResponse >=> setStatusCode 500 >=> errorHandler 500 "Internal server error"
 
 let configureCors (builder: CorsPolicyBuilder) =
-    builder
-        .WithOrigins("http://localhost:5000", "https://localhost:5001")
-        .AllowAnyMethod()
-        .AllowAnyHeader()
+    builder.WithOrigins("http://localhost:4000").AllowAnyMethod().AllowAnyHeader()
     |> ignore
 
 let configureApp (app: IApplicationBuilder) =
