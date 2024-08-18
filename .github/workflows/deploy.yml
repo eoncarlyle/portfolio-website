@@ -21,7 +21,7 @@ jobs:
         run: dotnet publish -c Release -o published
 
       - name: Build image
-        run: podman build . --file Dockerfile --tag $IMAGE_NAME
+        run: podman build -t $IMAGE_NAME .
 
       - name: Log in to registry
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -38,8 +38,8 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           # echo VERSION=$VERSION
           echo VERSION=latest
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+          podman tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          podman push $IMAGE_ID:$VERSION
 
       - name: Pull new image
         run: podman pull ghcr.io/eoncarlyle/portfolio-website:latest
