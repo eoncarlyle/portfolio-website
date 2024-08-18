@@ -37,9 +37,8 @@ jobs:
 
           echo IMAGE_ID=$IMAGE_ID
           # echo VERSION=$VERSION
-          echo VERSION=latest
-          podman tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          podman push $IMAGE_ID:$VERSION
+          podman tag $IMAGE_NAME $IMAGE_ID:latest
+          podman push $IMAGE_ID:latest
 
       - name: Pull new image
         run: podman pull ghcr.io/eoncarlyle/portfolio-website:latest
