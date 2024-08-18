@@ -14,8 +14,11 @@ jobs:
       - name: Pull latest code from main branch
         run: git -C /home/iain/portfolio-website pull
 
-      - name: Build Docker image
+      - name: Build Podman image
         run: podman build -t portfolio-website:latest /home/iain/portfolio-website
+
+      - name: Systemd daemon reload
+        run: systemctl --user daemon-reload
 
       - name: Restart quadlet service
         run: systemctl --user restart quadlet-portfolio-website.service
