@@ -1,0 +1,21 @@
+name: Deploy Portfolio Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy on santa-cruz
+    runs-on: self-hosted
+
+    steps:
+      - name: Pull latest code from main branch
+        run: git -C /home/iain/portfolio-website pull
+
+      - name: Build Docker image
+        run: podman build -t portfolio-website:latest /home/iain/portfolio-website
+
+      - name: Restart quadlet service
+        run: systemctl --user restart quadlet-portfolio-website.service
