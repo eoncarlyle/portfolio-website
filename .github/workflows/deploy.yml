@@ -5,20 +5,46 @@ on:
     branches:
       - main
 
+env:
+  IMAGE_NAME: portfolio-website
+
 jobs:
   deploy:
     name: Deploy on santa-cruz
     runs-on: self-hosted
 
     steps:
-      - name: Pull latest code from main branch
-        run: git -C /home/iain/portfolio-website pull
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Build Podman image
-        run: runuser -u iain -- podman build -t portfolio-website:latest /home/iain/portfolio-website
+      - name: Build application
+        run: dotnet publish -c Release -o published
 
-      - name: Systemd daemon reload
-        run: systemctl --user -M iain@ daemon-reload
+      - name: Build image
+        run: podman build . --file Dockerfile --tag $IMAGE_NAME
 
-      - name: Restart quadlet service
-        run: systemctl --user -M iain@ restart quadlet-portfolio-website.service
+      - name: Log in to registry
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [ "$VERSION" == "main" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          # echo VERSION=$VERSION
+          echo VERSION=latest
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+
+      - name: Pull new image
+        run: podman pull ghcr.io/eoncarlyle/portfolio-website:latest
+
+      - name: Stop existing container
+        run: podman stop $IMAGE_NAME && podman rm $IMAGE_NAME
+
+      - name: Start new container
+        run: podman run -d -p 4000:4000 --name=$IMAGE_NAME ghcr.io/eoncarlyle/$IMAGE_NAME:latest
