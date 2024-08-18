@@ -15,10 +15,10 @@ jobs:
         run: git -C /home/iain/portfolio-website pull
 
       - name: Build Podman image
-        run: podman build -t portfolio-website:latest /home/iain/portfolio-website
+        run: runuser -u iain -- podman build -t portfolio-website:latest /home/iain/portfolio-website
 
       - name: Systemd daemon reload
-        run: systemctl --user daemon-reload
+        run: runuser -u iain -- systemctl --user daemon-reload
 
       - name: Restart quadlet service
-        run: systemctl --user restart quadlet-portfolio-website.service
+        run: runuser -u iain -- systemctl --user restart quadlet-portfolio-website.service
