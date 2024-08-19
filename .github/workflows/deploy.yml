@@ -36,14 +36,11 @@ jobs:
 
           echo IMAGE_ID=$IMAGE_ID
           # echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:latest
           docker push $IMAGE_ID:latest
 
       - name: Pull new image
         run: docker pull ghcr.io/eoncarlyle/portfolio-website:latest
-
-      - name: Stop and remove existing image
-        run: docker container stop $IMAGE_NAME && docker container rm $IMAGE_NAME
-        continue-on-error: true
 
       - name: Start new container
         run: docker run -d -p 4000:4000 --name=$IMAGE_NAME --replace ghcr.io/eoncarlyle/$IMAGE_NAME:latest
