@@ -46,4 +46,4 @@ jobs:
         continue-on-error: true
 
       - name: Start new container
-        run: docker run -d -p 4000:4000 --name=$IMAGE_NAME ghcr.io/eoncarlyle/$IMAGE_NAME:latest
+        run: docker run -d -p 4000:4000 --name=$IMAGE_NAME --replace ghcr.io/eoncarlyle/$IMAGE_NAME:latest
