@@ -49,4 +49,6 @@ jobs:
           podman rm $IMAGE_NAME || true
 
       - name: Start new container
-        run: podman run -d -p 4000:4000 --name=$IMAGE_NAME --replace ghcr.io/eoncarlyle/$IMAGE_NAME:latest
+        run: |
+          podman run -d -p 4000:4000 --name=$IMAGE_NAME ghcr.io/eoncarlyle/$IMAGE_NAME:latest
+          podman logs $IMAGE_NAME
