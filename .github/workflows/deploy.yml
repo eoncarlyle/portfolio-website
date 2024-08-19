@@ -21,10 +21,10 @@ jobs:
         run: dotnet publish -c Release -o published
 
       - name: Build image
-        run: podman build -t $IMAGE_NAME .
+        run: docker build -t $IMAGE_NAME .
 
       - name: Log in to registry
-        run: echo "${{ secrets.GHCR_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -37,11 +37,11 @@ jobs:
 
           echo IMAGE_ID=$IMAGE_ID
           # echo VERSION=$VERSION
-          podman tag $IMAGE_NAME $IMAGE_ID:latest
-          podman push $IMAGE_ID:latest
+          docker tag $IMAGE_NAME $IMAGE_ID:latest
+          docker push $IMAGE_ID:latest
 
       - name: Pull new image
-        run: podman pull ghcr.io/eoncarlyle/portfolio-website:latest
+        run: docker pull ghcr.io/eoncarlyle/portfolio-website:latest
 
       - name: Start new container
-        run: podman run -d -p 4000:4000 --name=$IMAGE_NAME --replace ghcr.io/eoncarlyle/$IMAGE_NAME:latest
+        run: docker run -d -p 4000:4000 --name=$IMAGE_NAME --replace ghcr.io/eoncarlyle/$IMAGE_NAME:latest
