@@ -24,7 +24,7 @@ jobs:
         run: rm -rf /home/iain/portfolio-website
 
       - name: Coppying new runtime directory
-        run: cp -r ../ /home/iain/portfolio-website
+        run: cp -r . /home/iain/portfolio-website
 
       - name: Restarting service
         run: systemctl --user restart portfolio-website
