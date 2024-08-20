@@ -27,4 +27,4 @@ jobs:
         run: cp -r . /home/iain/portfolio-website
 
       - name: Restarting service
-        run: systemctl --user -M iain@ restart portfolio-website.service
+        run: sudo systemctl --user -M iain@ restart portfolio-website.service
