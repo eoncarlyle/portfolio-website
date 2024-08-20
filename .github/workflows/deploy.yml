@@ -23,5 +23,8 @@ jobs:
       - name: Remove runtime directory
         run: rm -rf /home/iain/portfolio-website
 
-      - name:
-        run: cp -r published /home/iain/portfolio-website
+      - name: Coppying new runtime directory
+        run: cp -r ../ /home/iain/portfolio-website
+
+      - name: Restarting service
+        run: systemctl --user restart portfolio-website
