@@ -20,26 +20,8 @@ jobs:
       - name: Build application
         run: dotnet publish -c Release -o published
 
-      - name: Build image
-        run: podman build -t $IMAGE_NAME .
+      - name: Remove runtime directory
+        run: rm -rf /home/iain/portfolio-website
 
-      - name: Log in to registry
-        run: echo "${{ secrets.GHCR_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Push, pull image
-        run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          # VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          # [ "$VERSION" == "main" ] && VERSION=latest
-
-          echo IMAGE_ID=$IMAGE_ID
-          # echo VERSION=$VERSION
-          podman tag $IMAGE_NAME $IMAGE_ID:latest
-          podman push $IMAGE_ID:latest
-          podman pull $IMAGE_ID:latest
-
-      - name: Start new container
-        run: /bin/bash /home/iain/launch-portfolio.sh
+      - name:
+        run: cp -r published /home/iain/portfolio-website
