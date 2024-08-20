@@ -40,5 +40,8 @@ jobs:
           podman tag $IMAGE_NAME $IMAGE_ID:latest
           podman push $IMAGE_ID:latest
 
+      - name: Pull image
+        run: podman pull $IMAGE_ID:latest
+
       - name: Start new container
-        run: /bin/bash launch-portfolio.sh
+        run: /bin/bash /home/iain/launch-portfolio.sh
