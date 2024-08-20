@@ -1,7 +1,0 @@
-[Install]
-WantedBy=default.target
-
-[Container]
-Image=localhost/portfolio-website:latest
-ContainerName=quadlet-portfolio-website
-PublishPort=4000:4000
