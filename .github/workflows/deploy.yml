@@ -28,4 +28,4 @@ jobs:
 
       - name: Restarting service
         #run: sudo systemctl --user -M iain@ restart portfolio-website.service
-        run: sudo systemctl restart portfolio-website.service
+        run: systemctl restart --user portfolio-website.service
