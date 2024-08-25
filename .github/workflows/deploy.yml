@@ -23,7 +23,7 @@ jobs:
       - name: Remove runtime directory
         run: rm -rf /home/iain/portfolio-website
 
-      - name: Coppying new runtime directory
+      - name: Copying new runtime directory
         run: cp -r . /home/iain/portfolio-website
 
       - name: Restarting service
