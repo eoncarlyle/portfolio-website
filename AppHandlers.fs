@@ -39,14 +39,13 @@ let isErrorView (viewData: IDictionary<string, obj>) =
 
 let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     let renderTuple =
-        match markdownViewName with
-        | markdownViewName when (markdownViewName = DirectMarkdown) && isStandardView viewData ->
-            ("DirectMarkdown", Some viewData)
-        | markdownViewName when (markdownViewName = ResumeMarkdown) && isStandardView viewData ->
-            ("ResumeMarkdown", Some viewData)
-        | markdownViewName when (markdownViewName = ErrorMarkdown) && isErrorView viewData ->
-            ("ErrorMarkdown", Some viewData)
-        | _ -> ("ErrorMarkdown", dict [ ("ErrorCode", box 500); ("Body", box error500Msg) ] |> Some)
+        match viewName with
+        | DirectMarkdown when isStandardView viewData -> "DirectMarkdown", Some viewData
+        | ResumeMarkdown when isStandardView viewData -> "ResumeMarkdown", Some viewData
+        | ErrorMarkdown when isErrorView viewData -> "ErrorMarkdown", Some viewData
+        | _ ->
+            let errorData = dict [ ("ErrorCode", box 500); ("Body", box error500Msg) ]
+            "ErrorMarkdown", Some errorData
 
     publicResponseCaching 60 None
     >=> razorHtmlView (fst renderTuple) None (snd renderTuple) None
