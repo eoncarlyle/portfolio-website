@@ -16,14 +16,14 @@ let webApp =
         [ GET >=> choose AppHandlers.appRoutes
           setStatusCode 404
           >=> publicResponseCaching 60 None
-          >=> AppHandlers.notFoundHandler ]
+          >=> AppHandlers.errorRazorViewHandler 404 AppHandlers.error400Msg ]
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
 
     clearResponse
     >=> setStatusCode 500
-    >=> AppHandlers.errorHandler 500 "Internal server error"
+    >=> AppHandlers.errorRazorViewHandler 500 AppHandlers.error500Msg
 
 let configureCors (builder: CorsPolicyBuilder) =
     builder.WithOrigins("http://localhost:4000").AllowAnyMethod().AllowAnyHeader()
