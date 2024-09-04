@@ -39,7 +39,7 @@ let isErrorView (viewData: IDictionary<string, obj>) =
 
 let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     let renderTuple =
-        match viewName with
+        match markdownViewName with
         | DirectMarkdown when isStandardView viewData -> "DirectMarkdown", Some viewData
         | ResumeMarkdown when isStandardView viewData -> "ResumeMarkdown", Some viewData
         | ErrorMarkdown when isErrorView viewData -> "ErrorMarkdown", Some viewData
