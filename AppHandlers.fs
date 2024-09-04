@@ -12,7 +12,11 @@ type MarkdownViewName =
 
 let markdownFilesDirectory = "./WebRoot/markdown"
 
-let templateRazorView markdownViewName fileContents =
+let getMarkdownFilePaths =
+    Directory.GetFiles markdownFilesDirectory
+    |> Array.filter (fun path -> Path.GetExtension path = ".md")
+
+let razorViewHandler markdownViewName fileContents =
     let viewData = dict [ ("Body", box fileContents) ] |> Some
 
     let viewName =
@@ -30,27 +34,21 @@ let errorHandler errorCode body =
 let notFoundHandler =
     errorHandler 404 "The page that you are looking for does not exist!"
 
-let markdownHandler appViewName (markdownFilePath: string) =
+let markdownFileHandler appViewName (markdownFilePath: string) =
     match File.Exists markdownFilePath with
     | true ->
         File.ReadAllText markdownFilePath
         |> Markdown.ToHtml
-        |> templateRazorView appViewName
+        |> razorViewHandler appViewName
     | false -> notFoundHandler
 
-let directMarkdownHandler markdownFilePath =
-    markdownHandler DirectMarkdown markdownFilePath
-
-let getFiles =
-    Directory.GetFiles markdownFilesDirectory
-    |> Array.filter (fun path -> Path.GetExtension path = ".md")
-
-let getHandler (markdownFilePath: string) =
+let getRoute (markdownFilePath: string) =
     match Path.GetFileName markdownFilePath with
-    | "landing.md" -> route "/" >=> markdownHandler DirectMarkdown markdownFilePath
-    | "resume.md" -> route "/resume" >=> markdownHandler ResumeMarkdown markdownFilePath
+    | "landing.md" -> route "/" >=> markdownFileHandler DirectMarkdown markdownFilePath
+    | "resume.md" -> route "/resume" >=> markdownFileHandler ResumeMarkdown markdownFilePath
     | _ ->
         route $"/post/{Path.GetFileNameWithoutExtension markdownFilePath}"
-        >=> markdownHandler DirectMarkdown markdownFilePath
+        >=> markdownFileHandler DirectMarkdown markdownFilePath
 
-let routes: list<HttpHandler> = Array.map getHandler getFiles |> Array.toList
+let appRoutes: list<HttpHandler> =
+    Array.map getRoute getMarkdownFilePaths |> Array.toList

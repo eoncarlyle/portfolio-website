@@ -11,16 +11,19 @@ open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.Razor
 
-open AppHandlers
-
 let webApp =
     choose
-        [ GET >=> choose routes
-          setStatusCode 404 >=> publicResponseCaching 60 None >=> notFoundHandler ]
+        [ GET >=> choose AppHandlers.appRoutes
+          setStatusCode 404
+          >=> publicResponseCaching 60 None
+          >=> AppHandlers.notFoundHandler ]
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
-    clearResponse >=> setStatusCode 500 >=> errorHandler 500 "Internal server error"
+
+    clearResponse
+    >=> setStatusCode 500
+    >=> AppHandlers.errorHandler 500 "Internal server error"
 
 let configureCors (builder: CorsPolicyBuilder) =
     builder.WithOrigins("http://localhost:4000").AllowAnyMethod().AllowAnyHeader()
