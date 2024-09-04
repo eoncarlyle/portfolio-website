@@ -10,39 +10,13 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.Razor
-open FSharp.Formatting.Markdown
 
-
-let errorHandler errorCode body =
-    let viewData = dict [ ("ErrorCode", box errorCode); ("Body", box body) ] |> Some
-    razorHtmlView "Error" None viewData None
-
-let notFoundHandler = errorHandler 404 "The page that you are looking for does not exist!"
-
-let markdownHandler viewName markdownFileName =
-    let markdownFilePath = $"./WebRoot/markdown/{markdownFileName}.md"
-
-    if File.Exists markdownFilePath then
-        let fileContents =
-            File.ReadAllText markdownFilePath |> Markdown.ToHtml
-
-        let viewData = dict [ ("Body", box fileContents) ] |> Some
-        publicResponseCaching 60 None >=> razorHtmlView viewName None viewData None
-    else notFoundHandler
-
-let directMarkdownHandler markdownFileName =
-    markdownHandler "DirectMarkdown" markdownFileName
+open AppHandlers
 
 let webApp =
     choose
-        [ GET
-          >=> choose
-                  [ route "/" >=> directMarkdownHandler "landing"
-                    route "/resume" >=> markdownHandler "ResumeMarkdown" "resume"
-                    routef "/post/%s" directMarkdownHandler ]
-          setStatusCode 404
-          >=> publicResponseCaching 60 None
-          >=> notFoundHandler ]
+        [ GET >=> choose routes
+          setStatusCode 404 >=> publicResponseCaching 60 None >=> notFoundHandler ]
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
