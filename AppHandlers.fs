@@ -5,6 +5,7 @@ open System.Collections.Generic
 open Giraffe
 open Giraffe.Razor
 open FSharp.Formatting.Markdown
+open Microsoft.AspNetCore
 
 type MarkdownViewName =
     | DirectMarkdown
@@ -13,8 +14,10 @@ type MarkdownViewName =
 
 type MarkdownPath = private MarkdownPath of string
 
+type Handler = HttpFunc -> Http.HttpContext -> HttpFuncResult
+
 module MarkdownPath =
-    let create (path: string) =
+    let create path =
         match path with
         | path when (File.Exists path) && (Path.GetExtension path = ".md") -> Some(MarkdownPath path)
         | _ -> None
@@ -22,7 +25,7 @@ module MarkdownPath =
     let toString (MarkdownPath path) = path
 
 let markdownFilesDirectory = "./WebRoot/markdown"
-let error400Msg = "The page that you are looking for does not exist!"
+let error404Msg = "The page that you are looking for does not exist!"
 let error500Msg = "Internal server error"
 
 let getMarkdownFilePaths =
@@ -37,7 +40,7 @@ let isErrorView (viewData: IDictionary<string, obj>) =
     && viewData.ContainsKey "ErrorCode"
     && viewData.Keys.Count = 2
 
-let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
+let razorViewHandler markdownViewName viewData =
     let renderTuple =
         match markdownViewName with
         | DirectMarkdown when isStandardView viewData -> "DirectMarkdown", Some viewData
@@ -50,7 +53,7 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     publicResponseCaching 60 None
     >=> razorHtmlView (fst renderTuple) None (snd renderTuple) None
 
-let markdownFileHandler markdownViewName (markdownPath: MarkdownPath) =
+let markdownFileHandler markdownViewName markdownPath =
     let fileContents =
         MarkdownPath.toString markdownPath |> File.ReadAllText |> Markdown.ToHtml
 
@@ -59,7 +62,15 @@ let markdownFileHandler markdownViewName (markdownPath: MarkdownPath) =
 let errorRazorViewHandler errorCode body =
     razorViewHandler ErrorMarkdown (dict [ ("ErrorCode", box errorCode); ("Body", box body) ])
 
-let getRoute (markdownPath: MarkdownPath) =
+let error404Handler: Handler =
+    setStatusCode 404
+    >=> publicResponseCaching 60 None
+    >=> errorRazorViewHandler 404 error404Msg
+
+let error500Handler: Handler =
+    clearResponse >=> setStatusCode 500 >=> errorRazorViewHandler 500 error500Msg
+
+let createRouteHandler markdownPath =
     match MarkdownPath.toString markdownPath |> Path.GetFileName with
     | "landing.md" -> route "/" >=> markdownFileHandler DirectMarkdown markdownPath
     | "resume.md" -> route "/resume" >=> markdownFileHandler ResumeMarkdown markdownPath
@@ -69,8 +80,6 @@ let getRoute (markdownPath: MarkdownPath) =
 
 let appRoutes: list<HttpHandler> =
     Directory.GetFiles markdownFilesDirectory
-    |> Array.map MarkdownPath.create
-    |> Array.filter Option.isSome
-    |> Array.map Option.get
-    |> Array.map getRoute
+    |> Array.choose MarkdownPath.create
+    |> Array.map createRouteHandler
     |> Array.toList

@@ -12,18 +12,11 @@ open Giraffe
 open Giraffe.Razor
 
 let webApp =
-    choose
-        [ GET >=> choose AppHandlers.appRoutes
-          setStatusCode 404
-          >=> publicResponseCaching 60 None
-          >=> AppHandlers.errorRazorViewHandler 404 AppHandlers.error400Msg ]
+    choose [ GET >=> choose AppHandlers.appRoutes; AppHandlers.error404Handler ]
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
-
-    clearResponse
-    >=> setStatusCode 500
-    >=> AppHandlers.errorRazorViewHandler 500 AppHandlers.error500Msg
+    AppHandlers.error500Handler
 
 let configureCors (builder: CorsPolicyBuilder) =
     builder.WithOrigins("http://localhost:4000").AllowAnyMethod().AllowAnyHeader()
