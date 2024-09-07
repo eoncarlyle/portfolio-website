@@ -1,5 +1,3 @@
-<hr></hr>
-
 ## Experience
 
 **Site Reliability Engineer**<br>
