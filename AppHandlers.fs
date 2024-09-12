@@ -32,33 +32,28 @@ let markdownRoot = Path.Combine(webRoot, "markdown")
 let error404Msg = "The page that you are looking for does not exist!"
 let error500Msg = "Internal server error"
 
-let getMarkdownFilePaths =
-    Directory.GetFiles markdownRoot
-    |> Array.filter (fun path -> Path.GetExtension path = ".md")
+let markdownPipeline = MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
 
-let isStandardView (viewData: IDictionary<string, obj>) =
-    viewData.ContainsKey "Body" && viewData.Keys.Count = 1
+let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
+    let isStandardView = viewData.ContainsKey "Body" && viewData.Keys.Count = 1
 
-let isErrorView (viewData: IDictionary<string, obj>) =
-    viewData.ContainsKey "Body"
-    && viewData.ContainsKey "ErrorCode"
-    && viewData.Keys.Count = 2
+    let isErrorView =
+        viewData.ContainsKey "Body"
+        && viewData.ContainsKey "ErrorCode"
+        && viewData.Keys.Count = 2
 
-let razorViewHandler markdownViewName viewData =
     let renderTuple =
         match markdownViewName with
-        | DirectMarkdown when isStandardView viewData -> "DirectMarkdown", Some viewData
-        | LeftHeaderMarkdown when isStandardView viewData -> "LeftHeaderMarkdown", Some viewData
-        | CenterHeaderMarkdown when isStandardView viewData -> "CenterHeaderMarkdown", Some viewData
-        | ErrorMarkdown when isErrorView viewData -> "ErrorMarkdown", Some viewData
+        | DirectMarkdown when isStandardView -> "DirectMarkdown", Some viewData
+        | LeftHeaderMarkdown when isStandardView -> "LeftHeaderMarkdown", Some viewData
+        | CenterHeaderMarkdown when isStandardView -> "CenterHeaderMarkdown", Some viewData
+        | ErrorMarkdown when isErrorView -> "ErrorMarkdown", Some viewData
         | _ ->
             let errorData = dict [ ("ErrorCode", box 500); ("Body", box error500Msg) ]
             "ErrorMarkdown", Some errorData
 
     publicResponseCaching 60 None
     >=> razorHtmlView (fst renderTuple) None (snd renderTuple) None
-
-let markdownPipeline = MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
 
 let markdownFileHandler markdownViewName markdownPath =
     let htmlContents =
