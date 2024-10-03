@@ -20,6 +20,12 @@ jobs:
       - name: Remove runtime directory
         run: rm -rf /home/iain/portfolio-website
 
+      - name: Debug
+        run: echo pwd
+        
+      - name: Debug
+        run: tree .
+
       - name: Creating new runtime directory
         run: mkdir /home/iain/portfolio-website
 
