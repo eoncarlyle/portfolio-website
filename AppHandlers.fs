@@ -60,7 +60,7 @@ let markdownFileHandler markdownViewName markdownPath =
         MarkdownPath.toString markdownPath
         |> File.ReadAllText
         |> fun markdownContents -> Markdown.ToHtml(markdownContents, markdownPipeline)
-        |> _.Replace("\u21A9", "\u21A9\uFE0E")
+        |> _.Replace("&#8617", "&#8617&#65038")
 
     razorViewHandler markdownViewName (dict [ ("Body", box htmlContents) ])
 
