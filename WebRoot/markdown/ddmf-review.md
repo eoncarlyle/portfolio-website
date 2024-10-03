@@ -1,8 +1,6 @@
 
 # Review of _Domain Modeling Made Functional_
 
-By <a href="/">Iain Schmitt</a>
-
 _Domain Modeling Made Functional: Tackle Software Complexity with Domain-Driven Design and F\#_ is a 2018 book by Scott Wlaschin [^wlaschin]. As it says on the tin, the book's goal is to show the reader how to implement domain modeling using functional programming. The phrase "domain-driven design" itself was coined by Eric Evans' 2003 book of the same name where all code examples are written in Java [^evans], and most other books and talks about DDD use object-oriented languages. While code examples for this book are provided in F\#, no prior knowledge of the language is assumed. The first section of the book is a brief overview of domain-driven design terms, and section two walks through how the type system and chained function calls can be used for 'modeling in the small'. Part 3 wraps up the book by fully implementing the e-commerce bounded context introduced in Part 1.
 
 The book's discussion of domain modeling topics agnostic to programming paradigm were good but could have gone into more detail. It covers the basics of entities, value objects, aggregates, and bounded contexts well if not as in-depth as _Domain Driven Design_. While the Evans book suffers from a low ratio between prose and code segments, _Domain Modeling Made Functional_ never goes more than a few paragraphs without showing some code, making Wlaschin's arguments more concrete and the book more readable. One limitation of his approach is his reliance on a single, relatively straightforward business domain throughout the book while Evans offers more varied modeling challenges across multiple domains in a single chapter. Wlaschin's e-commerce business domain includes order validation, pricing, and an acknowledgement email [^dmmfrepo], and this business logic isn't as complicated compared to the syndicated loan system in chapters 8 and 10 of _Domain Driven Design_ where the solution must keep track of a lender's share of an incoming loan payment. The book would be improved by a chapter walking the reader through multiple thorny domain modeling cases.
@@ -28,7 +26,7 @@ module String50 =
 Concerning pattern matching, the following example was used in the book with the `ShoppingCart` discriminated union.
 
 ```fsharp
-type ShoppingCart = 
+type ShoppingCart =
     | EmptyCart
     | ActiveCart
     | PaidCart
@@ -36,7 +34,7 @@ type ShoppingCart =
 let addItem cart item =
     match cart with
     | EmptyCart -> ActiveCart { UnpaidItems = [ item ] }
-    | ActiveCart { UnpaidItems = existingItems } 
+    | ActiveCart { UnpaidItems = existingItems }
         -> ActiveCart { UnpaidItems = item :: existingItems }
     | PaidCart _ -> cart
 ```
@@ -46,7 +44,7 @@ Wlaschin also gives an effective explanation of the Either monad to bring error 
 
 !["Railway Oriented Programming" Diagram](https://iainschmitt.com/images/RailwayOrientedProgrammingDiagram.png)
 
-For readers coming to functional programming for the first time, this is an appropriately gentle introduction to monads, and he doesn't even use the 'm-word' until he's fully explained `Result`: "The m-word has a reputation for being scary, but in fact we’ve already created and used one in this very chapter!". I'm almost embarrassed to admit that this was how I learned that the Java `Optional` class was itself a monad. Little did I know that nearly every day I was using an FP concept that had confused me for years! Something similar is done for Michał Płachta's _Groking Functional Programming_, where the Optional, Either, and I/O monads are demonstrated without using the word 'monad' anywhere in the book [^plachta].  
+For readers coming to functional programming for the first time, this is an appropriately gentle introduction to monads, and he doesn't even use the 'm-word' until he's fully explained `Result`: "The m-word has a reputation for being scary, but in fact we’ve already created and used one in this very chapter!". I'm almost embarrassed to admit that this was how I learned that the Java `Optional` class was itself a monad. Little did I know that nearly every day I was using an FP concept that had confused me for years! Something similar is done for Michał Płachta's _Groking Functional Programming_, where the Optional, Either, and I/O monads are demonstrated without using the word 'monad' anywhere in the book [^plachta].
 
 This leaves a lot about F\# that a novice to the language will have to pick up - there isn't a discussion of the built-in .NET types, a dedicated chapter to working with collections, and other such topics. For questions like 'how do I do a map over an array' the excellent F\# Language Reference [^fsharplangref] and F\# Library Reference [^fsharplibref] provide quick answers.  _Domain Modeling Made Functional_ isn't sold as a way to learn F\#, but while I didn't intend to at the outset I ended up reading the entire book cover-to-cover and it greatly motivated me to write F\# in the process. Reading the book, using the language documentation, and doing a few old Advent of Code problems was a faster and more painless way to learn the basics of a new language than what I had done in the past by reading a language-learning book first. This has made me realise that I would much rather learn a new language by diving into a problem area that it is well equipped to work in: rather than just learn Rust, I'd rather do a deep dive in concurrency and learn Rust in the process. Rather than just learn C, I'd rather write a ray tracer, something I've tried unsuccessfully a few times since first seeing the spectacular ray tracer in 99 lines of C++ [^beason]. In the future, I'll be on the lookout for 'Learn concept X through language Y' books.
 
@@ -105,5 +103,3 @@ The second to last sentence in _Domain Modeling Made Functional_ is "In this boo
 [^slides]: ["Railway Oriented Programming"](https://www.slideshare.net/slideshow/railway-oriented-programming/32242318#90)
 
 [^beason]: [Kevin Beason's "Global Illumination in 99 lines of C++"](https://www.kevinbeason.com/smallpt/)
-
-

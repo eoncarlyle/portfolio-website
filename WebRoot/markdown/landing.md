@@ -1,7 +1,3 @@
-Iain Schmitt's Portfolio
-===
-<hr></hr>
-
 I'm a Software Engineer at SPS Commerce based out of Minneapolis, Minnesota.
 The links below can be used to review my work or to get in contact with me.
 

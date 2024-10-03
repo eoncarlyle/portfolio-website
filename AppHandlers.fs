@@ -35,12 +35,9 @@ let error500Msg = "Internal server error"
 let markdownPipeline = MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
 
 let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
-    let isStandardView = viewData.ContainsKey "Body" && viewData.Keys.Count = 1
+    let isStandardView = viewData.ContainsKey "Header" && viewData.ContainsKey "Body"
 
-    let isErrorView =
-        viewData.ContainsKey "Body"
-        && viewData.ContainsKey "ErrorCode"
-        && viewData.Keys.Count = 2
+    let isErrorView = viewData.ContainsKey "Body" && viewData.ContainsKey "ErrorCode"
 
     let renderTuple =
         match markdownViewName with
@@ -55,14 +52,14 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     publicResponseCaching 60 None
     >=> razorHtmlView (fst renderTuple) None (snd renderTuple) None
 
-let markdownFileHandler markdownViewName markdownPath =
+let markdownFileHandler markdownViewName markdownPath header =
     let htmlContents =
         MarkdownPath.toString markdownPath
         |> File.ReadAllText
         |> fun markdownContents -> Markdown.ToHtml(markdownContents, markdownPipeline)
         |> _.Replace("&#8617", "&#8617&#65038")
 
-    razorViewHandler markdownViewName (dict [ ("Body", box htmlContents) ])
+    razorViewHandler markdownViewName (dict [ ("Body", box htmlContents); ("Header", box header) ])
 
 let errorRazorViewHandler errorCode body =
     razorViewHandler ErrorMarkdown (dict [ ("ErrorCode", box errorCode); ("Body", box body) ])
@@ -77,11 +74,13 @@ let error500Handler: Handler =
 
 let createRouteHandler markdownPath =
     match MarkdownPath.toString markdownPath |> Path.GetFileName with
-    | "landing.md" -> route "/" >=> markdownFileHandler DirectMarkdown markdownPath
-    | "resume.md" -> route "/resume" >=> markdownFileHandler LeftHeaderMarkdown markdownPath
+    | "landing.md" -> route "/" >=> markdownFileHandler LeftHeaderMarkdown markdownPath "Iain Schmitt"
+    | "resume.md" ->
+        route "/resume"
+        >=> markdownFileHandler LeftHeaderMarkdown markdownPath "Iain Schmitt's Resume"
     | _ ->
         route $"/post/{Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)}"
-        >=> markdownFileHandler DirectMarkdown markdownPath
+        >=> markdownFileHandler PostMarkdown markdownPath "Iain Schmitt"
 
 let appRoutes: list<HttpHandler> =
     Directory.GetFiles markdownRoot
