@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build application
         run: dotnet publish -c Release -o published
@@ -23,8 +23,11 @@ jobs:
       - name: Remove runtime directory
         run: rm -rf /home/iain/portfolio-website
 
+      - name: Creating new runtime directory
+        run: mkdir /home/iain/portfolio-website
+
       - name: Copying new runtime directory
-        run: cp -r . /home/iain/portfolio-website
+        run: cp -r /home/iain/portfolio-website/bin/Release/net8.0/* /home/iain/portfolio-website
 
       - name: Restarting service
         run: sudo systemctl --user -M iain@ restart portfolio-website.service
