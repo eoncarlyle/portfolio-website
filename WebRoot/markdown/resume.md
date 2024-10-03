@@ -42,7 +42,7 @@ Software engineer on Items Capability team, primarily working in Java and React
 
 ## Technical Projects and Skills
 
-**State Economy Game/GDPLE**
+**GDPLE**
 
 - Playable at [gdple.iainschmitt.com](https://gdple.iainschmitt.com)
 - U.S. state economy guessing game updated daily
