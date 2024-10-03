@@ -10,7 +10,7 @@ open Microsoft.AspNetCore
 type MarkdownViewName =
     | DirectMarkdown
     | LeftHeaderMarkdown
-    | CenterHeaderMarkdown
+    | PostMarkdown
     | ErrorMarkdown
 
 type MarkdownPath = private MarkdownPath of string
@@ -46,7 +46,7 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
         match markdownViewName with
         | DirectMarkdown when isStandardView -> "DirectMarkdown", Some viewData
         | LeftHeaderMarkdown when isStandardView -> "LeftHeaderMarkdown", Some viewData
-        | CenterHeaderMarkdown when isStandardView -> "CenterHeaderMarkdown", Some viewData
+        | PostMarkdown when isStandardView -> "PostMarkdown", Some viewData
         | ErrorMarkdown when isErrorView -> "ErrorMarkdown", Some viewData
         | _ ->
             let errorData = dict [ ("ErrorCode", box 500); ("Body", box error500Msg) ]
@@ -81,7 +81,7 @@ let createRouteHandler markdownPath =
     | "resume.md" -> route "/resume" >=> markdownFileHandler LeftHeaderMarkdown markdownPath
     | _ ->
         route $"/post/{Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)}"
-        >=> markdownFileHandler CenterHeaderMarkdown markdownPath
+        >=> markdownFileHandler DirectMarkdown markdownPath
 
 let appRoutes: list<HttpHandler> =
     Directory.GetFiles markdownRoot
