@@ -48,18 +48,22 @@ Software engineer on Items Capability team, primarily working in Java and React
 - U.S. state economy guessing game updated daily
 - Frontend written in TypeScript/Preact, backend in F#/ASP.NET, with an SQLite database
 
-**HumbleMarket**<br>
+**HumbleMarket**
 
 - Prediction market web application supporting multi-outcome events
 - Frontend written in TypeScript/React, backend in Java/Spring backend, with MongoDB used for the database
 - Implemented automated market maker algorithms to maintain market liquidity
+<br>
 
-**Programming Languages & Frameworks**: Java, Spring, JavaScript/TypeScript, React, Express, Preact, F#, Python, Flask <br>
-**DevOps Tools**: Ansible, Fluent Bit, Prometheus, Grafana, GitLab CI/CD<br>
-**Other Utilities**: Linux System Administration, Network Engineering, SQL Databases, Apache ZooKeeper, MongoDB<br>
+**Programming Languages & Frameworks**: Java, Spring, JavaScript/TypeScript, React, Express, Preact, F#, Python, Flask
+<br><br>
+**DevOps Tools**: Ansible, Fluent Bit, Prometheus, Grafana, GitLab CI/CD
+<br><br>
+**Other Utilities**: Linux System Administration, Network Engineering, SQL Databases, Apache ZooKeeper, MongoDB
+<br>
 
 ## Education
 
-**Bachelor of Chemical Engineering**<br>
-**University of Minnesota, May 2021**<br>
+Bachelor of Chemical Engineering<br>
+University of Minnesota, May 2021<br>
 <br><br>
