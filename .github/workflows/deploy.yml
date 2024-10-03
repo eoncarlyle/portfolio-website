@@ -27,7 +27,7 @@ jobs:
         run: mkdir /home/iain/portfolio-website
 
       - name: Copying new runtime directory
-        run: cp -r /home/iain/portfolio-website/bin/Release/net8.0/* /home/iain/portfolio-website
+        run: cp -r portfolio-website/bin/Release/net8.0/* /home/iain/portfolio-website
 
       - name: Restarting service
         run: sudo systemctl --user -M iain@ restart portfolio-website.service
