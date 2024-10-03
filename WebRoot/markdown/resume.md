@@ -1,5 +1,10 @@
 ## Experience
 
+**Software Engineer**<br>
+**SPS Commerce: May 2024 - Present**<br>
+Software engineer on Items Capability team, primarily working in Java and React
+<br><br>
+
 **Site Reliability Engineer**<br>
 **RELEX Solutions: April 2022 - May 2024**<br>
 
@@ -41,19 +46,17 @@
 
 - Playable at [gdple.iainschmitt.com](https://gdple.iainschmitt.com)
 - U.S. state economy guessing game updated daily
-- Frontend written in TypeScript/Preact, backend in TypeScript/Express, with Sqlite used for the database
-  <br><br>
+- Frontend written in TypeScript/Preact, backend in F#/ASP.NET, with an SQLite database
 
 **HumbleMarket**<br>
 
 - Prediction market web application supporting multi-outcome events
 - Frontend written in TypeScript/React, backend in Java/Spring backend, with MongoDB used for the database
 - Implemented automated market maker algorithms to maintain market liquidity
-  <br><br>
 
-Programming Languages & Frameworks: Java, Spring, Python, Flask, JavaScript/TypeScript, React, Express, Preact<br>
-DevOps Tools: Ansible, Fluent Bit, Prometheus, Grafana, GitLab CI/CD<br>
-Other Utilities: Linux System Administration, Network Engineering, Apache ZooKeeper, MongoDB<br>
+**Programming Languages & Frameworks**: Java, Spring, JavaScript/TypeScript, React, Express, Preact, F#, Python, Flask <br>
+**DevOps Tools**: Ansible, Fluent Bit, Prometheus, Grafana, GitLab CI/CD<br>
+**Other Utilities**: Linux System Administration, Network Engineering, SQL Databases, Apache ZooKeeper, MongoDB<br>
 
 ## Education
 
