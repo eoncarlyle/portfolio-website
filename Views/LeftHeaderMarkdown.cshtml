@@ -1,8 +1,8 @@
 @{
   Layout = "_Layout";
 }
-<a href="/" class="header-link">
-  <h1>Iain Schmitt</h1>
+<a href="/" class="post-header-link">
+  <h1>@Html.Raw(ViewData["Header"])</h1>
 </a>
 <hr></hr>
 @Html.Raw(ViewData["Body"])
