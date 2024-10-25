@@ -80,6 +80,7 @@ img {
 
 a {
     color: var(--nord9);
+    text-decoration: none;
 }
 
 .center {
