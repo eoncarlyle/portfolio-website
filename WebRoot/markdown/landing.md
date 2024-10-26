@@ -5,5 +5,6 @@ My <a href="https://github.com/eoncarlyle">GitHub</a> hosts my publicly availabl
 
 ## Posts
 <ul>
-  <li>2024.09.08: <a href="/post/ddmf-review">Review of <em>Domain Modeling Made Functional</em></a>
+  <li>2024.10.24: <a href="/post/october-2024-gdple-development">October 2024 GDPLE Development</a></li>
+  <li>2024.09.08: <a href="/post/ddmf-review">Review of <em>Domain Modeling Made Functional</em></a></li>
 </ul>
