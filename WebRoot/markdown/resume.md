@@ -13,7 +13,6 @@ Software engineer on Items Capability team, primarily working in Java and React
 - Improved observability for early incident detection with Fluent Bit, Prometheus, and Grafana
 - Wrote Ansible CI/CD pipelines for middleware infrastructure required by production applications
 - Resolved multiple incidents with customer impact as on-call engineer
-- Achieved all increment goals while interim team manager for three months by resource reallocation
   <br><br>
 
 **Technical Analyst**<br>
