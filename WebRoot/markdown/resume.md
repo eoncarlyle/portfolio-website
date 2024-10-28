@@ -31,14 +31,6 @@ Software engineer on Items Capability team, primarily working in Java and React
 - Awarded paid research assistantship for progress shown in first two months
   <br><br>
 
-**Encephalo Investments**<br>
-**Software Development Intern: June 2020 - March 2021**<br>
-
-- Wrote Python backtest framework for high-throughput evaluation of trading algorithms
-- Improved performance of analytics platform through profiling, re-writing slow methods in Cython
-- Created internal web application in Flask and React for sharing analytics workflow results
-  <br><br>
-
 ## Technical Projects and Skills
 
 **GDPLE**
