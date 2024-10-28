@@ -184,4 +184,3 @@ Instead of rewriting the frontend to build on one of the cheapest servers offere
 
 [^vnode_dom]: https://github.com/preactjs/preact/blob/main/src/internal.d.ts#L150
 [^perfmeasure]: Values taken using the MacOS `time` command, averaged over three measurements
-[^react-aria]: https://www.npmjs.com/package/react-aria-components
