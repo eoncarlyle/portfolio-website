@@ -21,9 +21,9 @@ export class AppController {
   async postPuzzleSession(): Promise<IPuzzleSession> { ... }
 
   @Post("/guess")
-  async ostGuess(@Body() body: GuessSubmissionRequest): 
+  async ostGuess(@Body() body: GuessSubmissionRequest):
       Promise<GuessSubmissionResponse> { ... }
-  
+
   @Get("/answer/:id")
   async getPuzzleAnswer(@Param() params: PuzzleAnswerRequest):
       Promise<PuzzleAnswerResponse> { ... }
@@ -34,7 +34,7 @@ F\# is a joy to write in, but because I was pretty directly re-writing TypeScrip
 
 ```typescript
 export interface NonLeafEconomyNode {
-  gdpCategory: string; 
+  gdpCategory: string;
   children: Array<NonLeafEconomyNode | LeafEconomyNode>;
 }
 
@@ -108,7 +108,7 @@ The CI story was more interesting for the frontend: I kept [running out of memor
 FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
 ```
 
-The JavaScript bundle was relatively small at 445.79 kB/145.92 kB when gzip compressed. Luckily I was using Preact as a drop-in-replacement for React, which gzips down to 9.96 kB but my problems seemed to be with bundling Material UI. There were over 10,000 'module level directive' warnings associated with the `@mui` NPM package: 
+The JavaScript bundle was relatively small at 445.79 kB/145.92 kB when gzip compressed. Luckily I was using Preact as a drop-in-replacement for React, which gzips down to 9.96 kB but my problems seemed to be with bundling Material UI. There were over 10,000 'module level directive' warnings associated with the `@mui` NPM package:
 
 ```bash
 $ npx vite build &> /tmp/build
@@ -152,9 +152,9 @@ export class BaseNode<T> {
 
 The React application in that repository has no issue with rendering `ComboBox`. No Preact errors are thrown if `ListItemBox` elements are left out, which of course defeats the purpose of having the `ComboBox` in the first place. This means that the problem is with Preact and `ListBoxItem` in particular. With respect to the error itself, in the code segment above the `child.constructor.name` is equal to `"HTMLUnkownElement"` for Preact. The rest of this section is more speculative - I know very little about Preact internals. However, in comparing two stack frames up from `BaseNode#appendChild`, Preact is calling the method on a lower level of the virtual DOM hierarchy than React, and I don't think that this lower level exists.
 
-The code segment below is taken two stack frames above `BaseNode#appendChild`. For Preact, `parentVNode.type` and `parentVNode._dom` have values of `"item"` and `undefined` respectively, and the `_dom` property of a Preact `VNode` is 'The \[first (for Fragments)\] DOM child of a VNode' [^vnode_dom]. While the function call looks a little different for React, `child.constructor` and `child.node.type` are `[[FunctionLocation]] Document.ts:227` and `"item"`.  While React is inserting an `"item"` virtual DOM element into the DOM, Preact looks to be inserting the first _child_ of an `"item"` virtual DOM element, which is `undefined`. 
+The code segment below is taken two stack frames above `BaseNode#appendChild`. For Preact, `parentVNode.type` and `parentVNode._dom` have values of `"item"` and `undefined` respectively, and the `_dom` property of a Preact `VNode` is 'The \[first (for Fragments)\] DOM child of a VNode' [^vnode_dom]. While the function call looks a little different for React, `child.constructor` and `child.node.type` are `[[FunctionLocation]] Document.ts:227` and `"item"`.  While React is inserting an `"item"` virtual DOM element into the DOM, Preact looks to be inserting the first _child_ of an `"item"` virtual DOM element, which is `undefined`.
 
-Because the text inside of the `ListBoxItem` is the lowest level in the component hierarchy, I assume is that the `"item"` DOM element is the content between the `ListBoxItem` tags, which is 'Aardvark' in my bug demonstration repository.  Line 119 of `Document.ts` is only reached once in both the Preact and React applications, so this isn't a matter of React not yet reaching the lowest level of the component tree,  and the `ListBoxItem` definition is `const ListBoxItem = createLeafComponent('item', function (props, forwardedRef, item) {...})` which likely explains the `"item"` in both function calls. 
+Because the text inside of the `ListBoxItem` is the lowest level in the component hierarchy, I assume is that the `"item"` DOM element is the content between the `ListBoxItem` tags, which is 'Aardvark' in my bug demonstration repository.  Line 119 of `Document.ts` is only reached once in both the Preact and React applications, so this isn't a matter of React not yet reaching the lowest level of the component tree,  and the `ListBoxItem` definition is `const ListBoxItem = createLeafComponent('item', function (props, forwardedRef, item) {...})` which likely explains the `"item"` in both function calls.
 
 
 ```javascript
@@ -182,5 +182,5 @@ I would have preferred to use React Aria for the autocomplete over importing a s
 Instead of rewriting the frontend to build on one of the cheapest servers offered by Digital Ocean, I could have instead moved the action runners to a homelab server and done any number of things to deploy it onto the VPS - something I plan to do anyway. But what's the fun in that?
 
 
-[^vnode_dom]: https://github.com/preactjs/preact/blob/main/src/internal.d.ts#L150
+[^vnode_dom]: [Link to relevant comment in Preact](https://github.com/preactjs/preact/blob/main/src/internal.d.ts#L150)
 [^perfmeasure]: Values taken using the MacOS `time` command, averaged over three measurements
