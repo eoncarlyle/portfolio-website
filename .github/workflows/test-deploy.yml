@@ -20,6 +20,9 @@ jobs:
       - name: Build container image
         run: sudo docker build -t localhost/portfolio-website:latest .
 
+      - name: Stop ZooKeeper container
+        run: docker stop zookeeper-server || true
+
       - name: Run ZooKeeper container
         run: docker pull docker.io/library/zookeeper zookeeper:latest && docker run --name zookeeper-server --replace -d -p 2181:2181 zookeeper:latest
 
