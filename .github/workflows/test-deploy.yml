@@ -18,16 +18,16 @@ jobs:
         run: dotnet publish -c Release -o published
 
       - name: Build container image
-        run: sudo docker build -t localhost/portfolio-website:latest .
+        run: sudo podman build -t localhost/portfolio-website:latest .
 
       - name: Stop ZooKeeper container
-        run: sudo docker stop zookeeper-server && sudo docker rm zookeeper-server || true
+        run: sudo podman stop zookeeper-server && sudo podman rm zookeeper-server
 
       - name: Run ZooKeeper container
-        run: sudo docker pull docker.io/library/zookeeper && sudo docker run --name zookeeper-server -d -p 2181:2181 zookeeper:latest
+        run: sudo podman pull docker.io/library/zookeeper && sudo podman run --name zookeeper-server -d -p 2181:2181 zookeeper:latest
 
       - name: Run first container
-        run: sudo docker run -d -p 4001:4000 localhost/portfolio-website:latest 4001
+        run: sudo podman run -d -p 4001:4000 localhost/portfolio-website:latest 4001
 
       - name: Run first container
-        run: sudo docker run -d -p 4002:4000 localhost/portfolio-website:latest 4002
+        run: sudo podman run -d -p 4002:4000 localhost/portfolio-website:latest 4002
