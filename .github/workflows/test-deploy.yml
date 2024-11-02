@@ -14,10 +14,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build application
-        run: dotnet publish -c Release -o published
+      # Commenting these out for now
+      #- name: Build application
+      #  run: dotnet publish -c Release -o published
 
-      # commenting this out for now
       #- name: Build container image
       #  run: sudo podman build -t localhost/portfolio-website:latest .
 
