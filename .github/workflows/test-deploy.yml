@@ -21,7 +21,7 @@ jobs:
         run: podman build -t localhost/portfolio-website:latest .
 
       - name: Run ZooKeeper container
-        run: podman pull zookeeper:latest && podman run --name zookeeper-server -d -p 2181:2181 zookeeper:latest
+        run: podman pull docker.io/library/zookeeper zookeeper:latest && podman run --name zookeeper-server --replace -d -p 2181:2181 zookeeper:latest
 
       - name: Run first container
         run: podman run -d -p 4001:4000 localhost/portfolio-website:latest 4001
