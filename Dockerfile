@@ -9,4 +9,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /out .
 ENTRYPOINT ["dotnet", "portfolio-website.App.dll"]
-CMD ["4000"]
+CMD ["4080"]

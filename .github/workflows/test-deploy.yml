@@ -1,4 +1,4 @@
-name: Deploy Portfolio Website
+name: Test Deploy Portfolio Website
 
 on:
   push:
@@ -20,5 +20,11 @@ jobs:
       - name: Build container image
         run: podman build -t localhost/portfolio-website:latest .
 
-      - name: Restarting service
-        run: sudo systemctl --user -M iain@ restart portfolio-website.service
+      - name: Run ZooKeeper container
+        run: podman pull zookeeper:latest && podman run --name zookeeper-server -d -p 2181:2181 zookeeper:latest
+
+      - name: Run first container
+        run: podman run -d -p 4001:4000 localhost/portfolio-website:latest 4001
+
+      - name: Run first container
+        run: podman run -d -p 4002:4000 localhost/portfolio-website:latest 4002

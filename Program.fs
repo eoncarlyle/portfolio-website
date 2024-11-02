@@ -2,6 +2,7 @@ module Portfolio.App
 
 open System
 open System.IO
+open System.Threading.Tasks
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Cors.Infrastructure
 open Microsoft.AspNetCore.Hosting
@@ -10,6 +11,7 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.Razor
+open org.apache.zookeeper
 
 let webApp =
     choose [ GET >=> choose AppHandlers.appRoutes; AppHandlers.error404Handler ]
@@ -41,8 +43,44 @@ let configureServices (services: IServiceCollection) =
 let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
 
+let noOpWatcherFunction (event: WatchedEvent) : Task = Task.CompletedTask
+
+type NoOpWatcher() =
+    inherit Watcher()
+
+    override _.process(event: WatchedEvent) : Task =
+        // No operation - return a completed task
+        Task.CompletedTask
+
+let zooKeeper = new ZooKeeper("localhost:2181", 3000, NoOpWatcher())
+
+let configureZookeeper (maybeHostPort: string option) =
+    let hostPort = maybeHostPort |> Option.orElse (Some "4000") |> Option.get
+
+    task {
+        let! hostListStat = zooKeeper.existsAsync "/portfolio-hosts"
+
+        if (hostListStat = null) then
+            zooKeeper.createAsync ("/portfolio-hosts", [||], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
+            |> ignore
+
+        zooKeeper.createAsync (
+            $"/portfolio-hosts/localhost:{hostPort}",
+            [||],
+            ZooDefs.Ids.OPEN_ACL_UNSAFE,
+            CreateMode.EPHEMERAL
+        )
+        |> ignore
+
+    }
+    |> ignore
+
+
 [<EntryPoint>]
 let main args =
+
+    Array.tryHead args |> Option.orElse (Some "4080") |> configureZookeeper
+
     Host
         .CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
