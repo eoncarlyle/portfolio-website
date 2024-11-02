@@ -18,7 +18,7 @@ jobs:
         run: dotnet publish -c Release -o published
 
       - name: Build container image
-        run: docker build -t localhost/portfolio-website:latest .
+        run: sudo docker build -t localhost/portfolio-website:latest .
 
       - name: Run ZooKeeper container
         run: docker pull docker.io/library/zookeeper zookeeper:latest && docker run --name zookeeper-server --replace -d -p 2181:2181 zookeeper:latest
