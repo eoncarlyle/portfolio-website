@@ -1,0 +1,30 @@
+name: Deploy Portfolio Website
+
+on:
+  push:
+    branches:
+      - rediculous-deployment
+
+jobs:
+  deploy:
+    name: Deploy on santa-cruz
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build application
+        run: dotnet publish -c Release -o published
+
+      - name: Build container image
+        run: podman build -t ghcr.io/eoncarlyle/portfolio-website:latest .
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Push container image to GHCR
+        run: podman push ghcr.io/eoncarlyle/portfolio-website:latest
+
+      - name: Restarting service
+        run: sudo systemctl --user -M iain@ restart portfolio-website.service
