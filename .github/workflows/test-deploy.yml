@@ -24,7 +24,7 @@ jobs:
         run: sudo docker stop zookeeper-server || true
 
       - name: Run ZooKeeper container
-        run: sudo docker pull docker.io/library/zookeeper && sudo docker run --name zookeeper-server --replace -d -p 2181:2181 zookeeper:latest
+        run: sudo docker pull docker.io/library/zookeeper && sudo docker run --name zookeeper-server -d -p 2181:2181 zookeeper:latest
 
       - name: Run first container
         run: sudo docker run -d -p 4001:4000 localhost/portfolio-website:latest 4001
