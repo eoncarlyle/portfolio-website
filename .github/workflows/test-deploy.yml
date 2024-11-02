@@ -18,13 +18,13 @@ jobs:
         run: dotnet publish -c Release -o published
 
       - name: Build container image
-        run: podman build -t localhost/portfolio-website:latest .
+        run: docker build -t localhost/portfolio-website:latest .
 
       - name: Run ZooKeeper container
-        run: podman pull docker.io/library/zookeeper zookeeper:latest && podman run --name zookeeper-server --replace -d -p 2181:2181 zookeeper:latest
+        run: docker pull docker.io/library/zookeeper zookeeper:latest && docker run --name zookeeper-server --replace -d -p 2181:2181 zookeeper:latest
 
       - name: Run first container
-        run: podman run -d -p 4001:4000 localhost/portfolio-website:latest 4001
+        run: docker run -d -p 4001:4000 localhost/portfolio-website:latest 4001
 
       - name: Run first container
-        run: podman run -d -p 4002:4000 localhost/portfolio-website:latest 4002
+        run: docker run -d -p 4002:4000 localhost/portfolio-website:latest 4002
