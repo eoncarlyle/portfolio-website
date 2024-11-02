@@ -21,11 +21,14 @@ jobs:
       #- name: Build container image
       #  run: podman build -t localhost/portfolio-website:latest .
 
+      - name: Debug
+        run: whoami
+
       - name: Run ZooKeeper container
-        run: podman pull docker.io/library/zookeeper && podman run --name zookeeper-server --replace -d -p 2181:2181 zookeeper:latest
+        run: runuser -u iain -- podman pull docker.io/library/zookeeper && podman run --name zookeeper-server --replace -d -p 2181:2181 zookeeper:latest
 
       - name: Run first container
-        run: podman run -d -p 4001:4000 localhost/portfolio-website:latest 4001
+        run: runuser -u iain -- podman run -d -p 4001:4000 localhost/portfolio-website:latest 4001
 
       - name: Run second container
-        run: podman run -d -p 4002:4000 localhost/portfolio-website:latest 4002
+        run: runuser -u iain -- podman run -d -p 4002:4000 localhost/portfolio-website:latest 4002
