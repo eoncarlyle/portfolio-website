@@ -14,21 +14,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Commenting these out for now
-      #- name: Build application
-      #  run: dotnet publish -c Release -o published
+       #Commenting these out for now
+      - name: Build application
+        run: dotnet publish -c Release -o published
 
-      #- name: Build container image
-      #  run: podman build -t localhost/portfolio-website:latest .
+      - name: Build container image
+        run: podman build -t localhost/portfolio-website:latest .
 
       - name: Debug
         run: whoami
 
       - name: Run ZooKeeper container
-        run: podman pull docker.io/library/zookeeper && podman run --name zookeeper-server --replace -d -p 2181:2181 zookeeper:latest
+        run: podman pull docker.io/library/zookeeper && podman run --name zookeeper-server --replace -d --network=host zookeeper:latest
 
       - name: Run first container
-        run: podman run -d -p 4001:4000 localhost/portfolio-website:latest 4001
+        run: podman run -d --network=host localhost/portfolio-website:latest 4001
 
-      - name: Run second container
-        run: podman run -d -p 4002:4000 localhost/portfolio-website:latest 4002

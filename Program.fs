@@ -54,8 +54,7 @@ type NoOpWatcher() =
 
 let zooKeeper = new ZooKeeper("localhost:2181", 3000, NoOpWatcher())
 
-let configureZookeeper (maybeHostPort: string option) =
-    let hostPort = maybeHostPort |> Option.orElse (Some "4000") |> Option.get
+let configureZookeeper (hostPort: string) =
 
     task {
         let! hostListStat = zooKeeper.existsAsync "/portfolio-hosts"
@@ -79,13 +78,14 @@ let configureZookeeper (maybeHostPort: string option) =
 [<EntryPoint>]
 let main args =
 
-    Array.tryHead args |> Option.orElse (Some "4080") |> configureZookeeper
+    let hostPort = Array.tryHead args |> Option.orElse (Some "4080") |> Option.get
+    configureZookeeper hostPort
 
     Host
         .CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
-                .UseUrls("http://localhost:4000")
+                .UseUrls($"http://localhost:{hostPort}")
                 .UseContentRoot(AppHandlers.contentRoot)
                 .UseWebRoot(AppHandlers.webRoot)
                 .Configure(Action<IApplicationBuilder> configureApp)
