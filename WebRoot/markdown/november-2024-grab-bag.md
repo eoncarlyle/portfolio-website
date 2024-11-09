@@ -1,6 +1,6 @@
 # November Grab Bag
 
-There are a couple of topics that were cut from drafts of the previous two posts. I liked the sections too much to shelve, so I'm posting them as a grab-bag here
+There are a couple of topics that were cut from drafts of the previous two posts. I liked the sections too much to shelve, so I'm posting them as a grab-bag here.
 
 ## _Software Unscripted_ and Enterprise Haskell
 
