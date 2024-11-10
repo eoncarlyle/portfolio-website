@@ -1,10 +1,13 @@
 module AppHandlers
 
+open System
 open System.IO
 open System.Collections.Generic
 open Giraffe
 open Giraffe.Razor
 open Markdig
+open Markdig.Extensions.Yaml
+open Markdig.Syntax
 open Microsoft.AspNetCore
 
 type MarkdownViewName =
@@ -16,6 +19,12 @@ type MarkdownViewName =
 type MarkdownPath = private MarkdownPath of string
 
 type Handler = HttpFunc -> Http.HttpContext -> HttpFuncResult
+
+type PostYamlHeader = { Title: string; Date: String }
+
+type PostYamlHeaderPair =
+    { Path: MarkdownPath
+      Header: PostYamlHeader }
 
 module MarkdownPath =
     let create path =
@@ -32,7 +41,14 @@ let markdownRoot = Path.Combine(webRoot, "markdown")
 let error404Msg = "The page that you are looking for does not exist!"
 let error500Msg = "Internal server error"
 
-let markdownPipeline = MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
+let markdownPipeline =
+    MarkdownPipelineBuilder().UseAdvancedExtensions().UseYamlFrontMatter().Build()
+
+let markdownPaths =
+    Directory.GetFiles markdownRoot |> Array.choose MarkdownPath.create
+
+let markdownFileName markdownPath =
+    Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)
 
 let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     let isStandardView = viewData.ContainsKey "Header" && viewData.ContainsKey "Body"
@@ -52,12 +68,62 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     publicResponseCaching 60 None
     >=> razorHtmlView (fst renderTuple) None (snd renderTuple) None
 
+let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
+    if line.StartsWith(prefix) then
+        Some(line.Substring(prefix.Length).Trim())
+    else
+        None
+
+// Main parsing function
+let tryParsePostYamlHeader (lines: string array) =
+    let tryTitle = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "title:")
+    let tryDate = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "date:")
+
+    match tryTitle, tryDate with
+    | Some title, Some date -> Some { Title = title; Date = date }
+    | _ -> None
+
+let postList =
+
+    let tryGetHeader (markdownPath: MarkdownPath) =
+        MarkdownPath.toString markdownPath
+        |> File.ReadAllText
+        |> (fun markdownContents ->
+            Markdown
+                .Parse(markdownContents, markdownPipeline)
+                .Descendants<YamlFrontMatterBlock>())
+        |> Seq.tryHead
+        |> Option.map (fun yamlBlock -> yamlBlock.Lines.Lines |> Seq.map _.ToString() |> Seq.toArray)
+        |> Option.bind tryParsePostYamlHeader
+    
+    let getHeaderHtml (pair: PostYamlHeaderPair) =
+            $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
+
+    let postLinks =
+        markdownPaths
+        |> Array.map (fun markdownPath ->
+                          let maybeHeader = tryGetHeader markdownPath
+                          match maybeHeader with
+                          | Some header -> Some { Path = markdownPath; Header = header}
+                          | _ -> None)
+        |> Array.choose id
+        |> Array.sortBy (fun pair -> DateTime.Parse(pair.Header.Date))
+        |> Array.rev
+        |> Array.map getHeaderHtml
+    
+    String.Join("\n", Array.concat [ [| "<ul>" |]; postLinks; [| "</ul>" |] ])
+
 let markdownFileHandler markdownViewName markdownPath header =
-    let htmlContents =
+    let htmlContentsFromFile =
         MarkdownPath.toString markdownPath
         |> File.ReadAllText
         |> fun markdownContents -> Markdown.ToHtml(markdownContents, markdownPipeline)
         |> _.Replace("&#8617", "&#8617&#65038")
+
+    let htmlContents =
+        match markdownFileName markdownPath with
+        | "landing" -> [ htmlContentsFromFile; postList ]  |> String.concat "\n"
+        | _ -> htmlContentsFromFile
 
     razorViewHandler markdownViewName (dict [ ("Body", box htmlContents); ("Header", box header) ])
 
@@ -79,11 +145,8 @@ let createRouteHandler markdownPath =
         route "/resume"
         >=> markdownFileHandler LeftHeaderMarkdown markdownPath "Iain Schmitt's Resume"
     | _ ->
-        route $"/post/{Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)}"
+        route $"/post/{markdownFileName markdownPath}"
         >=> markdownFileHandler PostMarkdown markdownPath "Iain Schmitt"
 
 let appRoutes: list<HttpHandler> =
-    Directory.GetFiles markdownRoot
-    |> Array.choose MarkdownPath.create
-    |> Array.map createRouteHandler
-    |> Array.toList
+    markdownPaths |> Array.map createRouteHandler |> Array.toList

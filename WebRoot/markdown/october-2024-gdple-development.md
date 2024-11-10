@@ -1,4 +1,7 @@
-
+---
+title: October 2024 GDPLE Development
+date: 2024.10.27
+---
 # October 2024 GDPLE Development
 
 GDPLE is my [Wordle-inspired US state economy guessing game](https://gdple.iainschmitt.com/) that I wrote last year, but this October I did some work on both the frontend and backend that I thought warranted a blog post.

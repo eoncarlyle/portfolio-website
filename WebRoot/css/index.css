@@ -113,3 +113,14 @@ p code {
     border-radius: 0.3em;
     padding: 0.1em;
 }
+
+blockquote {
+    background-color: var(--nord1);
+    border-radius: 0.3em;
+    padding: 1em;
+    margin: 0.5em 0;
+}
+
+blockquote p {
+    margin: 0;
+}

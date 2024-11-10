@@ -1,3 +1,7 @@
+---
+title: November Grab Bag
+date: 2024.11.08
+---
 # November Grab Bag
 
 There are a couple of topics that were cut from drafts of the previous two posts. I liked the sections too much to shelve, so I'm posting them as a grab bag here.

@@ -1,4 +1,7 @@
-
+---
+title: Review of <em>Domain Modeling Made Functional</em>
+date: 2024.09.08
+---
 # Review of _Domain Modeling Made Functional_
 
 _Domain Modeling Made Functional: Tackle Software Complexity with Domain-Driven Design and F\#_ is a 2018 book by Scott Wlaschin [^wlaschin]. As it says on the tin, the book's goal is to show the reader how to implement domain modeling using functional programming. The phrase "domain-driven design" itself was coined by Eric Evans' 2003 book of the same name where all code examples are written in Java [^evans], and most other books and talks about DDD use object-oriented languages. While code examples for this book are provided in F\#, no prior knowledge of the language is assumed. The first section of the book is a brief overview of domain-driven design terms, and section two walks through how the type system and chained function calls can be used for 'modeling in the small'. Part 3 wraps up the book by fully implementing the e-commerce bounded context introduced in Part 1.
