@@ -115,5 +115,12 @@ p code {
 }
 
 blockquote {
-    background: var(--nord1);
+    background-color: var(--nord1);
+    border-radius: 0.3em;
+    padding: 1em;
+    margin: 0.5em 0;
+}
+
+blockquote p {
+    margin: 0;
 }

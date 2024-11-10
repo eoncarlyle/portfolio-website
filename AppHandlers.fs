@@ -97,7 +97,7 @@ let postList =
         |> Option.bind tryParsePostYamlHeader
     
     let getHeaderHtml (pair: PostYamlHeaderPair) =
-            $"<li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
+            $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
 
     let postLinks =
         markdownPaths
