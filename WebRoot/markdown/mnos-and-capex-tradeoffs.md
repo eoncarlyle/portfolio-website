@@ -33,7 +33,7 @@ is a large part of what enables the zero transaction costs at the heart of their
 
 Carriers/mobile network operators (MNOs) do not have this luxury. For example, the LTE wireless standard is optimised
 for performance at a 3.1 mile cell radius, which requires cell towers roughly 5.3 miles apart from each other in a
-hexagonal grid [^cox]. While Google and Meta can spread workloads across planet-scale fleets of servers and network
+hexagonal grid.[^cox] While Google and Meta can spread workloads across planet-scale fleets of servers and network
 infrastructure, carriers need to have cell sites wherever they intend to serve customers: the modern consumer expects
 and modern life demands cell coverage in all but the most remote corners of America. As of December 31st of 2023,
 this meant that T-Mobile operated 128,000 cell sites in order to reach 98% of Americans.[^t-mobile-2023-10K] Building
@@ -65,7 +65,7 @@ All together MNOs are constrained by cell tower geography, spectrum availability
 constraints mean carriers face very nonzero transaction costs, giving them daunting unit economics as compared to
 consumer aggregators like Meta and Google. But it gets worse. The American MNO market is an oligopoly with limited
 differentiation between the big three carriers. As of this quarter, Verizon and AT&T have 116 and 114 million
-connections to their consumer offerings while T-Mobile has 127 million connections but doesn't break them down between consumer 
+connections to their consumer offerings while T-Mobile has 127 million connections but doesn't break them down between consumer
 and enterprise accounts. The three networks are more or less fighting to a draw.
 
 At least in the US, carriers were once more differentiated as before the iPhone they had exclusive agreements with
@@ -121,7 +121,7 @@ struck a similar chord to the ETNO report: [^draghi-report]
 > technologies beyond basic connectivity.
 
 Some of the cited drivers of lower profitability included _ex-ante_ regulation of telecommunications pricing (as opposed to
-_ex-post_ regulatory action in the US when responding to malfeasance) the market operating on a country-by-country basis rather 
+_ex-post_ regulatory action in the US when responding to malfeasance) the market operating on a country-by-country basis rather
 than bloc wide, as well as:
 
 > Spectrum auctions to assign mobile frequencies have not been harmonised across member states and have been purely
@@ -143,16 +143,16 @@ set electricity prices that maintain relatively small profits for the utility co
 This is made more interesting by policy initiatives to encourage residential and industrial electrification in an effort
 to reduce carbon emissions. There is political pressure to keep electricity prices low, as electricity rates set by the
 government have many tax-like qualities. However, electrifying residential and industrial uses of power that currently rely
-on fossil fuels requires investments in transmission infrastructure to support higher loads. It's worth noting that electrical 
-utilities have a business incentive to do this, as more electrification means moving dollars from natural gas companies to power 
-companies. But policymakers with ambitious carbon reduction targets may have more aggressive timelines than what would otherwise 
+on fossil fuels requires investments in transmission infrastructure to support higher loads. It's worth noting that electrical
+utilities have a business incentive to do this, as more electrification means moving dollars from natural gas companies to power
+companies. But policymakers with ambitious carbon reduction targets may have more aggressive timelines than what would otherwise
 make economic sense for the utility, which requires bargaining.
 
 Rate setters have a healthy skepticism of the utilities they regulate - no power company would tell a rate commission that
-their company would survive just fine with a slightly lower the price of electricity. But just as for Europe's 5G buildout, 
-the capital investment required for both regular operations and any further electrification has to come from somewhere, and 
-utilities need to balance their books one way or another. For both European MNOs and American power companies there is a 
-tradeoff between prices paid by consumers and investments in infrastructure. American policymakers committed to abundant, 
+their company would survive just fine with a slightly lower the price of electricity. But just as for Europe's 5G buildout,
+the capital investment required for both regular operations and any further electrification has to come from somewhere, and
+utilities need to balance their books one way or another. For both European MNOs and American power companies there is a
+tradeoff between prices paid by consumers and investments in infrastructure. American policymakers committed to abundant,
 low carbon electricity would do well to heed Europe's warning on the consequences of ignoring this tradeoff.
 
 [^aggregation-theory]: [Stratechery "Aggregation Theory" Post](https://stratechery.com/2015/aggregation-theory/)

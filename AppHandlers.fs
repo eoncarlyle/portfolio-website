@@ -68,22 +68,22 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     publicResponseCaching 60 None
     >=> razorHtmlView (fst renderTuple) None (snd renderTuple) None
 
-let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
-    if line.StartsWith(prefix) then
-        Some(line.Substring(prefix.Length).Trim())
-    else
-        None
-
-// Main parsing function
-let tryParsePostYamlHeader (lines: string array) =
-    let tryTitle = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "title:")
-    let tryDate = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "date:")
-
-    match tryTitle, tryDate with
-    | Some title, Some date -> Some { Title = title; Date = date }
-    | _ -> None
 
 let postList =
+
+    let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
+        if line.StartsWith(prefix) then
+            Some(line.Substring(prefix.Length).Trim())
+        else
+            None
+
+    let tryParsePostYamlHeader (lines: string array) =
+        let tryTitle = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "title:")
+        let tryDate = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "date:")
+
+        match tryTitle, tryDate with
+        | Some title, Some date -> Some { Title = title; Date = date }
+        | _ -> None
 
     let tryGetHeader (markdownPath: MarkdownPath) =
         MarkdownPath.toString markdownPath
@@ -95,7 +95,7 @@ let postList =
         |> Seq.tryHead
         |> Option.map (fun yamlBlock -> yamlBlock.Lines.Lines |> Seq.map _.ToString() |> Seq.toArray)
         |> Option.bind tryParsePostYamlHeader
-    
+
     let getHeaderHtml (pair: PostYamlHeaderPair) =
             $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
 
@@ -110,7 +110,7 @@ let postList =
         |> Array.sortBy (fun pair -> DateTime.Parse(pair.Header.Date))
         |> Array.rev
         |> Array.map getHeaderHtml
-    
+
     String.Join("\n", Array.concat [ [| "<ul>" |]; postLinks; [| "</ul>" |] ])
 
 let markdownFileHandler markdownViewName markdownPath header =
