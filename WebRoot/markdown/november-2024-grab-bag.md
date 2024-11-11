@@ -16,7 +16,7 @@ Something else that sets the tone for many of the conversations on Software Unsc
 
 ## F\# and .NET Naming Conventions
 
-Until listening to "F\# in Production with Scott Wlaschin",[^wlaschin] I was skeptical of production use of Haskell in particular and functional programming in general. The episode didn't go in as much depth as some, [^muratori] but Wlaschin positioned F\# as a better fit for enterprise software engineering over Haskell:
+Until listening to "F\# in Production with Scott Wlaschin",[^wlaschin] I was skeptical of production use of Haskell in particular and functional programming in general. The episode didn't go in as much depth as some,[^muratori] but Wlaschin positioned F\# as a better fit for enterprise software engineering over Haskell:
 
 > “If you look at the Haskell books, like printing ‘Hello World’ is like in Chapter 7 of these books … you can’t do it in Haskell until you understand I/O, and you can’t understand I/O until you understand monads”
 
