@@ -18,15 +18,10 @@ let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
     AppHandlers.error500Handler
 
-let configureCors (builder: CorsPolicyBuilder) =
-    builder.WithOrigins("http://localhost:4000").AllowAnyMethod().AllowAnyHeader()
-    |> ignore
-
 let configureApp (app: IApplicationBuilder) =
     app
         .UseGiraffeErrorHandler(internalErrorHandler)
         .UseHttpsRedirection()
-        .UseCors(configureCors)
         .UseStaticFiles()
         .UseResponseCaching()
         .UseGiraffe(webApp)
@@ -43,11 +38,14 @@ let configureLogging (builder: ILoggingBuilder) =
 
 [<EntryPoint>]
 let main args =
+    let hostPort = Array.tryHead args |> Option.orElse (Some "4080") |> Option.get
+    AppZooKeeper.configureZookeeper hostPort
+
     Host
         .CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
-                .UseUrls("http://localhost:4000")
+                .UseUrls($"http://localhost:{hostPort}") //! Address of host subject to change
                 .UseContentRoot(AppHandlers.contentRoot)
                 .UseWebRoot(AppHandlers.webRoot)
                 .Configure(Action<IApplicationBuilder> configureApp)
