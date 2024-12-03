@@ -1,7 +1,3 @@
----
-title: Uses Page
-date: 2024.11.08
----
 A list of the hardware and software that I depend on in my daily work
 ## Workstation
   - 14-inch 2024 MacbookPro, 12-core M4 Pro/24 GB RAM/16-core GPU/512 GB SSD
@@ -23,12 +19,11 @@ A list of the hardware and software that I depend on in my daily work
   - Office daily driver: Apple Magic Mouse
   - Home daily driver: Razer Basilisk
 
-## A/V
-  - Cannon M50 Mark II camera with Sigma 16mm f/1.4 EF-M lens
+## Audio & Video
   - Shure SM58 microphone
   - Focusrite Scarlet 2i2 audio interface
   - Sony WH-1000XM3 over-ear headphones
-  - Reeder RSS reader
+  - Cannon M50 Mark II camera with Sigma 16mm f/1.4 EF-M lens
 
 ## Software
   - MacOS workstation OS
@@ -40,3 +35,4 @@ A list of the hardware and software that I depend on in my daily work
   - IntelliJ and JetBrains Rider IDEs
   - Rectangle Pro window manager
   - Bitwarden password manager
+  - Reeder RSS reader

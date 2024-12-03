@@ -124,3 +124,8 @@ blockquote {
 blockquote p {
     margin: 0;
 }
+
+table {
+    min-width: 75%;
+    margin: auto;
+}
