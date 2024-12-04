@@ -30,18 +30,17 @@ jobs:
       - name: Copying reverse proxy to new runtime directory
         run: cp -r zk-reverse-proxy-core /home/iain/portfolio-website-test
   
-  #first-app-replica:
-  #  runs-on: self-hosted
-  #  steps:
-  #    - name: Restarting service
-  #      run: sudo systemctl --user -M iain@ restart portfolio-website-first-app-replica.service
-  #
-  #second-app-replica:
-  #  runs-on: self-hosted
-
-  #  steps:
-  #    - name: Restarting service
-  #      run: sudo systemctl --user -M iain@ restart portfolio-website-second-app-replica.service
+  restart-units:
+    runs-on: self-hosted
+    steps:
+      - name: Restarting first app replica service
+        run: sudo systemctl --user -M iain@ restart portfolio-website-first-app-replica.service
+  
+      - name: Restarting second app replica service
+        run: sudo systemctl --user -M iain@ restart portfolio-website-second-app-replica.service
+      
+      - name: Restarting reverse proxy
+        run: sudo systemctl --user -M iain@ restart portfolio-website-reverse-proxy.service
 
 
 # 1) Get ZooKeeper ssytemd service
