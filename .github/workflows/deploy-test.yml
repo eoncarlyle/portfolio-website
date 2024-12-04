@@ -41,10 +41,3 @@ jobs:
       
       - name: Restarting reverse proxy
         run: sudo systemctl --user -M iain@ restart portfolio-website-reverse-proxy.service
-
-
-# 1) Get ZooKeeper ssytemd service
-# 2) Get proper node
-# 3) Write node build commands
-# 4) create systemd units for all three 
-#
