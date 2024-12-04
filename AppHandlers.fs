@@ -97,15 +97,16 @@ let postList =
         |> Option.bind tryParsePostYamlHeader
 
     let getHeaderHtml (pair: PostYamlHeaderPair) =
-            $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
+        $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
 
     let postLinks =
         markdownPaths
         |> Array.map (fun markdownPath ->
-                          let maybeHeader = tryGetHeader markdownPath
-                          match maybeHeader with
-                          | Some header -> Some { Path = markdownPath; Header = header}
-                          | _ -> None)
+            let maybeHeader = tryGetHeader markdownPath
+
+            match maybeHeader with
+            | Some header -> Some { Path = markdownPath; Header = header }
+            | _ -> None)
         |> Array.choose id
         |> Array.sortBy (fun pair -> DateTime.Parse(pair.Header.Date))
         |> Array.rev
@@ -122,7 +123,7 @@ let markdownFileHandler markdownViewName markdownPath header =
 
     let htmlContents =
         match markdownFileName markdownPath with
-        | "landing" -> [ htmlContentsFromFile; postList ]  |> String.concat "\n"
+        | "landing" -> [ htmlContentsFromFile; postList ] |> String.concat "\n"
         | _ -> htmlContentsFromFile
 
     razorViewHandler markdownViewName (dict [ ("Body", box htmlContents); ("Header", box header) ])
@@ -141,6 +142,9 @@ let error500Handler: Handler =
 let createRouteHandler markdownPath =
     match MarkdownPath.toString markdownPath |> Path.GetFileName with
     | "landing.md" -> route "/" >=> markdownFileHandler LeftHeaderMarkdown markdownPath "Iain Schmitt"
+    | "uses.md" ->
+        route "/uses"
+        >=> markdownFileHandler PostMarkdown markdownPath "Iain Schmitt's Uses Page"
     | "resume.md" ->
         route "/resume"
         >=> markdownFileHandler LeftHeaderMarkdown markdownPath "Iain Schmitt's Resume"
