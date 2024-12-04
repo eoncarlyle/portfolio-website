@@ -1,0 +1,51 @@
+name: Deploy Portfolio Website
+
+on:
+  push:
+    branches:
+      - zk-reverse-proxy
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build application
+        run: dotnet publish -c Release -o published
+
+      - name: Build reverse proxy
+        run: npm --prefix zk-reverse-proxy-core install && npm --prefix zk-reverse-proxy-core build
+
+      - name: Remove runtime directory
+        run: rm -rf /home/iain/portfolio-website-test
+
+      - name: Creating new runtime directory
+        run: mkdir /home/iain/portfolio-website-test
+
+      - name: Copying application to new runtime directory
+        run: cp -r bin/Release/net8.0/* /home/iain/portfolio-website-test
+        
+      - name: Copying reverse proxy to new runtime directory
+        run: cp -r zk-reverse-proxy-core /home/iain/portfolio-website-test
+  
+  #first-app-replica:
+  #  runs-on: self-hosted
+  #  steps:
+  #    - name: Restarting service
+  #      run: sudo systemctl --user -M iain@ restart portfolio-website-first-app-replica.service
+  #
+  #second-app-replica:
+  #  runs-on: self-hosted
+
+  #  steps:
+  #    - name: Restarting service
+  #      run: sudo systemctl --user -M iain@ restart portfolio-website-second-app-replica.service
+
+
+# 1) Get ZooKeeper ssytemd service
+# 2) Get proper node
+# 3) Write node build commands
+# 4) create systemd units for all three 
+#
