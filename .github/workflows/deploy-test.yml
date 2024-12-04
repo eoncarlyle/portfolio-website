@@ -16,7 +16,7 @@ jobs:
         run: dotnet publish -c Release -o published
 
       - name: Build reverse proxy
-        run: npm --prefix zk-reverse-proxy-core install && npm --prefix zk-reverse-proxy-core build
+        run: npm --prefix zk-reverse-proxy-core install && npm --prefix zk-reverse-proxy-core run build
 
       - name: Remove runtime directory
         run: rm -rf /home/iain/portfolio-website-test
