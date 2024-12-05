@@ -12,7 +12,7 @@ open Giraffe
 open Giraffe.Razor
 
 let webApp =
-    choose [ GET >=> choose AppHandlers.appRoutes; AppHandlers.error404Handler ]
+    choose [ GET >=> choose AppHandlers.appRoutes; HEAD >=> AppHandlers.headHandler; AppHandlers.error404Handler ]
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")

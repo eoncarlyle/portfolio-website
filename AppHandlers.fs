@@ -131,6 +131,9 @@ let markdownFileHandler markdownViewName markdownPath header =
 let errorRazorViewHandler errorCode body =
     razorViewHandler ErrorMarkdown (dict [ ("ErrorCode", box errorCode); ("Body", box body) ])
 
+let headHandler: Handler =
+    setStatusCode 200
+
 let error404Handler: Handler =
     setStatusCode 404
     >=> publicResponseCaching 60 None
