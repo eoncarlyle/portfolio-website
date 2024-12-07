@@ -41,6 +41,7 @@ let getIPv4Addresses() =
 /// Gets the primary IP address (usually the first non-loopback IPv4 address)
 let getPrimaryIP() =
     getIPv4Addresses()
+    |> Array.filter (fun addr -> addr.ToString().StartsWith("192"))
     |> Array.tryHead
     |> Option.defaultWith (fun () -> IPAddress.Parse("127.0.0.1"))
 
