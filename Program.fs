@@ -39,7 +39,8 @@ let configureLogging (builder: ILoggingBuilder) =
 [<EntryPoint>]
 let main args =
     let hostPort = Array.tryHead args |> Option.orElse (Some "4080") |> Option.get
-    AppZooKeeper.configureZookeeper hostPort
+    let zkHost = Array.tryItem 1 args |> Option.orElse (Some "127.0.0.1") |> Option.get
+    AppZooKeeper.configureZookeeper hostPort zkHost
 
     Host
         .CreateDefaultBuilder(args)
