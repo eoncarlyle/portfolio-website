@@ -36,6 +36,7 @@ jobs:
         run: cp -r zk-reverse-proxy-core $RUNTIME_DIR
  
   distribute:
+    needs: build
     runs-on: self-hosted
     env:
       KEY1:  /home/iain/vm-management/host1/.vagrant/machines/default/virtualbox/private_key
@@ -49,10 +50,10 @@ jobs:
         run: ssh -i $KEY2 vagrant@192.168.6.13
         
       - name: Copying new runtime directory on host 1
-        run: scp -i $KEY1 bin/Release/net8.0/* vagrant@192.168.6.12:~/portfolio-website
+        run: scp -i -r $KEY1 bin/Release/net8.0/* vagrant@192.168.6.12:~/portfolio-website
       
       - name: Copying new runtime directory on host 2
-        run: scp -i $KEY2 bin/Release/net8.0/* vagrant@192.168.6.13:~/portfolio-website
+        run: scp -i -r $KEY2 bin/Release/net8.0/* vagrant@192.168.6.13:~/portfolio-website
       
       - name: Copying new runtime directory on host 1
         run: ssh -i $KEY1 vagrant@192.168.6.12 sudo systemctl restart portfolio-website
