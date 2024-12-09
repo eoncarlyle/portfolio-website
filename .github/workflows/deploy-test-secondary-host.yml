@@ -1,0 +1,76 @@
+name: Deploy Test Portfolio Website with Secondary Hosts
+
+on:
+  push:
+    branches:
+      - zk-reverse-proxy-secondary-host
+
+env:
+  RUNTIME_DIR: /home/iain/portfolio-website-test-secondary-host
+
+jobs:
+  build:
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build application
+        run: dotnet publish -c Release -o published
+
+      - name: Build reverse proxy
+        run: npm --prefix zk-reverse-proxy-core install && npm --prefix zk-reverse-proxy-core run build
+
+      - name: Remove runtime directory
+        run: rm -rf $RUNTIME_DIR
+
+      - name: Creating new runtime directory
+        run: mkdir $RUNTIME_DIR
+
+      # Probably not needed once this is fully taken care of 
+      - name: Copying application to new runtime directory
+        run: cp -r bin/Release/net8.0/* $RUNTIME_DIR
+
+      - name: Copying reverse proxy to new runtime directory
+        run: cp -r zk-reverse-proxy-core $RUNTIME_DIR
+ 
+  distribute:
+    runs-on: self-hosted
+    env:
+      KEY1:  /home/iain/vm-management/host1/.vagrant/machines/default/virtualbox/private_key
+      KEY2:  /home/iain/vm-management/host2/.vagrant/machines/default/virtualbox/private_key
+    
+    steps:
+      - name: Remove runtime directory on host 1
+        run: ssh -i $KEY1 vagrant@192.168.6.12
+    
+      - name: Remove runtime directory on host 2
+        run: ssh -i $KEY2 vagrant@192.168.6.13
+        
+      - name: Copying new runtime directory on host 1
+        run: scp -i $KEY1 bin/Release/net8.0/* vagrant@192.168.6.12:~/portfolio-website
+      
+      - name: Copying new runtime directory on host 2
+        run: scp -i $KEY2 bin/Release/net8.0/* vagrant@192.168.6.13:~/portfolio-website
+      
+      - name: Copying new runtime directory on host 1
+        run: ssh -i $KEY1 vagrant@192.168.6.12 sudo systemctl restart portfolio-website
+
+      - name: Copying new runtime directory on host 2
+        run: ssh -i $KEY2 vagrant@192.168.6.13 sudo systemctl restart portfolio-website
+  
+  
+  
+  restart-units:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      #- name: Restarting first app replica service
+      #  run: sudo systemctl --user -M iain@ restart portfolio-website-first-app-replica.service
+
+      #- name: Restarting second app replica service
+      #  run: sudo systemctl --user -M iain@ restart portfolio-website-second-app-replica.service
+
+      - name: Restarting reverse proxy
+        run: sudo systemctl --user -M iain@ restart portfolio-website-reverse-proxy.service
