@@ -44,16 +44,16 @@ jobs:
     
     steps:
       - name: Remove runtime directory on host 1
-        run: ssh -i $KEY1 vagrant@192.168.6.12
+        run: ssh -i $KEY1 vagrant@192.168.6.12 rm -rf ~/portfolio-website
     
       - name: Remove runtime directory on host 2
-        run: ssh -i $KEY2 vagrant@192.168.6.13
+        run: ssh -i $KEY2 vagrant@192.168.6.13 rm -rf ~/portfolio-website
         
       - name: Copying new runtime directory on host 1
-        run: scp -i -r $KEY1 bin/Release/net8.0/* vagrant@192.168.6.12:~/portfolio-website
+        run: scp -r -i $KEY1 bin/Release/net8.0/* vagrant@192.168.6.12:~/portfolio-website
       
       - name: Copying new runtime directory on host 2
-        run: scp -i -r $KEY2 bin/Release/net8.0/* vagrant@192.168.6.13:~/portfolio-website
+        run: scp -r -i $KEY2 bin/Release/net8.0/* vagrant@192.168.6.13:~/portfolio-website
       
       - name: Copying new runtime directory on host 1
         run: ssh -i $KEY1 vagrant@192.168.6.12 sudo systemctl restart portfolio-website
