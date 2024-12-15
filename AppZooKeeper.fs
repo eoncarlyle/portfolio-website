@@ -2,6 +2,8 @@ module AppZooKeeper
 
 open System.Threading.Tasks
 open org.apache.zookeeper
+open System
+open System.Text
 
 let TARGETS_ZNODE_PATH = "/targets"
 let noOpWatcherFunction (event: WatchedEvent) : Task = Task.CompletedTask
@@ -38,5 +40,16 @@ let configureZookeeper (hostPort: string) =
             CreateMode.EPHEMERAL
         )
         |> ignore
+
+        zooKeeper.createAsync ("/cacheAge", null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
+        |> ignore
+
+        zooKeeper.setDataAsync (
+            "/cacheAge",
+            Encoding.ASCII.GetBytes(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() |> Convert.ToString),
+            -1
+        )
+        |> ignore
+
     }
     |> ignore

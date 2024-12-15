@@ -1,6 +1,7 @@
 import ZooKeeper from "zookeeper";
 
 import Option from "./Option.js";
+import NodeCache from "node-cache";
 
 type ZkConfig = {
   connect: string; //ZK server connection string
@@ -13,10 +14,12 @@ type ZkConfig = {
 export type Target = {
   endpoint: string;
   count: number;
-  version: number
-}
+  version: number;
+};
 
-export const TARGETS_ZNODE_PATH = "/targets"
+export const TARGETS_ZNODE_PATH = "/targets";
+
+export const CACHE_DATE_ZNODE_PATH = "/cacheAge";
 
 export enum HttpMethod {
   GET = "GET",
@@ -25,15 +28,15 @@ export enum HttpMethod {
   DELETE = "DELETE",
   PATCH = "PATCH",
   HEAD = "HEAD",
-  OPTIONS = "OPTIONS"
+  OPTIONS = "OPTIONS",
 }
 
 // Only used in target server
 export const getSocketFromPort = (port: number, hostname = "127.0.0.1") =>
   `${TARGETS_ZNODE_PATH}/${hostname}:${port}`;
 
-export const getSocket = (hostname: string) => `${TARGETS_ZNODE_PATH}/${hostname}`
-
+export const getSocket = (hostname: string) =>
+  `${TARGETS_ZNODE_PATH}/${hostname}`;
 
 export const zkConfig = {
   connect: "127.0.0.1:2181",
@@ -54,8 +57,31 @@ export const getMaybeZnode = async (client: ZooKeeper, path: string) => {
     : Option.none<stat>();
 };
 
-export const createZnodeIfAbsent = async (client: ZooKeeper, path: string, flags?: number) => {
+export const createZnodeIfAbsent = async (
+  client: ZooKeeper,
+  path: string,
+  flags?: number,
+) => {
   if ((await getMaybeZnode(client, path)).isNone()) {
-    await client.create(path, "", flags || ZooKeeper.constants.ZOO_PERSISTENT)
+    await client.create(path, "", flags || ZooKeeper.constants.ZOO_PERSISTENT);
   }
-}
+};
+// data_cb : function(rc, error, stat, data)
+
+export const cacheResetWatch = async (
+  client: ZooKeeper,
+  path: string,
+  cache: NodeCache,
+) => {
+  if ((await getMaybeZnode(client, path)).isSome()) {
+    client.aw_get(
+      path,
+      (_type, _state, _path) => {
+        console.log("Clearing cache");
+        cache.close();
+        cacheResetWatch(client, path, cache);
+      },
+      (_rc, _error, _stat, _data) => {},
+    );
+  }
+};
