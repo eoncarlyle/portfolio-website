@@ -4,22 +4,23 @@
 **/
 
 :root {
-    --nord0: #2e3440;
-    --nord1: #3b4252;
-    --nord2: #434c5e;
-    --nord3: #4c566a;
-    --nord4: #d8dee9;
-    --nord5: #e5e9f0;
-    --nord6: #eceff4;
-    --nord7: #8fbcbb;
-    --nord8: #88c0d0;
-    --nord9: #81a1c1;
-    --nord10: #5e81ac;
-    --nord11: #bf616a;
-    --nord12: #d08770;
-    --nord13: #ebcb8b;
-    --nord14: #a3be8c;
-    --nord15: #b48ead;
+    --colorBase: #181825;
+    --color0: #1e1e2e;
+    --color1: #313244;
+    --color2: #45475a;
+    --color3: #585b70;
+    --color4: #a6adc8;
+    --color5: #bac2de;
+    --color6: #cdd6f4;
+    --color7: #94e2d5;
+    --color8: #89dceb;
+    --color9: #74c7ec;
+    --color10: #89b4fa;
+    --color11: #f38ba8;
+    --color12: #fab387;
+    --color13: #f9e2af;
+    --color14: #a6e3a1;
+    --color15: #c6a0f6;
     --max-width: 670pt;
     --default-padding: 1rem;
     --rule-height: 2pt;
@@ -34,10 +35,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.7;
     width: 100%;
-    background-color: var(--nord0);
+    background-color: var(--color0);
 
     ::selection {
-        background: var(--nord3);
+        background: var(--color2);
     }
 }
 
@@ -58,11 +59,11 @@ h5,
 h6,
 p,
 li {
-    color: var(--nord5);
+    color: var(--color5);
 }
 
 hr {
-    background: var(--nord9);
+    background: var(--color12);
     height: var(--rule-height);
     border: 0;
 }
@@ -79,7 +80,7 @@ img {
 }
 
 a {
-    color: var(--nord9);
+    color: var(--color12);
     text-decoration: none;
 }
 
@@ -109,13 +110,13 @@ li {
 }
 
 p code {
-    background: var(--nord1);
+    background: var(--colorBase);
     border-radius: 0.3em;
     padding: 0.1em;
 }
 
 blockquote {
-    background-color: var(--nord1);
+    background-color: var(--colorBase);
     border-radius: 0.3em;
     padding: 1em;
     margin: 0.5em 0;
