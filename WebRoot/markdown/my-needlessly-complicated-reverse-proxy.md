@@ -10,9 +10,9 @@ After moving my personal website to my home DMZ network over a public cloud reve
 
 ZooKeeper is a key-value store for managing the state of distributed applications. The project started at Yahoo!, where many engineering teams working on distributed applications ended up duplicating effort in solving the same problems while introducing the same failure modes to their applications. What became ZooKeeper was a common solution to allow engineers to focus more on business logic and less on reading distributed systems academic research. The service is generally run as an ensemble of _2N - 1_ servers where _N>2_, and two motivations for this configuration are for fault tolerance and master election. Only a single master node in the ZooKeeper ensemble is capable of writing to the data store, and only once a write is recognised by a majority of the cluster members including the master is the write committed. This allows the data store to remain operational provided that a majority of the cluster is available. On ensemble startup, or if the master ZooKeeper server becomes unavailable, the ZooKeeper cluster elects a new master. An odd number of nodes prevents a 50/50 deadlocked master election in these cases. [^zookeeper-book]
 
-## Reverse Proxy Server 
+## Reverse Proxy Server
 
-While ZooKeeper is normally used for more interesting things, I decided to use it for service discovery and load balancing over the replicas serving the [test.iainschmitt.com](test.iainschmitt.com) static website. On startup, every replica writes to a `/targets/$hostName` znode; znodes being a node in the ZooKeeper data store. ZooKeeper supports both nodes that will persist until explicitly deleted as well as ephemeral ones that will be deleted once the client that created them in the first place is disconnected from the ZooKeeper ensemble. By using ephemeral lifetimes for replica znodes, unreachable target replicas would be removed from consideration by the reverse proxy. 
+While ZooKeeper is normally used for more interesting things, I decided to use it for service discovery and load balancing over the replicas serving the <a href="https://test.iainschmitt.com">test.iainschmitt.com</a>. static website. On startup, every replica writes to a `/targets/$hostName` znode; znodes being a node in the ZooKeeper data store. ZooKeeper supports both nodes that will persist until explicitly deleted as well as ephemeral ones that will be deleted once the client that created them in the first place is disconnected from the ZooKeeper ensemble. By using ephemeral lifetimes for replica znodes, unreachable target replicas would be removed from consideration by the reverse proxy.
 
 When an uncached request for a particular URL reaches the reverse proxy, it lists the children of `/targets` to determine potential reverse proxy targets. The value stored in the `/targets/$hostName` znode is the count of cumulative requests to that target, so the target with the fewest requests is select and it's count incremented if the connection succeeds. If the first attempted target fails to respond, the next least commonly used is attempted. The request cache is cleared whenever a new replica comes online, which would most commonly happen during an application update.
 
@@ -95,9 +95,9 @@ Event emitting is a pretty unique flow control primitive which I haven't seen an
 
 ## Shortcomings and Future Development
 
-This ZooKeeper enabled reverse proxy currently serves [test.iainschmitt.com](test.iainschmitt.com) across two replicas, this is naturally ridiculous overkill and there are dozens of out-of-the-box solutions to do this better. But given that this isn't for production use, that attitude is <a href="/post/reinventing-the-wheel-to-go-back-in-time">no fun</a>. With that said, one less obvious way that this is an absurd solution is that ZooKeeper was designed for distributed system workloads with more reads than writes, but right now the `/targets` znode is queried before updating the cumulative request count of the chosen target server, making for a 1:1 ratio between reads and writes. [^zookeeper-article] Right now I'm operating a single reverse proxy server, a single ZooKeeper in the ensemble, and both target server replicas on the same physical host, but that's just a little bit of system administration away from being fixed.
+This ZooKeeper enabled reverse proxy currently serves <a href="https://test.iainschmitt.com">test.iainschmitt.com</a>. across two replicas, this is naturally ridiculous overkill and there are dozens of out-of-the-box solutions to do this better. But given that this isn't for production use, that attitude is <a href="/post/reinventing-the-wheel-to-go-back-in-time">no fun</a>. With that said, one less obvious way that this is an absurd solution is that ZooKeeper was designed for distributed system workloads with more reads than writes, but right now the `/targets` znode is queried before updating the cumulative request count of the chosen target server, making for a 1:1 ratio between reads and writes. [^zookeeper-article] Right now I'm operating a single reverse proxy server, a single ZooKeeper in the ensemble, and both target server replicas on the same physical host, but that's just a little bit of system administration away from being fixed.
 
-Apache ZooKeeper provides a few convinces for notifying clients about changes in the data store. ZooKeeper watches are one of these features, and I put them to use for clearing the reverse proxy cache when a new replica becomes available. A target server will write the current date time to `/cacheAge` during startup, and the reverse proxy calls the function below to clear the request cache accordingly. Because watches only last for a single change notification, in the code below I have reset the watch every time it is triggered but there really has to be a more elegant and error-resilient way to do this. 
+Apache ZooKeeper provides a few convinces for notifying clients about changes in the data store. ZooKeeper watches are one of these features, and I put them to use for clearing the reverse proxy cache when a new replica becomes available. A target server will write the current date time to `/cacheAge` during startup, and the reverse proxy calls the function below to clear the request cache accordingly. Because watches only last for a single change notification, in the code below I have reset the watch every time it is triggered but there really has to be a more elegant and error-resilient way to do this.
 
 ```typescript
 export const cacheResetWatch = async (
@@ -123,7 +123,7 @@ The caching logic in general needs work; the cache TTL is 120 seconds and if the
 
 Since leaving RELEX, I've heard many complaints like the following about my favourite fault-tolerant key-value store, such as on episode \#116 of the _Ship It!_ Dev Ops podcast:
 
-> The worst outage I ever had is I was at Elastic, an engineering all hands in Berlin. It was a great place. I loved it. So all the SREs were there. And we did this to ourselves. Let me just preface this by saying… Because we relied on something that you should never rely on, and it’s called Zookeeper. 
+> The worst outage I ever had is I was at Elastic, an engineering all hands in Berlin. It was a great place. I loved it. So all the SREs were there. And we did this to ourselves. Let me just preface this by saying… Because we relied on something that you should never rely on, and it’s called Zookeeper.
 >
 > Half of the gray in this beard is from Zookeeper. So many things that you know, and probably love, and also hate… You probably love it if you don’t have to actually do the operations for Zookeeper, and if you’re on operations with Zookeeper, you absolutely hate Zookeeper. Zookeeper is the bane of your infrastructure, necessary as it may be.
 
@@ -140,8 +140,8 @@ As someone who _was_ on the operations side of ZooKeeper, I have to disagree. Bu
 
 [^zookeeper-article]: Hunt, P., Konar, M., Junqueria, F. P., and Reed, B. "ZooKeeper: Wait-free Coordination for Internet-Scale Systems", in _Usenix ATC_, June 2010.
 
-[^node-types]: [`node:stream` TypeScript types](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/node/stream.d.t) 
+[^node-types]: [`node:stream` TypeScript types](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/node/stream.d.t)
 
 [^ship-it]: [_Ship It!_ Episode \#116](https://changelog.com/shipit/116)
 
-[^node-http-request]: [Node `http.request` Documentation](https://nodejs.org/api/http.html#httprequesturl-options-callback) 
+[^node-http-request]: [Node `http.request` Documentation](https://nodejs.org/api/http.html#httprequesturl-options-callback)
