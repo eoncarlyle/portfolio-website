@@ -121,7 +121,7 @@ export const cacheResetWatch = async (
 
 The caching logic in general needs work; the cache TTL is 120 seconds and if the current target server git commit was recorded in ZooKeeper rather than the timestamp of the last replica restart then the cache could be cleared only when the content of the target server has actually changed.
 
-Since leaving RELEX, I've heard many complaints like the following about my favourite fault-tolerant key-value store, such as on episode \#116 of the _Ship It!_ Dev Ops podcast:
+Since leaving RELEX, I've heard many complaints like the following about my favourite fault-tolerant key-value store, such as on episode \#116 of the _Ship It!_ Dev Ops podcast: [^ship-it]
 
 > The worst outage I ever had is I was at Elastic, an engineering all hands in Berlin. It was a great place. I loved it. So all the SREs were there. And we did this to ourselves. Let me just preface this by saying… Because we relied on something that you should never rely on, and it’s called Zookeeper.
 >
