@@ -158,6 +158,6 @@ A few takeaways
 4) The only references to functional purity in this post were the function names `pureMapWriteToConfig` and `pureChainWriteToConfig`. While many discussions of monads will reference carrying out IO or mutable state without breaking functional purity, this isn't all that helpful in explaining what monads do given a) functors enable similar behaviour and b) `chain`/`bind` can be useful in situations where no side effects are carried out
 
 [^ramda]: [Ramda NPM Package](https://www.npmjs.com/package/ramda)
-[fp-ts]: [`fp-ts` NPM Package](https://www.npmjs.com/package/fp-ts). Note: `fp-ts` will appear in code segments in this article, consistent with the package documentation
+[^fp-ts]: [`fp-ts` NPM Package](https://www.npmjs.com/package/fp-ts). Note: `fp-ts` will appear in code segments in this article, consistent with the package documentation
 [^mostly-adequate]: [Mostly Adequate Guide to Functional Programming](https://github.com/MostlyAdequate/mostly-adequate-guide). Note: it appears that [Brian Lonsdorf](https://www.linkedin.com/in/drboolean/) started the project, but there are many other contributors to the current repository.
 [^paradox]: Unfortunately I have forgotten where I first read this, it isn't my original quip
