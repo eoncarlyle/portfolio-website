@@ -38,7 +38,7 @@ const singleMapApplied: string = singleMapFunction(); // = "MYSTRING"
 
 In the segment above, the argument to `mapIO` is a function that accepts a string and returns another string. The return value is itself a function, and it accepts an `IO<string>` and returns another `IO<string>`. This can be useful to sequentially apply multiple successive functions on the functor's value. While this can look messy in languages without a pipeline operator, the `fp-ts` pipe function can clean this up making `doubleMapMessy` and `doubleMapPipe` equivalent in the following.
 
-```TypeScript
+```typescript
 const doubleMapMessy: IO<string> = mapIO((input: string) =>
   input.toUpperCase(),
 )(mapIO((input: string) => input.repeat(2))(effect));
