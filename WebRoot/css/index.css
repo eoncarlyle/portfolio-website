@@ -109,7 +109,7 @@ li {
     text-align: left;
 }
 
-p code {
+:not(pre) > code {
     background: var(--colorBase);
     border-radius: 0.3em;
     padding: 0.1em;
