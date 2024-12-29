@@ -1,12 +1,12 @@
-export default class Option<T> {
+export default class ObsoleteOption<T> {
   private constructor(private readonly value: T | null) {}
 
-  static some<T>(value: T): Option<T> {
-    return new Option(value);
+  static some<T>(value: T): ObsoleteOption<T> {
+    return new ObsoleteOption(value);
   }
 
-  static none<T>(): Option<T> {
-    return new Option<T>(null);
+  static none<T>(): ObsoleteOption<T> {
+    return new ObsoleteOption<T>(null);
   }
 
   isSome(): boolean {
@@ -26,7 +26,9 @@ export default class Option<T> {
     return this.value ?? defaultValue;
   }
 
-  map<U>(fn: (value: T) => U): Option<U> {
-    return this.value === null ? Option.none() : Option.some(fn(this.value));
+  map<U>(fn: (value: T) => U): ObsoleteOption<U> {
+    return this.value === null
+      ? ObsoleteOption.none()
+      : ObsoleteOption.some(fn(this.value));
   }
 }

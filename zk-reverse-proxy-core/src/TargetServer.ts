@@ -1,5 +1,5 @@
 import ZooKeeper from "zookeeper";
-import {createServer, IncomingMessage, ServerResponse} from "node:http";
+import { createServer, IncomingMessage, ServerResponse } from "node:http";
 import * as process from "node:process";
 
 import {
@@ -8,10 +8,9 @@ import {
   getMaybeZnode,
   getSocketFromPort,
   createZnodeIfAbsent,
-  TARGETS_ZNODE_PATH
+  TARGETS_ZNODE_PATH,
 } from "./Main.js";
 import * as R from "ramda";
-
 
 type AppResponse = {
   statusCode: number;
@@ -26,7 +25,7 @@ const getAppResponse = (port: number, m: IncomingMessage) =>
   R.cond([
     [
       (m) => R.and(m.method === "GET", m.url === "/"),
-      R.always(appResponse(200, `Served on port ${port}`)),
+      R.always(appResponse(200, `Sered on port ${port}`)),
     ],
     [
       (m) => m.method !== "GET",
@@ -63,15 +62,12 @@ const targetServer = async (zkClient: ZooKeeper, port: number) => {
 
 const targetServerZk = createZkClient(zkConfig);
 
-createZnodeIfAbsent(targetServerZk, TARGETS_ZNODE_PATH)
-
+createZnodeIfAbsent(targetServerZk, TARGETS_ZNODE_PATH);
 
 if (process.argv.length !== 3) {
-  console.log("node targetServer [portNumber]")
-  process.exit(1)
+  console.log("node targetServer [portNumber]");
+  process.exit(1);
 } else {
-  const port = Number(process.argv[2])
-  await targetServer(targetServerZk, port)
+  const port = Number(process.argv[2]);
+  await targetServer(targetServerZk, port);
 }
-
-

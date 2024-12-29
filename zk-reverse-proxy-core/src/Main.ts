@@ -1,7 +1,20 @@
 import ZooKeeper from "zookeeper";
+import { IO } from "fp-ts/IO";
 
-import Option from "./Option.js";
+// TODO fix these dastardly imports
+
+import {
+  TaskOption,
+  none,
+  some,
+  fromTask,
+  chain as taskChain,
+  fold as taskOptionFold,
+} from "fp-ts/TaskOption";
+import { Task, of as taskOf } from "fp-ts/Task";
 import NodeCache from "node-cache";
+import { pipe } from "fp-ts/function";
+import ObsoleteOption from "Option.js";
 
 type ZkConfig = {
   connect: string; //ZK server connection string
@@ -53,8 +66,19 @@ export const createZkClient = (config: ZkConfig) => {
 
 export const getMaybeZnode = async (client: ZooKeeper, path: string) => {
   return (await client.pathExists(path, false))
-    ? Option.some(await client.exists(path, false)) //! This makes the assumption that the znode wasn't deleted between this line and the previous
-    : Option.none<stat>();
+    ? ObsoleteOption.some(await client.exists(path, false)) //! This makes the assumption that the znode wasn't deleted between this line and the previous
+    : ObsoleteOption.none<stat>();
+};
+
+export const _getMaybeZnode = (
+  client: ZooKeeper,
+  path: string,
+): TaskOption<stat> => {
+  return pipe(
+    pipe(() => client.pathExists(path, false), fromTask),
+    taskChain((exists: boolean) => (exists ? some(path) : none)),
+    taskChain((path: string) => fromTask(() => client.exists(path, false))),
+  );
 };
 
 export const createZnodeIfAbsent = async (
@@ -67,6 +91,25 @@ export const createZnodeIfAbsent = async (
   }
 };
 // data_cb : function(rc, error, stat, data)
+
+export const _createZnobdeIfAbsent = (
+  client: ZooKeeper,
+  path: string,
+  flags?: number,
+): Task<IO<void>> =>
+  pipe(
+    _getMaybeZnode(client, path),
+    taskOptionFold(
+      () => {
+        return taskOf(() => {});
+      },
+      (_stat) => {
+        return taskOf(() =>
+          client.create(path, "", flags || ZooKeeper.constants.ZOO_PERSISTENT),
+        );
+      },
+    ),
+  );
 
 export const cacheResetWatch = async (
   client: ZooKeeper,
@@ -85,3 +128,29 @@ export const cacheResetWatch = async (
     );
   }
 };
+
+export const _cacheResetWatch = (
+  client: ZooKeeper,
+  path: string,
+  cache: NodeCache,
+): Task<IO<void>> =>
+  pipe(
+    _getMaybeZnode(client, path),
+    taskOptionFold(
+      () => {
+        return taskOf(() => {});
+      },
+      (_stat) =>
+        taskOf(() => {
+          client.aw_get(
+            path,
+            (_type, _state, _path) => {
+              console.log("Clearing cache");
+              cache.close();
+              _cacheResetWatch(client, path, cache)().then((io) => io());
+            },
+            (_rc, _error, _stat, _data) => {},
+          );
+        }),
+    ),
+  );

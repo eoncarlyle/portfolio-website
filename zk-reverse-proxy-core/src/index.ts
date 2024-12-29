@@ -14,6 +14,9 @@ import {
 //import * as console from "node:console";
 import NodeCache from "node-cache";
 
+import * as T from "fp-ts/Task";
+import * as IOE from "fp-ts/IOEither";
+
 const reverseProxyZk = createZkClient(zkConfig);
 await createZnodeIfAbsent(reverseProxyZk, TARGETS_ZNODE_PATH);
 await createZnodeIfAbsent(reverseProxyZk, CACHE_DATE_ZNODE_PATH);
@@ -66,6 +69,15 @@ const updateTargetHostCount = async (
     );
     throw e;
   }
+};
+
+const _updateTargetHostCount = async (
+  candidateSockets: Target[],
+  candidateIndex: number,
+): T.Task<IOE.IOEither<Error, void>> => {
+  const selectedTargetHost = candidateSockets[candidateIndex];
+
+  tryC;
 };
 
 const getTargets = async (incomingTargets: Target[]) => {
