@@ -16,6 +16,9 @@ import NodeCache from "node-cache";
 
 import * as T from "fp-ts/Task";
 import * as IOE from "fp-ts/IOEither";
+import * as E from "fp-ts/Either";
+import * as TE from "fp-ts/TaskEither";
+import { pipe } from "fp-ts/function";
 
 const reverseProxyZk = createZkClient(zkConfig);
 await createZnodeIfAbsent(reverseProxyZk, TARGETS_ZNODE_PATH);
@@ -71,14 +74,25 @@ const updateTargetHostCount = async (
   }
 };
 
-const _updateTargetHostCount = async (
+// Picking between TaskEither and Task of IOEither was annoying
+const _updateTargetHostCount = (
   candidateSockets: Target[],
   candidateIndex: number,
-): T.Task<IOE.IOEither<Error, void>> => {
-  const selectedTargetHost = candidateSockets[candidateIndex];
-
-  tryC;
-};
+): TE.TaskEither<Error, void> =>
+  pipe(
+    candidateSockets[candidateIndex],
+    (host) =>
+      TE.tryCatch(
+        () =>
+          reverseProxyZk.set(
+            getSocket(host.endpoint),
+            String(host.count + 1),
+            host.version,
+          ),
+        E.toError,
+      ),
+    TE.map((_) => {}),
+  );
 
 const getTargets = async (incomingTargets: Target[]) => {
   const sockets = await reverseProxyZk.get_children(TARGETS_ZNODE_PATH, false);
@@ -143,7 +157,7 @@ const requestListener = async (
               const body = chunks.join("");
               outerRes.write(body);
               outerRes.end();
-              httpCache.set<string>(key, body, 100);
+              httpCache.set<string>(key, body);
             } catch (e) {
               await requestListener(
                 outerReq,

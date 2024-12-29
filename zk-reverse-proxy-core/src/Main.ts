@@ -1,17 +1,9 @@
 import ZooKeeper from "zookeeper";
-import { IO } from "fp-ts/IO";
 
 // TODO fix these dastardly imports
-
-import {
-  TaskOption,
-  none,
-  some,
-  fromTask,
-  chain as taskChain,
-  fold as taskOptionFold,
-} from "fp-ts/TaskOption";
-import { Task, of as taskOf } from "fp-ts/Task";
+import * as I from "fp-ts/IO";
+import * as TO from "fp-ts/TaskOption";
+import * as T from "fp-ts/Task";
 import NodeCache from "node-cache";
 import { pipe } from "fp-ts/function";
 import ObsoleteOption from "Option.js";
@@ -73,11 +65,12 @@ export const getMaybeZnode = async (client: ZooKeeper, path: string) => {
 export const _getMaybeZnode = (
   client: ZooKeeper,
   path: string,
-): TaskOption<stat> => {
+): TO.TaskOption<stat> => {
   return pipe(
-    pipe(() => client.pathExists(path, false), fromTask),
-    taskChain((exists: boolean) => (exists ? some(path) : none)),
-    taskChain((path: string) => fromTask(() => client.exists(path, false))),
+    //pipe(() => client.pathExists(path, false), fromTask),
+    pipe(() => client.pathExists(path, false), TO.fromTask),
+    TO.chain((exists: boolean) => (exists ? TO.some(path) : TO.none)),
+    TO.chain((path: string) => TO.fromTask(() => client.exists(path, false))),
   );
 };
 
@@ -96,15 +89,15 @@ export const _createZnobdeIfAbsent = (
   client: ZooKeeper,
   path: string,
   flags?: number,
-): Task<IO<void>> =>
+): T.Task<I.IO<void>> =>
   pipe(
     _getMaybeZnode(client, path),
-    taskOptionFold(
+    TO.fold(
       () => {
-        return taskOf(() => {});
+        return T.of(() => {});
       },
       (_stat) => {
-        return taskOf(() =>
+        return T.of(() =>
           client.create(path, "", flags || ZooKeeper.constants.ZOO_PERSISTENT),
         );
       },
@@ -133,15 +126,15 @@ export const _cacheResetWatch = (
   client: ZooKeeper,
   path: string,
   cache: NodeCache,
-): Task<IO<void>> =>
+): T.Task<I.IO<void>> =>
   pipe(
     _getMaybeZnode(client, path),
-    taskOptionFold(
+    TO.fold(
       () => {
-        return taskOf(() => {});
+        return T.of(() => {});
       },
       (_stat) =>
-        taskOf(() => {
+        T.of(() => {
           client.aw_get(
             path,
             (_type, _state, _path) => {
