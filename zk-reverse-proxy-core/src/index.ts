@@ -116,6 +116,39 @@ const getTargets = async (incomingTargets: Target[]) => {
     : incomingTargets;
 };
 
+const _getTargets = (incomingTargets: Target[]): T.Task<readonly Target[]> =>
+  incomingTargets.length === 0 ? _readTargets() : T.of(incomingTargets);
+
+const _readTargets = (): T.Task<readonly Target[]> =>
+  pipe(
+    T.fromTask(() => reverseProxyZk.get_children(TARGETS_ZNODE_PATH, false)),
+    T.chain((targets: string[]) =>
+      pipe(
+        targets.map((hostname) => {
+          return pipe(
+            T.fromTask(() => reverseProxyZk.get(getSocket(hostname), false)),
+            T.map((response) => {
+              const [znodeStat, data] = response as [stat, object];
+              return {
+                endpoint: hostname,
+                count: data ? parseInt(data.toString()) : 0,
+                version: znodeStat.version,
+              } as Target;
+            }),
+          );
+        }),
+        T.sequenceArray,
+      ),
+    ),
+  );
+
+/*
+- The next handler needs to be broken down into more functions
+- Don't start with the man/larget happy path, instead start with everything...
+...else and make a dedicated function for the big thing
+
+*/
+
 const requestListener = async (
   outerReq: IncomingMessage,
   outerRes: ServerResponse,
@@ -134,6 +167,85 @@ const requestListener = async (
 
         // Should only have to make ZK writes in event of cache miss
         await updateTargetHostCount(targets, targetIndex); // Replacing with shuffle didn't meaningfully improve: search commits
+        const innerReq = http.request(
+          getHttpOptions(targets, outerReq.url, targetIndex),
+        );
+        // Writing JSON, multipart form, etc. in body would need to happen before this point
+        // While this isn't needed for current implementation, would be required later on
+
+        innerReq.end();
+        innerReq.on("response", (innerRes) => {
+          // I think the fact that incoming message doesn't just have a body - and that is streamed instead -is meaningful
+          outerRes.writeHead(innerRes.statusCode || 200, outerReq.headers);
+          innerRes.setEncoding("utf-8");
+          const chunks: string[] = [];
+
+          innerRes.on("data", (chunk) => {
+            chunks.push(chunk);
+          });
+
+          innerRes.on("end", async () => {
+            // Caching required going over to event handlers rather than
+            try {
+              const body = chunks.join("");
+              outerRes.write(body);
+              outerRes.end();
+              httpCache.set<string>(key, body);
+            } catch (e) {
+              await requestListener(
+                outerReq,
+                outerRes,
+                targets,
+                targetIndex + 1,
+              );
+            }
+          });
+        });
+
+        innerReq.on("error", async () => {
+          // Try/catch is not enough, need explicit error event listener
+          await requestListener(outerReq, outerRes, targets, targetIndex + 1);
+        });
+      } else if (httpCache.get(key)) {
+        const body = httpCache.get<string>(key);
+        outerRes.writeHead(200, outerReq.headers);
+        outerRes.end(body);
+      }
+    } catch (e: any) {
+      await requestListener(
+        outerReq,
+        outerRes,
+        await getTargets(incomingTargets),
+        targetIndex + 1,
+      );
+    }
+  } else if (targetIndex >= incomingTargets.length) {
+    outerRes.writeHead(500);
+    outerRes.write("Internal Error");
+    outerRes.end();
+  } else {
+    outerRes.writeHead(400);
+    outerRes.end("Bad Request");
+  }
+};
+
+const _requestListener = async (
+  outerReq: IncomingMessage,
+  outerRes: ServerResponse,
+  incomingTargets: Target[] = [],
+  targetIndex: number = 0,
+) => {
+  if (
+    outerReq.url !== undefined &&
+    (incomingTargets.length === 0 || targetIndex < incomingTargets.length)
+  ) {
+    try {
+      //const key = JSON.stringify(options) //Why did `options.path` not work?
+      const key = getKey(outerReq.url, outerReq.method);
+      if (outerReq.method !== HttpMethod.GET || !httpCache.get(key)) {
+        const targets = _getTargets(incomingTargets);
+
+        await updateTargetHostCount(targets, targetIndex);
         const innerReq = http.request(
           getHttpOptions(targets, outerReq.url, targetIndex),
         );
