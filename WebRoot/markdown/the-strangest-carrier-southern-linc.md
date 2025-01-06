@@ -1,6 +1,6 @@
 ---
 title: The Strangest Carrier: Southern Linc
-date: 2024.12.26
+date: 2025.01.05
 ---
 # The Strangest Carrier: Southern Linc
 
