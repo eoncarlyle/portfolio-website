@@ -46,7 +46,7 @@ body {
     padding: var(--default-padding);
     max-width: var(--max-width);
     margin: auto;
-    @media (min-width: 768px) {
+    @media (min-width: 925px) {
         padding-left: calc(100vw - 100%);
     }
 }
