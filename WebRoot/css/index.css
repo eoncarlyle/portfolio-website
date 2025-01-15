@@ -93,7 +93,7 @@ p {
 }
 
 code {
-    font-family: "FantasqueSansMonoRegular" monospace;
+    font-family: "FantasqueSansMonoRegular", monospace;
 }
 
 li {
