@@ -3,7 +3,6 @@ module Portfolio.App
 open System
 open System.IO
 open Microsoft.AspNetCore.Builder
-open Microsoft.AspNetCore.Cors.Infrastructure
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
@@ -41,36 +40,32 @@ let configureLogging (builder: ILoggingBuilder) =
 
 
 //TODO: better validation
-type NetworkArgs =
-    { ZkConnectString: string
-      HostAddress: string
-      HostPort: string }
 
-let getNetworkArgs args =
+
+let getRuntimeArgs args: AppZooKeeper.RuntimeArgs option=
     match (Array.length args) with
-    | 3 ->
+    | 4 ->
         Some
             { ZkConnectString = Array.get args 0
               HostAddress = Array.get args 1
-              HostPort = Array.get args 2 }
+              HostPort = Array.get args 2
+              CommitSHA = Array.get args 3}
     | _ -> None
 
 [<EntryPoint>]
 let main args =
-    // Intentionally unrecoverably fails if bad 
-    let networkArgs = getNetworkArgs args |> Option.get
+    // Intentionally fails if absent
+    let runtimeArgs = getRuntimeArgs args |> Option.get
 
-    let zkConnectString = networkArgs.ZkConnectString
-    let hostAddress = networkArgs.HostAddress
-    let hostPort = networkArgs.HostPort
-    
-    AppZooKeeper.configureZookeeper zkConnectString hostAddress hostPort
+    match runtimeArgs.ZkConnectString with
+    | "-1" -> ()
+    | _ -> AppZooKeeper.configureZookeeper runtimeArgs
 
     Host
         .CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
-                .UseUrls($"http://{hostAddress}:{hostPort}")
+                .UseUrls($"http://{runtimeArgs.HostAddress}:{runtimeArgs.HostPort}")
                 .UseContentRoot(AppHandlers.contentRoot)
                 .UseWebRoot(AppHandlers.webRoot)
                 .Configure(Action<IApplicationBuilder> configureApp)

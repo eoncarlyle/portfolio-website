@@ -6,11 +6,21 @@ open System
 open System.Text
 
 let TARGETS_ZNODE_PATH = "/targets"
+
+let COMMIT_ZNODE_PATH = "/portfolioApplicationCommit"
+
 let noOpWatcherFunction (event: WatchedEvent) : Task = Task.CompletedTask
 
 type NoOpWatcher() =
     inherit Watcher()
     override _.process(event: WatchedEvent) : Task = Task.CompletedTask
+
+type RuntimeArgs =
+    { ZkConnectString: string
+      HostAddress: string
+      HostPort: string
+      CommitSHA: string
+      }
 
 let getZooKeeper zkConnectString =
     new ZooKeeper(zkConnectString, 3000, NoOpWatcher())
@@ -18,8 +28,12 @@ let getZooKeeper zkConnectString =
 let getCurrentTargetZnodePath hostAddress hostPort =
     $"{TARGETS_ZNODE_PATH}/{hostAddress}:{hostPort}"
 
-let configureZookeeper (zkConnectString: string) (hostAddress: string) (hostPort: string) =
+let configureZookeeper runtimeArgs =
    task {
+        let zkConnectString = runtimeArgs.ZkConnectString
+        let hostAddress = runtimeArgs.HostAddress
+        let hostPort = runtimeArgs.HostPort
+        let commitSHA = runtimeArgs.HostAddress
         let zooKeeper = getZooKeeper zkConnectString
         let! targetListStat = zooKeeper.existsAsync TARGETS_ZNODE_PATH
         let currentTargetZnodePath = getCurrentTargetZnodePath hostAddress hostPort
@@ -36,15 +50,14 @@ let configureZookeeper (zkConnectString: string) (hostAddress: string) (hostPort
         zooKeeper.createAsync (currentTargetZnodePath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL)
         |> ignore
 
-        zooKeeper.createAsync ("/cacheAge", null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
+        zooKeeper.createAsync (COMMIT_ZNODE_PATH, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
         |> ignore
+        
+        let! commitZnode = zooKeeper.getDataAsync COMMIT_ZNODE_PATH
+        
+        match commitZnode.Data.ToString() with
+        | sha when sha = commitSHA -> ()
+        | _ -> zooKeeper.setDataAsync(COMMIT_ZNODE_PATH, Encoding.UTF8.GetBytes(commitSHA), -1 ) |> ignore
+        
 
-        zooKeeper.setDataAsync (
-            "/cacheAge",
-            Encoding.ASCII.GetBytes(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() |> Convert.ToString),
-            -1
-        )
-        |> ignore
-
-    }
-    |> ignore
+    }|> ignore

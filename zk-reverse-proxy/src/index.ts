@@ -15,6 +15,7 @@ import {
 import NodeCache from "node-cache";
 import ZooKeeperPromise from "zookeeper";
 import { argv } from "node:process";
+import {PORTFOLIO_APPLICATION_COMMIT} from "./Main";
 
 // TODO fix typing
 const getKey = (reqUrl: string, method: string | undefined) => {
@@ -183,10 +184,10 @@ if (argv.length != 4) {
 
   const reverseProxyZkClient = createZkClient(getZkConfig(zkConnectString));
   await createZnodeIfAbsent(reverseProxyZkClient, TARGETS_ZNODE_PATH);
-  await createZnodeIfAbsent(reverseProxyZkClient, CACHE_DATE_ZNODE_PATH);
+  await createZnodeIfAbsent(reverseProxyZkClient, PORTFOLIO_APPLICATION_COMMIT);
 
   const httpCache = new NodeCache({});
-  await cacheResetWatch(reverseProxyZkClient, CACHE_DATE_ZNODE_PATH, httpCache);
+  await cacheResetWatch(reverseProxyZkClient, PORTFOLIO_APPLICATION_COMMIT, httpCache);
 
   createServer(requestListener(reverseProxyZkClient, httpCache)).listen(port);
 }

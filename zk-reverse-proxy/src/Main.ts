@@ -19,7 +19,7 @@ export type Target = {
 
 export const TARGETS_ZNODE_PATH = "/targets";
 
-export const CACHE_DATE_ZNODE_PATH = "/cacheAge";
+export const PORTFOLIO_APPLICATION_COMMIT = "/portfolioApplicationCommit";
 
 export enum HttpMethod {
   GET = "GET",
