@@ -17,11 +17,11 @@ jobs:
 
       - name: Build ZK Reverse Proxy
         run: |
-          cd zk-reverse-proxy  # Adjust path as needed
+          cd zk-reverse-proxy-core
           sudo podman build -t localhost/zk-reverse-proxy:latest .
 
       - name: Build Portfolio Application
         run: |
-          cd portfolio-application  # Adjust path as needed
+          cd portfolio-application
           dotnet publish -c Release
           sudo podman build -t localhost/portfolio-application:latest .
