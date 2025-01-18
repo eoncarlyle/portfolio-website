@@ -7,8 +7,13 @@ RUN addgroup --system --gid 1001 nodejs && \
     chown -R nodeuser:nodejs /app
 
 COPY package*.json ./
-
-RUN npm install
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python3 make g++ && \
+    npm ci && \
+    apt-get purge -y python3 make g++ && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY --chown=nodeuser:nodejs . .
 
