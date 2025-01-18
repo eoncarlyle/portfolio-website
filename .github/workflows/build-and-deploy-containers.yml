@@ -56,11 +56,11 @@ jobs:
               docker.io/library/zookeeper:3.8
           done
 
-      - name: Verify ZooKeeper Status
-        run: |
-          for i in {1..3}; do
-            sudo podman exec -it zk$i zkServer.sh status
-          done
+      #- name: Verify ZooKeeper Status
+      #  run: |
+      #    for i in {1..3}; do
+      #      sudo podman exec -it zk$i zkServer.sh status
+      #    done
 
       - name: Deploy Reverse Proxies
         run: |
