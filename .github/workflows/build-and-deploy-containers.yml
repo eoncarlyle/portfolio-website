@@ -1,16 +1,30 @@
-# .github/workflows/deploy-containers.yml
-name: Deploy Containers
+name: Build and Deploy Container Images
 
 on:
   push:
     branches:
- #     - zk-reverse-proxy-2025-01
- # workflow_run:
- #   workflows: ["Build Container Images"]
- #   types:
- #     - completed
+      - zk-reverse-proxy-2025-01
 
 jobs:
+  build:
+    name: Build Images
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build ZK Reverse Proxy
+        run: |
+          cd zk-reverse-proxy-core
+          sudo podman build -t localhost/zk-reverse-proxy:latest .
+
+      - name: Build Portfolio Application
+        run: |
+          cd portfolio-application
+          dotnet publish -c Release
+          sudo podman build -t localhost/portfolio-application:latest .
+
   deploy:
     name: Deploy on santa-cruz
     runs-on: self-hosted
