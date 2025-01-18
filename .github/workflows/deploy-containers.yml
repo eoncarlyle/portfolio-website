@@ -1,0 +1,80 @@
+# .github/workflows/deploy-containers.yml
+name: Deploy Containers
+
+on:
+  push:
+    branches:
+      - zk-reverse-proxy-2025-01
+  workflow_run:
+    workflows: ["Build Container Images"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy on santa-cruz
+    runs-on: self-hosted
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Setup Network
+        run: |
+          sudo podman network exists podman_bridge_rootfull || \
+          sudo podman network create --driver bridge \
+            --subnet 192.168.100.0/24 \
+            --gateway 192.168.100.1 \
+            podman_bridge_rootfull
+
+      - name: Deploy ZooKeeper Ensemble
+        run: |
+          ZK_SERVERS="server.1=192.168.100.21:2888:3888;2181 \
+          server.2=192.168.100.22:2888:3888;2181 \
+          server.3=192.168.100.23:2888:3888;2181"
+          
+          for i in {1..3}; do
+            sudo podman run -d \
+              --name zk$i \
+              --replace \
+              --network podman_bridge_rootfull \
+              --ip 192.168.100.2$i \
+              -e ZOO_MY_ID=$i \
+              -e ZOO_SERVERS="$ZK_SERVERS" \
+              docker.io/library/zookeeper:3.8
+          done
+
+      - name: Verify ZooKeeper Status
+        run: |
+          for i in {1..3}; do
+            sudo podman exec -it zk$i zkServer.sh status
+          done
+
+      - name: Deploy Reverse Proxies
+        run: |
+          for i in {1..2}; do
+            sudo podman run -d \
+              --name zk-reverse-proxy-$i \
+              --replace \
+              --network podman_bridge_rootfull \
+              --ip 192.168.100.3$i \
+              --tls-verify=false \
+              localhost/zk-reverse-proxy:latest \
+              "192.168.100.21:2181,192.168.100.22:2181,192.168.100.23:2181" 1080
+          done
+
+      - name: Deploy Portfolio Applications
+        run: |
+          for i in {1..2}; do
+            sudo podman run -d \
+              --name portfolio-application-$i \
+              --replace \
+              --network podman_bridge_rootfull \
+              --ip 192.168.100.4$i \
+              --tls-verify=false \
+              localhost/portfolio-application:latest \
+              "192.168.100.21:2181,192.168.100.22:2181,192.168.100.23:2181" \
+              192.168.100.4$i 1080
+          done
+
+      - name: Verify Deployments
+        run: |
+          sudo podman ps --format "{{.Names}}: {{.Status}}"

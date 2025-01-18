@@ -1,0 +1,27 @@
+# .github/workflows/build-images.yml
+name: Build Container Images
+
+on:
+  push:
+    branches:
+      - zk-reverse-proxy-2025-01
+
+jobs:
+  build:
+    name: Build Images
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build ZK Reverse Proxy
+        run: |
+          cd zk-reverse-proxy  # Adjust path as needed
+          sudo podman build -t localhost/zk-reverse-proxy:latest .
+
+      - name: Build Portfolio Application
+        run: |
+          cd portfolio-application  # Adjust path as needed
+          dotnet publish -c Release
+          sudo podman build -t localhost/portfolio-application:latest .
