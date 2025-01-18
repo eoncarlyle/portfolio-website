@@ -12,7 +12,10 @@ open Giraffe
 open Giraffe.Razor
 
 let webApp =
-    choose [ GET >=> choose AppHandlers.appRoutes; HEAD >=> AppHandlers.headHandler; AppHandlers.error404Handler ]
+    choose
+        [ GET >=> choose AppHandlers.appRoutes
+          HEAD >=> AppHandlers.headHandler
+          AppHandlers.error404Handler ]
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
@@ -36,16 +39,39 @@ let configureServices (services: IServiceCollection) =
 let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
 
+
+//TODO: better validation
+type NetworkArgs =
+    { ZkConnectString: string
+      HostAddress: string
+      HostPort: string }
+
+let getNetworkArgs args =
+    match (Array.length args) with
+    | 3 ->
+        Some
+            { ZkConnectString = Array.get args 0
+              HostAddress = Array.get args 1
+              HostPort = Array.get args 2 }
+    | _ -> None
+
 [<EntryPoint>]
 let main args =
-    let hostPort = Array.tryHead args |> Option.orElse (Some "4080") |> Option.get
-    AppZooKeeper.configureZookeeper hostPort
+
+    // Intentionally unrecoverably fails if bad
+    let networkArgs = getNetworkArgs args |> Option.get
+
+    let zkConnectString = networkArgs.ZkConnectString
+    let hostAddress = networkArgs.HostAddress
+    let hostPort = networkArgs.HostPort
+
+    AppZooKeeper.configureZookeeper zkConnectString hostAddress hostPort
 
     Host
         .CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
-                .UseUrls($"http://localhost:{hostPort}") //! Address of host subject to change
+                .UseUrls($"http://{hostAddress}:{hostPort}")
                 .UseContentRoot(AppHandlers.contentRoot)
                 .UseWebRoot(AppHandlers.webRoot)
                 .Configure(Action<IApplicationBuilder> configureApp)

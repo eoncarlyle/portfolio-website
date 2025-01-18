@@ -19,7 +19,7 @@ await createZnodeIfAbsent(reverseProxyZk, TARGETS_ZNODE_PATH);
 await createZnodeIfAbsent(reverseProxyZk, CACHE_DATE_ZNODE_PATH);
 
 // Without caching couldn't really pass the Artillery test
-const httpCache = new NodeCache({ stdTTL: 100, checkperiod: 120 });
+const httpCache = new NodeCache({});
 
 await cacheResetWatch(reverseProxyZk, CACHE_DATE_ZNODE_PATH, httpCache);
 
@@ -70,24 +70,24 @@ const updateTargetHostCount = async (
 
 const getTargets = async (incomingTargets: Target[]) => {
   const sockets = await reverseProxyZk.get_children(TARGETS_ZNODE_PATH, false);
-  return incomingTargets.length === 0
-    ? R.sort(
-        R.ascend(R.prop("count")),
-        await Promise.all(
-          sockets.map(async (socket) => {
-            const [znodeStat, data] = (await reverseProxyZk.get(
-              getSocket(socket),
-              false,
-            )) as [stat, object];
-            return {
-              endpoint: socket,
-              count: data ? parseInt(data.toString()) : 0,
-              version: znodeStat.version,
-            };
-          }),
-        ),
-      )
-    : incomingTargets;
+  if (incomingTargets.length === 0) {
+    return R.sort(
+      R.ascend(R.prop("count")),
+      await Promise.all(
+        sockets.map(async (socket) => {
+          const [znodeStat, data] = (await reverseProxyZk.get(
+            getSocket(socket),
+            false,
+          )) as [stat, object];
+          return {
+            endpoint: socket,
+            count: data ? parseInt(data.toString()) : 0,
+            version: znodeStat.version,
+          };
+        }),
+      ),
+    );
+  } else return incomingTargets;
 };
 
 const requestListener = async (

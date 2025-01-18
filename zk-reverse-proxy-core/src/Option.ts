@@ -29,4 +29,20 @@ export default class Option<T> {
   map<U>(fn: (value: T) => U): Option<U> {
     return this.value === null ? Option.none() : Option.some(fn(this.value));
   }
+
+  ifPresentOrElse(onTrue: () => void, onFalse: () => void): void {
+    if (this.isSome()) {
+      return onTrue();
+    } else {
+      return onFalse();
+    }
+  }
+
+  ifPresent(onTrue: () => void): void {
+    return this.ifPresentOrElse(onTrue, () => {});
+  }
+
+  ifAbsent(onFalse: () => void): void {
+    return this.ifPresentOrElse(() => {}, onFalse);
+  }
 }

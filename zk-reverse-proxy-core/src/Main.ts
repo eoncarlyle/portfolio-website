@@ -38,6 +38,7 @@ export const getSocketFromPort = (port: number, hostname = "127.0.0.1") =>
 export const getSocket = (hostname: string) =>
   `${TARGETS_ZNODE_PATH}/${hostname}`;
 
+// TODO: this will be different
 export const zkConfig = {
   connect: "127.0.0.1:2181",
   timeout: 5000,
@@ -62,9 +63,9 @@ export const createZnodeIfAbsent = async (
   path: string,
   flags?: number,
 ) => {
-  if ((await getMaybeZnode(client, path)).isNone()) {
+  (await getMaybeZnode(client, path)).ifAbsent(async () => {
     await client.create(path, "", flags || ZooKeeper.constants.ZOO_PERSISTENT);
-  }
+  });
 };
 // data_cb : function(rc, error, stat, data)
 
@@ -73,7 +74,7 @@ export const cacheResetWatch = async (
   path: string,
   cache: NodeCache,
 ) => {
-  if ((await getMaybeZnode(client, path)).isSome()) {
+  (await getMaybeZnode(client, path)).ifPresent(() => {
     client.aw_get(
       path,
       (_type, _state, _path) => {
@@ -83,5 +84,5 @@ export const cacheResetWatch = async (
       },
       (_rc, _error, _stat, _data) => {},
     );
-  }
+  });
 };
