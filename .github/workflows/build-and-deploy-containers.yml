@@ -4,20 +4,60 @@ on:
   push:
     branches:
       - zk-reverse-proxy-2025-01
+    paths:
+      - 'zk-reverse-proxy/**'
+      - 'portfolio-application/**'
+      - '.github/workflows/**'
 
 jobs:
-  build:
-    name: Build Images
+  check_changes:
     runs-on: self-hosted
-
+    outputs:
+      zk_proxy_changed: ${{ steps.check_changes.outputs.zk_proxy_changed }}
+      portfolio_changed: ${{ steps.check_changes.outputs.portfolio_changed }}
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --name-only HEAD^ HEAD > changes.txt
+          
+          if grep -q "zk-reverse-proxy/" changes.txt; then
+            echo "zk_proxy_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "zk_proxy_changed=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if grep -q "portfolio-application/" changes.txt; then
+            echo "portfolio_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "portfolio_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+  build_zk_proxy:
+    needs: check_changes
+    if: needs.check_changes.outputs.zk_proxy_changed == 'true'
+    runs-on: self-hosted
+    
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Build ZK Reverse Proxy
         run: |
-          cd zk-reverse-proxy-core
+          cd zk-reverse-proxy
           sudo podman build -t localhost/zk-reverse-proxy:latest .
+
+  build_portfolio:
+    needs: check_changes
+    if: needs.check_changes.outputs.portfolio_changed == 'true'
+    runs-on: self-hosted
+    
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Build Portfolio Application
         run: |
@@ -26,8 +66,8 @@ jobs:
           sudo podman build -t localhost/portfolio-application:latest .
 
   deploy:
-    name: Deploy on santa-cruz
-    needs: build
+    needs: [check_changes, build_zk_proxy, build_portfolio]
+    if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true')
     runs-on: self-hosted
 
     steps:
@@ -54,6 +94,7 @@ jobs:
               -e ZOO_MY_ID=$i \
               -e ZOO_SERVERS="$ZK_SERVERS" \
               docker.io/library/zookeeper:3.8
+            sleep 1
           done
 
       #- name: Verify ZooKeeper Status
@@ -63,6 +104,7 @@ jobs:
       #    done
 
       - name: Deploy Reverse Proxies
+        if: needs.check_changes.outputs.zk_proxy_changed == 'true'
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -73,9 +115,11 @@ jobs:
               --tls-verify=false \
               localhost/zk-reverse-proxy:latest \
               "192.168.100.21:2181,192.168.100.22:2181,192.168.100.23:2181" 1080
+            sleep 1
           done
 
       - name: Deploy Portfolio Applications
+        if: needs.check_changes.outputs.portfolio_changed == 'true'
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -87,6 +131,7 @@ jobs:
               localhost/portfolio-application:latest \
               "192.168.100.21:2181,192.168.100.22:2181,192.168.100.23:2181" \
               192.168.100.4$i 1080
+            sleep 1
           done
 
       - name: Verify Deployments
