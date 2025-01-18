@@ -38,12 +38,13 @@ export const getSocketFromPort = (port: number, hostname = "127.0.0.1") =>
 export const getSocket = (hostname: string) =>
   `${TARGETS_ZNODE_PATH}/${hostname}`;
 
-// TODO: this will be different
-export const zkConfig = {
-  connect: "127.0.0.1:2181",
-  timeout: 5000,
-  debug_level: ZooKeeper.constants.ZOO_LOG_LEVEL_WARN,
-  host_order_deterministic: false,
+export const getZkConfig = (zkConnectString: string) => {
+  return {
+    connect: zkConnectString,
+    timeout: 5000,
+    debug_level: ZooKeeper.constants.ZOO_LOG_LEVEL_WARN,
+    host_order_deterministic: false,
+  };
 };
 
 export const createZkClient = (config: ZkConfig) => {
