@@ -48,11 +48,11 @@ type NetworkArgs =
 
 let getNetworkArgs args =
     match (Array.length args) with
-    | 3 ->
+    | 4 ->
         Some
-            { ZkConnectString = Array.get args 0
-              HostAddress = Array.get args 1
-              HostPort = Array.get args 2 }
+            { ZkConnectString = Array.get args 1
+              HostAddress = Array.get args 2
+              HostPort = Array.get args 3 }
     | _ -> None
 
 [<EntryPoint>]
