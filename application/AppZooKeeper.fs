@@ -19,10 +19,7 @@ let getCurrentTargetZnodePath hostAddress hostPort =
     $"{TARGETS_ZNODE_PATH}/{hostAddress}:{hostPort}"
 
 let configureZookeeper (zkConnectString: string) (hostAddress: string) (hostPort: string) =
-    Console.WriteLine(zkConnectString)
-    Console.WriteLine(hostAddress)
-    Console.WriteLine(hostPort)
-    task {
+   task {
         let zooKeeper = getZooKeeper zkConnectString
         let! targetListStat = zooKeeper.existsAsync TARGETS_ZNODE_PATH
         let currentTargetZnodePath = getCurrentTargetZnodePath hostAddress hostPort

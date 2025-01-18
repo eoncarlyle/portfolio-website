@@ -48,23 +48,22 @@ type NetworkArgs =
 
 let getNetworkArgs args =
     match (Array.length args) with
-    | 4 ->
+    | 3 ->
         Some
-            { ZkConnectString = Array.get args 1
-              HostAddress = Array.get args 2
-              HostPort = Array.get args 3 }
+            { ZkConnectString = Array.get args 0
+              HostAddress = Array.get args 1
+              HostPort = Array.get args 2 }
     | _ -> None
 
 [<EntryPoint>]
 let main args =
-
-    // Intentionally unrecoverably fails if bad
+    // Intentionally unrecoverably fails if bad 
     let networkArgs = getNetworkArgs args |> Option.get
 
     let zkConnectString = networkArgs.ZkConnectString
     let hostAddress = networkArgs.HostAddress
     let hostPort = networkArgs.HostPort
-
+    
     AppZooKeeper.configureZookeeper zkConnectString hostAddress hostPort
 
     Host
