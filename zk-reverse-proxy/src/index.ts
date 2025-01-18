@@ -1,7 +1,7 @@
 import http, { createServer, IncomingMessage, ServerResponse } from "node:http";
 import * as R from "ramda";
 import {
-  PORTFOLIO_APPLICATION_COMMIT,
+  CACHE_DATE_ZNODE_PATH,
   createZkClient,
   createZnodeIfAbsent,
   getSocket,
@@ -15,6 +15,7 @@ import {
 import NodeCache from "node-cache";
 import ZooKeeperPromise from "zookeeper";
 import { argv } from "node:process";
+import {PORTFOLIO_APPLICATION_COMMIT} from "./Main";
 
 // TODO fix typing
 const getKey = (reqUrl: string, method: string | undefined) => {
