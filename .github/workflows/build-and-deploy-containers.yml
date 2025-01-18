@@ -30,8 +30,6 @@ jobs:
     needs: build
     runs-on: self-hosted
 
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
     steps:
       - name: Setup Network
         run: |
