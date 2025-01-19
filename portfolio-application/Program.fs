@@ -39,7 +39,6 @@ let configureServices (services: IServiceCollection) =
 let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
 
-
 //TODO: better validation
 type NetworkArgs =
     { ZkConnectString: string
@@ -57,13 +56,13 @@ let getNetworkArgs args =
 
 [<EntryPoint>]
 let main args =
-    // Intentionally unrecoverably fails if bad 
+    // Intentionally unrecoverably fails if bad
     let networkArgs = getNetworkArgs args |> Option.get
 
     let zkConnectString = networkArgs.ZkConnectString
     let hostAddress = networkArgs.HostAddress
     let hostPort = networkArgs.HostPort
-    
+
     AppZooKeeper.configureZookeeper zkConnectString hostAddress hostPort
 
     Host
