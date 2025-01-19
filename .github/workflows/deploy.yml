@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-      - 'zk-reverse-proxy/**'
-      - 'portfolio-application/**'
-      - '.github/workflows/**'
+      - "zk-reverse-proxy/**"
+      - "portfolio-application/**"
+      - ".github/workflows/**"
 
 jobs:
   check_changes:
@@ -16,7 +16,7 @@ jobs:
       zk_proxy_changed: ${{ steps.check_changes.outputs.zk_proxy_changed }}
       portfolio_changed: ${{ steps.check_changes.outputs.portfolio_changed }}
       actions_changed: ${{ steps.check_changes.outputs.actions_changed }}
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,39 +26,38 @@ jobs:
         id: check_changes
         run: |
           git diff --name-only HEAD^ HEAD > changes.txt
-          
+
           echo "Changed files:"
           cat changes.txt
-          
+
           if grep -q "zk-reverse-proxy/" changes.txt; then
             echo "zk_proxy_changed=true" >> $GITHUB_OUTPUT
           else
             echo "zk_proxy_changed=false" >> $GITHUB_OUTPUT
           fi
-          
+
           if grep -q "portfolio-application/" changes.txt; then
             echo "portfolio_changed=true" >> $GITHUB_OUTPUT
           else
             echo "portfolio_changed=false" >> $GITHUB_OUTPUT
           fi
-          
+
           if grep -q "\.github/workflows/" changes.txt; then
             echo "actions_changed=true" >> $GITHUB_OUTPUT
           else
             echo "actions_changed=false" >> $GITHUB_OUTPUT
           fi
-          
+
           echo "Final outputs:"
           echo "zk_proxy_changed: $(cat $GITHUB_OUTPUT | grep zk_proxy_changed)"
           echo "portfolio_changed: $(cat $GITHUB_OUTPUT | grep portfolio_changed)"
           echo "actions_changed: $(cat $GITHUB_OUTPUT | grep actions_changed)"
-  
-  
+
   build_zk_proxy:
     needs: check_changes
     if: needs.check_changes.outputs.zk_proxy_changed == 'true'
     runs-on: self-hosted
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -71,7 +70,7 @@ jobs:
     needs: check_changes
     if: needs.check_changes.outputs.portfolio_changed == 'true'
     runs-on: self-hosted
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -82,7 +81,7 @@ jobs:
           sudo podman build -t localhost/portfolio-application:latest .
 
   setup_network:
-    needs: [ check_changes, build_zk_proxy, build_portfolio ]
+    needs: [check_changes, build_zk_proxy, build_portfolio]
     runs-on: self-hosted
     steps:
       - name: Setup Network
@@ -94,18 +93,17 @@ jobs:
             podman_bridge_rootfull
 
   deploy_test:
-    needs: [ check_changes, build_zk_proxy, build_portfolio, setup_network ]
+    needs: [check_changes, build_zk_proxy, build_portfolio, setup_network]
     if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
     runs-on: self-hosted
-    
-    steps:
 
+    steps:
       - name: Deploy ZooKeeper Ensemble
         run: |
           ZK_SERVERS="server.1=192.168.100.51:2888:3888;2181 \
           server.2=192.168.100.52:2888:3888;2181 \
           server.3=192.168.100.53:2888:3888;2181"
-          
+
           for i in {1..3}; do
             sudo podman run -d \
               --name zk$i-test \
@@ -152,29 +150,23 @@ jobs:
       - name: Verify Container Deployments
         run: |
           sudo podman ps --format "{{.Names}}: {{.Status}}"
-      
+
       - name: Verify success
         run: |
           curl -I https://test.iainschmitt.com
-  
+
   deploy_prod:
-    needs: [ deploy_test, check_changes ]
+    needs: [deploy_test, check_changes]
     if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
     runs-on: self-hosted
 
     steps:
-      - name: Debug Outputs
-        run: |
-          echo "ZK Proxy Changed: ${{ needs.check_changes.outputs.zk_proxy_changed }}"
-          echo "Portfolio Changed: ${{ needs.check_changes.outputs.portfolio_changed }}"
-          echo "Actions Changed: ${{ needs.check_changes.outputs.actions_changed }}"
-
       - name: Deploy ZooKeeper Ensemble
         run: |
           ZK_SERVERS="server.1=192.168.100.21:2888:3888;2181 \
           server.2=192.168.100.22:2888:3888;2181 \
           server.3=192.168.100.23:2888:3888;2181"
-          
+
           for i in {1..3}; do
             sudo podman run -d \
               --name zk$i \
@@ -221,11 +213,11 @@ jobs:
       - name: Verify Container Deployments
         run: |
           sudo podman ps --format "{{.Names}}: {{.Status}}"
-      
+
       - name: Verify success
         run: |
           curl -I https://iainschmitt.com
-      
+
       #- name: Verify ZooKeeper Status
       #  run: |
       #    for i in {1..3}; do
