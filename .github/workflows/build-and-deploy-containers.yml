@@ -119,7 +119,7 @@ jobs:
           done
 
       - name: Deploy Reverse Proxies
-        if: (needs.check_changes.outputs.actions_changed == 'true' || needs.check_changes.outputs.zk_proxy_changed == 'true')
+        if: (needs.check_changes.outputs.actions_changed == 'true') || (needs.check_changes.outputs.zk_proxy_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -134,7 +134,7 @@ jobs:
           done
 
       - name: Deploy Portfolio Applications
-        if: (needs.check_changes.outputs.actions_changed == 'true'|| needs.check_changes.outputs.portfolio_changed == 'true')
+        if: (needs.check_changes.outputs.actions_changed == 'true')|| (needs.check_changes.outputs.portfolio_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -168,7 +168,7 @@ jobs:
           echo "ZK Proxy Changed: ${{ needs.check_changes.outputs.zk_proxy_changed }}"
           echo "Portfolio Changed: ${{ needs.check_changes.outputs.portfolio_changed }}"
           echo "Actions Changed: ${{ needs.check_changes.outputs.actions_changed }}"
-          
+
       - name: Deploy ZooKeeper Ensemble
         run: |
           ZK_SERVERS="server.1=192.168.100.21:2888:3888;2181 \
@@ -188,7 +188,7 @@ jobs:
           done
 
       - name: Deploy Reverse Proxies
-        if: (needs.check_changes.outputs.actions_changed == 'true' || needs.check_changes.outputs.zk_proxy_changed == 'true')
+        if: (needs.check_changes.outputs.actions_changed == 'true' ) ||  (needs.check_changes.outputs.zk_proxy_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -203,7 +203,7 @@ jobs:
           done
 
       - name: Deploy Portfolio Applications
-        if: (needs.check_changes.outputs.actions_changed == 'true'|| needs.check_changes.outputs.portfolio_changed == 'true')
+        if: (needs.check_changes.outputs.actions_changed == 'true') || ( needs.check_changes.outputs.portfolio_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
