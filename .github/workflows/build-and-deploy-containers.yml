@@ -102,7 +102,7 @@ jobs:
               --name zk$i-test \
               --replace \
               --network podman_bridge_rootfull \
-              --ip 192.168.100.2$i \
+              --ip 192.168.100.5$i \
               -e ZOO_MY_ID=$i \
               -e ZOO_SERVERS="$ZK_SERVERS" \
               docker.io/library/zookeeper:3.8
