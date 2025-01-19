@@ -12,21 +12,19 @@ open Giraffe
 open Giraffe.Razor
 
 let webApp =
-    choose [ GET >=> choose AppHandlers.appRoutes; HEAD >=> AppHandlers.headHandler; AppHandlers.error404Handler ]
+    choose
+        [ GET >=> choose AppHandlers.appRoutes
+          HEAD >=> AppHandlers.headHandler
+          AppHandlers.error404Handler ]
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
     AppHandlers.error500Handler
 
-let configureCors (builder: CorsPolicyBuilder) =
-    builder.WithOrigins("http://localhost:4000").AllowAnyMethod().AllowAnyHeader()
-    |> ignore
-
 let configureApp (app: IApplicationBuilder) =
     app
         .UseGiraffeErrorHandler(internalErrorHandler)
         .UseHttpsRedirection()
-        .UseCors(configureCors)
         .UseStaticFiles()
         .UseResponseCaching()
         .UseGiraffe(webApp)
@@ -41,13 +39,38 @@ let configureServices (services: IServiceCollection) =
 let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
 
+
+//TODO: better validation
+type NetworkArgs =
+    { ZkConnectString: string
+      HostAddress: string
+      HostPort: string }
+
+let getNetworkArgs args =
+    match (Array.length args) with
+    | 3 ->
+        Some
+            { ZkConnectString = Array.get args 0
+              HostAddress = Array.get args 1
+              HostPort = Array.get args 2 }
+    | _ -> None
+
 [<EntryPoint>]
 let main args =
+    // Intentionally unrecoverably fails if bad 
+    let networkArgs = getNetworkArgs args |> Option.get
+
+    let zkConnectString = networkArgs.ZkConnectString
+    let hostAddress = networkArgs.HostAddress
+    let hostPort = networkArgs.HostPort
+    
+    AppZooKeeper.configureZookeeper zkConnectString hostAddress hostPort
+
     Host
         .CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
-                .UseUrls("http://localhost:4000")
+                .UseUrls($"http://{hostAddress}:{hostPort}")
                 .UseContentRoot(AppHandlers.contentRoot)
                 .UseWebRoot(AppHandlers.webRoot)
                 .Configure(Action<IApplicationBuilder> configureApp)

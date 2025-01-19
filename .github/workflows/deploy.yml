@@ -1,30 +1,233 @@
-name: Deploy Portfolio Website
+name: Build and Deploy Container Images
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'zk-reverse-proxy/**'
+      - 'portfolio-application/**'
+      - '.github/workflows/**'
 
 jobs:
-  deploy:
-    name: Deploy on santa-cruz
+  check_changes:
+    runs-on: self-hosted
+    outputs:
+      zk_proxy_changed: ${{ steps.check_changes.outputs.zk_proxy_changed }}
+      portfolio_changed: ${{ steps.check_changes.outputs.portfolio_changed }}
+      actions_changed: ${{ steps.check_changes.outputs.actions_changed }}
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --name-only HEAD^ HEAD > changes.txt
+          
+          echo "Changed files:"
+          cat changes.txt
+          
+          if grep -q "zk-reverse-proxy/" changes.txt; then
+            echo "zk_proxy_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "zk_proxy_changed=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if grep -q "portfolio-application/" changes.txt; then
+            echo "portfolio_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "portfolio_changed=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if grep -q "\.github/workflows/" changes.txt; then
+            echo "actions_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "actions_changed=false" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "Final outputs:"
+          echo "zk_proxy_changed: $(cat $GITHUB_OUTPUT | grep zk_proxy_changed)"
+          echo "portfolio_changed: $(cat $GITHUB_OUTPUT | grep portfolio_changed)"
+          echo "actions_changed: $(cat $GITHUB_OUTPUT | grep actions_changed)"
+  
+  
+  build_zk_proxy:
+    needs: check_changes
+    if: needs.check_changes.outputs.zk_proxy_changed == 'true'
+    runs-on: self-hosted
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build ZK Reverse Proxy
+        run: |
+          cd zk-reverse-proxy
+          sudo podman build -t localhost/zk-reverse-proxy:latest .
+
+  build_portfolio:
+    needs: check_changes
+    if: needs.check_changes.outputs.portfolio_changed == 'true'
+    runs-on: self-hosted
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Portfolio Application
+        run: |
+          cd portfolio-application
+          dotnet publish -c Release
+          sudo podman build -t localhost/portfolio-application:latest .
+
+  setup_network:
+    needs: [ check_changes, build_zk_proxy, build_portfolio ]
+    runs-on: self-hosted
+    steps:
+      - name: Setup Network
+        run: |
+          sudo podman network exists podman_bridge_rootfull || \
+          sudo podman network create --driver bridge \
+            --subnet 192.168.100.0/24 \
+            --gateway 192.168.100.1 \
+            podman_bridge_rootfull
+
+  deploy_test:
+    needs: [ check_changes, build_zk_proxy, build_portfolio, setup_network ]
+    if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
+    runs-on: self-hosted
+    
+    steps:
+
+      - name: Deploy ZooKeeper Ensemble
+        run: |
+          ZK_SERVERS="server.1=192.168.100.51:2888:3888;2181 \
+          server.2=192.168.100.52:2888:3888;2181 \
+          server.3=192.168.100.53:2888:3888;2181"
+          
+          for i in {1..3}; do
+            sudo podman run -d \
+              --name zk$i-test \
+              --replace \
+              --network podman_bridge_rootfull \
+              --ip 192.168.100.5$i \
+              -e ZOO_MY_ID=$i \
+              -e ZOO_SERVERS="$ZK_SERVERS" \
+              docker.io/library/zookeeper:3.8
+            sleep 1
+          done
+
+      - name: Deploy Reverse Proxies
+        if: (needs.check_changes.outputs.actions_changed == 'true') || (needs.check_changes.outputs.zk_proxy_changed == 'true')
+        run: |
+          for i in {1..2}; do
+            sudo podman run -d \
+              --name zk-reverse-proxy-$i-test \
+              --replace \
+              --network podman_bridge_rootfull \
+              --ip 192.168.100.6$i \
+              --tls-verify=false \
+              localhost/zk-reverse-proxy:latest \
+              "192.168.100.51:2181,192.168.100.52:2181,192.168.100.53:2181" 1080
+            sleep 1
+          done
+
+      - name: Deploy Portfolio Applications
+        if: (needs.check_changes.outputs.actions_changed == 'true')|| (needs.check_changes.outputs.portfolio_changed == 'true')
+        run: |
+          for i in {1..2}; do
+            sudo podman run -d \
+              --name portfolio-application-$i-test \
+              --replace \
+              --network podman_bridge_rootfull \
+              --ip 192.168.100.7$i \
+              --tls-verify=false \
+              localhost/portfolio-application:latest \
+              "192.168.100.51:2181,192.168.100.52:2181,192.168.100.53:2181" \
+              192.168.100.7$i 1080
+            sleep 1
+          done
+
+      - name: Verify Container Deployments
+        run: |
+          sudo podman ps --format "{{.Names}}: {{.Status}}"
+      
+      - name: Verify success
+        run: |
+          curl -I https://test.iainschmitt.com
+  
+  deploy_prod:
+    needs: [ deploy_test, check_changes ]
+    if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Debug Outputs
+        run: |
+          echo "ZK Proxy Changed: ${{ needs.check_changes.outputs.zk_proxy_changed }}"
+          echo "Portfolio Changed: ${{ needs.check_changes.outputs.portfolio_changed }}"
+          echo "Actions Changed: ${{ needs.check_changes.outputs.actions_changed }}"
 
-      - name: Build application
-        run: dotnet publish -c Release -o published
+      - name: Deploy ZooKeeper Ensemble
+        run: |
+          ZK_SERVERS="server.1=192.168.100.21:2888:3888;2181 \
+          server.2=192.168.100.22:2888:3888;2181 \
+          server.3=192.168.100.23:2888:3888;2181"
+          
+          for i in {1..3}; do
+            sudo podman run -d \
+              --name zk$i \
+              --replace \
+              --network podman_bridge_rootfull \
+              --ip 192.168.100.2$i \
+              -e ZOO_MY_ID=$i \
+              -e ZOO_SERVERS="$ZK_SERVERS" \
+              docker.io/library/zookeeper:3.8
+            sleep 1
+          done
 
-      - name: Remove runtime directory
-        run: rm -rf /home/iain/portfolio-website
+      - name: Deploy Reverse Proxies
+        if: (needs.check_changes.outputs.actions_changed == 'true' ) ||  (needs.check_changes.outputs.zk_proxy_changed == 'true')
+        run: |
+          for i in {1..2}; do
+            sudo podman run -d \
+              --name zk-reverse-proxy-$i \
+              --replace \
+              --network podman_bridge_rootfull \
+              --ip 192.168.100.3$i \
+              --tls-verify=false \
+              localhost/zk-reverse-proxy:latest \
+              "192.168.100.21:2181,192.168.100.22:2181,192.168.100.23:2181" 1080
+            sleep 1
+          done
 
-      - name: Creating new runtime directory
-        run: mkdir /home/iain/portfolio-website
+      - name: Deploy Portfolio Applications
+        if: (needs.check_changes.outputs.actions_changed == 'true') || ( needs.check_changes.outputs.portfolio_changed == 'true')
+        run: |
+          for i in {1..2}; do
+            sudo podman run -d \
+              --name portfolio-application-$i \
+              --replace \
+              --network podman_bridge_rootfull \
+              --ip 192.168.100.4$i \
+              --tls-verify=false \
+              localhost/portfolio-application:latest \
+              "192.168.100.21:2181,192.168.100.22:2181,192.168.100.23:2181" \
+              192.168.100.4$i 1080
+            sleep 1
+          done
 
-      - name: Copying new runtime directory
-        run: cp -r bin/Release/net8.0/* /home/iain/portfolio-website
-
-      - name: Restarting service
-        run: sudo systemctl --user -M iain@ restart portfolio-website.service
+      - name: Verify Container Deployments
+        run: |
+          sudo podman ps --format "{{.Names}}: {{.Status}}"
+      
+      - name: Verify success
+        run: |
+          curl -I https://iainschmitt.com
+      
+      #- name: Verify ZooKeeper Status
+      #  run: |
+      #    for i in {1..3}; do
+      #      sudo podman exec -it zk$i zkServer.sh status
+      #    done
