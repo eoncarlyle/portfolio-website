@@ -11,7 +11,6 @@ import {
   cacheResetWatch,
   getZkConfig,
 } from "./Main.js";
-//import * as console from "node:console";
 import NodeCache from "node-cache";
 import ZooKeeperPromise from "zookeeper";
 import { argv } from "node:process";
