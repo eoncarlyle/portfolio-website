@@ -39,7 +39,7 @@ jobs:
             echo "portfolio_changed=false" >> $GITHUB_OUTPUT
           fi
           
-          if grep -q ".github/workflows/" changes.txt; then
+          if grep -q "\.github/workflows/" changes.txt; then
             echo "actions_changed=true" >> $GITHUB_OUTPUT
           else
             echo "actions_changed=false" >> $GITHUB_OUTPUT
