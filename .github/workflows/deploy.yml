@@ -3,7 +3,7 @@ name: Build and Deploy Container Images
 on:
   push:
     branches:
-      - zk-reverse-proxy-2025-01
+      - main
     paths:
       - 'zk-reverse-proxy/**'
       - 'portfolio-application/**'
