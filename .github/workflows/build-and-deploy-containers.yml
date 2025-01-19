@@ -110,7 +110,7 @@ jobs:
           done
 
       - name: Deploy Reverse Proxies
-        if: (needs.check_changes.outputs.zk_proxy_changed == 'true'  || needs.check_changes.outputs.actions_changed == 'true')
+        if: (needs.check_changes.outputs.actions_changed == 'true' || needs.check_changes.outputs.zk_proxy_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -125,7 +125,7 @@ jobs:
           done
 
       - name: Deploy Portfolio Applications
-        if: (needs.check_changes.outputs.portfolio_changed == 'true'  || needs.check_changes.outputs.actions_changed == 'true')
+        if: (needs.check_changes.outputs.actions_changed == 'true'|| needs.check_changes.outputs.portfolio_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -173,7 +173,7 @@ jobs:
           done
 
       - name: Deploy Reverse Proxies
-        if: (needs.check_changes.outputs.zk_proxy_changed == 'true'  || needs.check_changes.outputs.actions_changed == 'true')
+        if: (needs.check_changes.outputs.actions_changed == 'true' || needs.check_changes.outputs.zk_proxy_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -188,7 +188,7 @@ jobs:
           done
 
       - name: Deploy Portfolio Applications
-        if: (needs.check_changes.outputs.portfolio_changed == 'true'  || needs.check_changes.outputs.actions_changed == 'true')
+        if: (needs.check_changes.outputs.actions_changed == 'true'|| needs.check_changes.outputs.portfolio_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
