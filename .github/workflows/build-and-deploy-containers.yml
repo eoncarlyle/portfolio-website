@@ -99,6 +99,12 @@ jobs:
     runs-on: self-hosted
     
     steps:
+      - name: Debug Outputs
+        run: |
+          echo "ZK Proxy Changed: ${{ needs.check_changes.outputs.zk_proxy_changed }}"
+          echo "Portfolio Changed: ${{ needs.check_changes.outputs.portfolio_changed }}"
+          echo "Actions Changed: ${{ needs.check_changes.outputs.actions_changed }}"
+        
       - name: Deploy ZooKeeper Ensemble
         run: |
           ZK_SERVERS="server.1=192.168.100.51:2888:3888;2181 \
