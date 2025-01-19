@@ -27,6 +27,9 @@ jobs:
         run: |
           git diff --name-only HEAD^ HEAD > changes.txt
           
+          echo "Changed files:"
+          cat changes.txt
+            
           if grep -q "zk-reverse-proxy/" changes.txt; then
             echo "zk_proxy_changed=true" >> $GITHUB_OUTPUT
           else
@@ -44,6 +47,11 @@ jobs:
           else
             echo "actions_changed=false" >> $GITHUB_OUTPUT
           fi
+          
+          echo "Final outputs:"
+          echo "zk_proxy_changed: $(cat $GITHUB_OUTPUT | grep zk_proxy_changed)"
+          echo "portfolio_changed: $(cat $GITHUB_OUTPUT | grep portfolio_changed)"
+          echo "actions_changed: $(cat $GITHUB_OUTPUT | grep actions_changed)"
   
   
   build_zk_proxy:
