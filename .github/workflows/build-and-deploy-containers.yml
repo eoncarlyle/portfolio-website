@@ -15,6 +15,7 @@ jobs:
     outputs:
       zk_proxy_changed: ${{ steps.check_changes.outputs.zk_proxy_changed }}
       portfolio_changed: ${{ steps.check_changes.outputs.portfolio_changed }}
+      actions_changed: ${{ steps.check_changes.outputs.actions_changed }}
     
     steps:
       - uses: actions/checkout@v4
@@ -37,6 +38,13 @@ jobs:
           else
             echo "portfolio_changed=false" >> $GITHUB_OUTPUT
           fi
+          
+          if grep -q ".github/workflows/" changes.txt; then
+            echo "actions_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "actions_changed=false" >> $GITHUB_OUTPUT
+          fi
+          
 
   build_zk_proxy:
     needs: check_changes
@@ -79,7 +87,7 @@ jobs:
 
   deploy_test:
     needs: [check_changes, build_zk_proxy, build_portfolio, setup_network]
-    if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true')
+    if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
     runs-on: self-hosted
     
     steps:
@@ -142,7 +150,7 @@ jobs:
   
   deploy_prod:
     needs: [deploy_test]
-    if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true')
+    if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
     runs-on: self-hosted
 
     steps:
