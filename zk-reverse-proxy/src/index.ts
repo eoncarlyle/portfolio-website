@@ -14,6 +14,7 @@ import {
 import NodeCache from "node-cache";
 import ZooKeeperPromise from "zookeeper";
 import { argv } from "node:process";
+import client from "prom-client";
 
 // TODO fix typing
 const getKey = (reqUrl: string, method: string | undefined) => {
@@ -22,6 +23,10 @@ const getKey = (reqUrl: string, method: string | undefined) => {
     path: reqUrl,
   });
 };
+
+const collectDefaultMetrics = client.collectDefaultMetrics;
+const Registry = client.Registry;
+const register = new Registry();
 
 const getHttpOptions = (
   targets: Target[],
@@ -86,7 +91,17 @@ const getTargets = async (
   } else return incomingTargets;
 };
 
-const requestListener =
+const metricsListener = async (req: IncomingMessage, res: ServerResponse) => {
+  if (req.url === "/metrics") {
+    res.setHeader("Content-Type", register.contentType);
+    res.end(await register.metrics());
+  } else {
+    res.writeHead(404);
+    res.end("Not found");
+  }
+};
+
+const reverseProxyListener =
   (zkClient: ZooKeeperPromise, httpCache: NodeCache) =>
   async (
     outerReq: IncomingMessage,
@@ -131,7 +146,7 @@ const requestListener =
                 outerRes.end();
                 httpCache.set<string>(key, body, 100);
               } catch (e) {
-                requestListener(zkClient, httpCache)(
+                reverseProxyListener(zkClient, httpCache)(
                   outerReq,
                   outerRes,
                   targets,
@@ -143,7 +158,7 @@ const requestListener =
 
           innerReq.on("error", async () => {
             // Try/catch is not enough, need explicit error event listener
-            await requestListener(zkClient, httpCache)(
+            await reverseProxyListener(zkClient, httpCache)(
               outerReq,
               outerRes,
               targets,
@@ -156,7 +171,7 @@ const requestListener =
           outerRes.end(body);
         }
       } catch (e: any) {
-        await requestListener(zkClient, httpCache)(
+        await reverseProxyListener(zkClient, httpCache)(
           outerReq,
           outerRes,
           await getTargets(zkClient, incomingTargets),
@@ -173,19 +188,23 @@ const requestListener =
     }
   };
 
-if (argv.length != 4) {
+if (argv.length != 5) {
   console.error(`Illegal arguments: '${argv}'`);
   process.exit(1);
 } else {
   const zkConnectString = argv[2];
-  const port = argv[3];
+  const reverseProxyPort = parseInt(argv[3]);
+  const metricsPort = parseInt(argv[4]);
 
+  collectDefaultMetrics({ register });
   const reverseProxyZkClient = createZkClient(getZkConfig(zkConnectString));
   await createZnodeIfAbsent(reverseProxyZkClient, TARGETS_ZNODE_PATH);
   await createZnodeIfAbsent(reverseProxyZkClient, CACHE_DATE_ZNODE_PATH);
 
   const httpCache = new NodeCache({});
   await cacheResetWatch(reverseProxyZkClient, CACHE_DATE_ZNODE_PATH, httpCache);
-
-  createServer(requestListener(reverseProxyZkClient, httpCache)).listen(port);
+  createServer(metricsListener).listen(metricsPort);
+  createServer(reverseProxyListener(reverseProxyZkClient, httpCache)).listen(
+    reverseProxyPort,
+  );
 }
