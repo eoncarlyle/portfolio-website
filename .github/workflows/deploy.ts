@@ -28,7 +28,6 @@ import { readFile, writeFile } from "fs/promises";
 import { promisify } from "util";
 import child_process from "child_process";
 import { exit } from "process";
-import { REPLServer } from "repl";
 const exec = promisify(child_process.exec);
 
 const applications = [
@@ -46,9 +45,11 @@ type Colour = (typeof colour)[number];
 type ReplicaNumber = (typeof replicaNumber)[number];
 
 const ADDRESS_BASE = "192.168.100";
+const PORTFOLIO_APP_PORT = 1080;
+const REVERSE_PROXY_PORT = 1080;
 
 const getCurrentColor = async (enviornment: Enviornment): Promise<Colour> => {
-  const { stdout, _ } = await exec("sudo podman ps --format '{{.Names}}'");
+  const { stdout, stderr } = await exec("sudo podman ps --format '{{.Names}}'");
 
   const blueApplicationCount = applications
     .map((application) => `${application}-${enviornment}-"blue"`)
@@ -77,6 +78,9 @@ const getCurrentColor = async (enviornment: Enviornment): Promise<Colour> => {
   }
 };
 
+// c.match(/{([^}]+)}/g
+
+// This should be staged: first add the new
 const replaceReverseProxyNginx = async (
   enviornment: Enviornment,
   newColor: Colour,
@@ -146,10 +150,6 @@ const getContainerName = (
   return `${application}-${enviornment}-${colour}-${replicaNumber}`;
 };
 
-//type Application = (typeof applications)[number];
-//type Enviornment = (typeof enviornments)[number];
-//type Colour = (typeof colour)[number];
-//type ReplicaNumber = (typeof replicaNumber)[number];
 const getReverseColour = (color: Colour): Colour =>
   color === "green" ? "blue" : "green";
 
@@ -174,7 +174,7 @@ const startZooKeeperContainer = async (
   return await exec(cmd);
 };
 
-const zkConnectString = (enviornment: Enviornment, colour: Colour) => {
+const getZkConnectString = (enviornment: Enviornment, colour: Colour) => {
   const zk1 = getAddress("zk", enviornment, colour, "1");
   const zk2 = getAddress("zk", enviornment, colour, "2");
   const zk3 = getAddress("zk", enviornment, colour, "3");
@@ -193,7 +193,7 @@ const startReverseProxies = async (
                 --ip ${getAddress("zk-reverse-proxy", enviornment, colour, replicaNumber)} \
                 --tls-verify=false \
                 localhost/zk-reverse-proxy:latest \
-                "${zkConnectString(enviornment, colour)}" 1080`;
+                "${getZkConnectString(enviornment, colour)}" ${REVERSE_PROXY_PORT}`;
 
   return await exec(cmd);
 };
@@ -210,8 +210,8 @@ const startPortfolioApplication = async (
                 --ip ${getAddress("portfolio-application", enviornment, colour, replicaNumber)} \
                 --tls-verify=false \
                 localhost/portfolio-application:latest \
-                "${zkConnectString(enviornment, colour)}" \
-                ${getAddress("portfolio-application", enviornment, colour, replicaNumber)} 1080`;
+                "${getZkConnectString(enviornment, colour)}" \
+                ${getAddress("portfolio-application", enviornment, colour, replicaNumber)} ${PORTFOLIO_APP_PORT}`;
 
   return await exec(cmd);
 };
@@ -227,7 +227,7 @@ const stopContainer = async (
   );
 };
 
-const restartService = async () => {
+const restartNginx = async () => {
   try {
     await exec(`sudo systemctl restart nginx`);
 
