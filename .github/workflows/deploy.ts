@@ -13,6 +13,9 @@ A few changes
 - This is going to require briefly taking all of the services down
   - Must fix to the 'blue' color
   - Need to match the naming scheme
+
+-
+
 ```
 upstream backend {
     server 192.168.100.31:1080 max_fails=1 fail_timeout=10s;
@@ -48,6 +51,7 @@ const ADDRESS_BASE = "192.168.100";
 const PORTFOLIO_APP_PORT = 1080;
 const REVERSE_PROXY_PORT = 1080;
 
+// Query the Nginx conf files too?
 const getCurrentColor = async (enviornment: Enviornment): Promise<Colour> => {
   const { stdout, stderr } = await exec("sudo podman ps --format '{{.Names}}'");
 
@@ -106,6 +110,18 @@ const replaceReverseProxyNginx = async (
 
   await writeFile(nginxConfPath, nginxConfFile.replace(oldAddress, newAddress));
 };
+
+// Use the templates, use conf names, use health checks, need to get creative about existing IPs
+const addReverseProxyNginx = async (
+  enviornment: Enviornment,
+  incomingColour: Colour,
+) => {};
+
+// Use the templates, use conf names, use health checks, need to get creative about existing IPs
+const removeReverseProxyNginx = async (
+  enviornment: Enviornment,
+  outgoinColour: Colour,
+) => {};
 
 const getAddress = (
   application: Application,
