@@ -4,7 +4,7 @@ date: 2025.01.23
 ---
 # LLM Chat Interfaces Will Change
 
-Grant Sanderson is the mind behind 3Blue1Brown, a math YouTube channel featuring exceptional [visualisation and animation](https://www.youtube.com/watch?v=cy8r7WSuT1I) created with his own animation library, Manim. [^manim] In October 2024 he published a walkthrough video of animating a Lorenz attractor in Manim. At 13:25 Sanderson shows his desktop ChatGPT a shared screen, and this image has stuck with me for months:
+Grant Sanderson is the mind behind 3Blue1Brown, a math YouTube channel featuring exceptional [visualisation and animation](https://www.youtube.com/watch?v=cy8r7WSuT1I) created with his own animation library, Manim. [^manim] In October 2024 he published a walkthrough video of animating a Lorenz attractor in Manim. [^manim-demo] At 13:25 Sanderson shows his desktop ChatGPT a shared screen, and this image has stuck with me for months:
 
 ![Still from 13:25 of "How I animate 3Blue1Brown | A Manim demo with Ben Sparks. 3Blue1Brown YouTube Channel](https://iainschmitt.com/images/3Blue1BrownChatGptStill.jpeg)
 
