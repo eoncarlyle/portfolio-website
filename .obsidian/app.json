@@ -1,0 +1,26 @@
+{
+  "vimMode": true,
+  "showLineNumber": true,
+  "promptDelete": false,
+  "readableLineLength": true,
+  "spellcheck": true,
+  "legacyEditor": false,
+  "livePreview": true,
+  "tabSize": 2,
+  "attachmentFolderPath": "Attachments",
+  "useTab": false,
+  "defaultViewMode": "source",
+  "spellcheckDictionary": [
+    "symetric",
+    "GDPLE"
+  ],
+  "autoPairBrackets": false,
+  "autoPairMarkdown": false,
+  "showInlineTitle": false,
+  "pdfExportSettings": {
+    "pageSize": "Letter",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 100
+  }
+}

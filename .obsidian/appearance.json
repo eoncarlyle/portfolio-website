@@ -1,0 +1,10 @@
+{
+  "cssTheme": "Minimal",
+  "accentColor": "#a6e3a1",
+  "baseFontSize": 15,
+  "monospaceFontFamily": "FantasqueSansM Nerd Font Mono",
+  "enabledCssSnippets": [
+    "cursor"
+  ],
+  "showViewHeader": false
+}
