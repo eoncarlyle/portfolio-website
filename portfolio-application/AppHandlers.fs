@@ -50,6 +50,8 @@ let markdownPaths =
 let markdownFileName markdownPath =
     Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)
 
+Console.WriteLine markdownPaths
+
 let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     let isStandardView = viewData.ContainsKey "Header" && viewData.ContainsKey "Body"
 
