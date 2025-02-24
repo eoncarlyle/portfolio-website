@@ -23,7 +23,7 @@ A list of the hardware and software that I depend on in my daily work
 ## Audio & Video
   - Shure SM58 microphone
   - Behringer U-Phoria UM2 USB Audio Interface
-  - Sony WH-1000XM3 over-ear headphones
+  - Bose QC Ultra over-ear headphones
   - Cannon M50 Mark II camera with Sigma 16mm f/1.4 EF-M lens
 
 ## Software
