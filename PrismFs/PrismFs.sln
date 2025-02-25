@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PrismFs", "PrismFs\PrismFs.fsproj", "{F7EF6DFB-601B-4BDD-9711-CD91DF4D39C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7EF6DFB-601B-4BDD-9711-CD91DF4D39C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7EF6DFB-601B-4BDD-9711-CD91DF4D39C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7EF6DFB-601B-4BDD-9711-CD91DF4D39C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7EF6DFB-601B-4BDD-9711-CD91DF4D39C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
