@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY *.fsproj ./
 
+RUN apt install nodejs
+
 RUN dotnet restore
 
 COPY . ./
