@@ -11,36 +11,40 @@ The book's discussion of domain modeling topics agnostic to programming paradigm
 What makes the book shine is its progressive disclosure of language features to an F\# beginner in a way that really sells the language. Domain modeling doesn't require too many language features so Wlaschin spends as little time as possible explaining F\# syntax. By introducing the type system and pattern matching early on the book can quickly explain the advantages that F\# brings over imperative languages. An example of baking the domain rules into the type system is shown below, where the `String50` type and module are set up to make null, empty, or string larger than 50 characters unrepresentable.
 
 
-```fsharp
-type String50 = private String50 of string
+<pre class="language-fsharp tabindex="0">
+<code class="language-fsharp>
+<span class="token keyword">type</span> <span class="token class-name">String50</span> <span class="token operator">=</span> <span class="token keyword">private</span> String50 <span class="token keyword">of</span> <span class="token class-name">string</span>
 
-module String50 =
-    let value (String50 str) = str
+<span class="token keyword">module</span> String50 <span class="token operator">=</span>
+    <span class="token keyword">let</span> value <span class="token punctuation">(</span>String50 str<span class="token punctuation">)</span> <span class="token operator">=</span> str
 
-    let create fieldName str : Result<String50, string> =
-        if String.IsNullOrEmpty str then
-            Error(fieldName + " must be non-empty")
-        elif str.Length > 50 then
-            Error(fieldName + " must be less than 50 chars")
-        else
-            Ok(String50 str)
-```
+    <span class="token keyword">let</span> create fieldName str <span class="token punctuation">:</span> <span class="token class-name">Result</span><span class="token operator">&lt;</span>String50<span class="token punctuation">,</span> string<span class="token operator">></span> <span class="token operator">=</span>
+        <span class="token keyword">if</span> String<span class="token punctuation">.</span>IsNullOrEmpty str <span class="token keyword">then</span>
+            <span class="token function">Error</span><span class="token punctuation">(</span>fieldName <span class="token operator">+</span> <span class="token string">" must be non-empty"</span><span class="token punctuation">)</span>
+        <span class="token keyword">elif</span> str<span class="token punctuation">.</span>Length <span class="token operator">></span> <span class="token number">50</span> <span class="token keyword">then</span>
+            <span class="token function">Error</span><span class="token punctuation">(</span>fieldName <span class="token operator">+</span> <span class="token string">" must be less than 50 chars"</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span>
+            <span class="token function">Ok</span><span class="token punctuation">(</span>String50 str<span class="token punctuation">)</span>
+</code>
+</pre>
 
 Concerning pattern matching, the following example was used in the book with the `ShoppingCart` discriminated union.
 
-```fsharp
-type ShoppingCart =
-    | EmptyCart
-    | ActiveCart
-    | PaidCart
+<pre class="language-fsharp tabindex="0">
+<code class="language-fsharp>
+<span class="token keyword">type</span> <span class="token class-name">ShoppingCart</span> <span class="token operator">=</span>
+    <span class="token operator">|</span> EmptyCart
+    <span class="token operator">|</span> ActiveCart
+    <span class="token operator">|</span> PaidCart
 
-let addItem cart item =
-    match cart with
-    | EmptyCart -> ActiveCart { UnpaidItems = [ item ] }
-    | ActiveCart { UnpaidItems = existingItems }
-        -> ActiveCart { UnpaidItems = item :: existingItems }
-    | PaidCart _ -> cart
-```
+<span class="token keyword">let</span> addItem cart item <span class="token operator">=</span>
+    <span class="token keyword">match</span> cart <span class="token keyword">with</span>
+    <span class="token operator">|</span> EmptyCart <span class="token operator">-></span> <span class="token computation-expression keyword">ActiveCart</span> <span class="token punctuation">{</span> UnpaidItems <span class="token operator">=</span> <span class="token punctuation">[</span> item <span class="token punctuation">]</span> <span class="token punctuation">}</span>
+    <span class="token operator">|</span> <span class="token computation-expression keyword">ActiveCart</span> <span class="token punctuation">{</span> UnpaidItems <span class="token operator">=</span> existingItems <span class="token punctuation">}</span>
+        <span class="token operator">-></span> <span class="token computation-expression keyword">ActiveCart</span> <span class="token punctuation">{</span> UnpaidItems <span class="token operator">=</span> item <span class="token operator">::</span> existingItems <span class="token punctuation">}</span>
+    <span class="token operator">|</span> PaidCart _ <span class="token operator">-></span> cart
+</code>
+</pre>
 
 
 Wlaschin also gives an effective explanation of the Either monad to bring error handling into the primary control flow rather than the 'hidden' control flow of exception handling. Rather than explain that the `Result` type is an implementation of the Either monad - or even explain what monads are - he explains the type before using it in the rest of the domain for error handling. Aiding his explanation are diagrams similar to those from his 'Railway Oriented Programming' talk shown below.[^slides]

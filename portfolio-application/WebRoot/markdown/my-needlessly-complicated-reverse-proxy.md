@@ -20,36 +20,38 @@ By setting things up this way there weren't many changes that needed to happen w
 
 Having an 'outer' request made to the reverse proxy as well as an 'inner' request made by the reverse proxy to the target is something that I didn't do correctly at first as shown by this toy example:
 
-```typescript
-import { createServer, IncomingMessage, ServerResponse } from "node:http";
-import http from "node:http";
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> createServer<span class="token punctuation">,</span> IncomingMessage<span class="token punctuation">,</span> ServerResponse <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"node:http"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> http <span class="token keyword">from</span> <span class="token string">"node:http"</span><span class="token punctuation">;</span>
 
-createServer((req: IncomingMessage, res: ServerResponse) => {
-  const options = {
-    hostname: "127.0.0.1",
-    port: 4000,
-    method: "GET",
-    path: req.url,
-  };
+<span class="token function">createServer</span><span class="token punctuation">(</span><span class="token punctuation">(</span>req<span class="token operator">:</span> IncomingMessage<span class="token punctuation">,</span> res<span class="token operator">:</span> ServerResponse<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> options <span class="token operator">=</span> <span class="token punctuation">{</span>
+    hostname<span class="token operator">:</span> <span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span>
+    port<span class="token operator">:</span> <span class="token number">4000</span><span class="token punctuation">,</span>
+    method<span class="token operator">:</span> <span class="token string">"GET"</span><span class="token punctuation">,</span>
+    path<span class="token operator">:</span> req<span class="token punctuation">.</span>url<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
 
-  const proxyReq = http.request(options, (proxyRes) => {
-    proxyRes.on("data", (chunk) => {
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end(chunk);
-    });
+  <span class="token keyword">const</span> proxyReq <span class="token operator">=</span> http<span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>options<span class="token punctuation">,</span> <span class="token punctuation">(</span>proxyRes<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    proxyRes<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>chunk<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token string-property property">"Content-Type"</span><span class="token operator">:</span> <span class="token string">"text/plain"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>chunk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    proxyRes.on("end", () => {
-      proxyReq.end();
-      res.end();
-    });
-  });
+    proxyRes<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">"end"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      proxyReq<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  proxyReq.on("error", (e) => {
-    res.writeHead(500);
-    res.end(e);
-  });
-}).listen(5001);
-```
+  proxyReq<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">"error"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">5001</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code>
+</pre>
 
 When the previous server was run, the inner `proxyRes` handler for `'data'` events was never called so it didn't function as an actual reverse proxy. I must have skipped this line in the Node docs the first time: [^node-http-request]
 
@@ -57,37 +59,39 @@ When the previous server was run, the inner `proxyRes` handler for `'data'` even
 
 After calling `end`, a readable stream of the request to the target server must be handled using event listeners. This readable stream also can emit multiple `'data'` events, so; a working reverse proxy looks something like the following:
 
-```typescript
-createServer(async (outerReq: IncomingMessage, outerRes: ServerResponse) => {
-  const proxyReq = http.request({
-    hostname: "localhost",
-    port: 4000,
-    method: "GET",
-    path: "/",
-  });
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token function">createServer</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">(</span>outerReq<span class="token operator">:</span> IncomingMessage<span class="token punctuation">,</span> outerRes<span class="token operator">:</span> ServerResponse<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> proxyReq <span class="token operator">=</span> http<span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    hostname<span class="token operator">:</span> <span class="token string">"localhost"</span><span class="token punctuation">,</span>
+    port<span class="token operator">:</span> <span class="token number">4000</span><span class="token punctuation">,</span>
+    method<span class="token operator">:</span> <span class="token string">"GET"</span><span class="token punctuation">,</span>
+    path<span class="token operator">:</span> <span class="token string">"/"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  proxyReq.end();
-  proxyReq.on("response", (proxyRes) => {
-    outerRes.writeHead(proxyRes.statusCode || 200, outerReq.headers);
-    proxyRes.setEncoding("utf-8");
-    const chunks: string[] = [];
+  proxyReq<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  proxyReq<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">"response"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>proxyRes<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    outerRes<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span>proxyRes<span class="token punctuation">.</span>statusCode <span class="token operator">||</span> <span class="token number">200</span><span class="token punctuation">,</span> outerReq<span class="token punctuation">.</span>headers<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    proxyRes<span class="token punctuation">.</span><span class="token function">setEncoding</span><span class="token punctuation">(</span><span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> chunks<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-    proxyRes.on("data", (chunk) => {
-      chunks.push(chunk);
-    });
+    proxyRes<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>chunk<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      chunks<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>chunk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    proxyRes.on("end", async () => {
-      const body = chunks.join("");
-      outerRes.write(body);
-      outerRes.end();
-    });
-  });
+    proxyRes<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">"end"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> body <span class="token operator">=</span> chunks<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      outerRes<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      outerRes<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  proxyReq.on("error", async () => {
-    console.error("Error");
-  });
-}).listen(5000);
-```
+  proxyReq<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">"error"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"Error"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">5000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code>
+</pre>
 
 I hadn't placed much focus into the Node networking APIs before, and until reading the Node chapter of _JavaScript: The Definitive Guide_ I didn't have that great of a handle on it. [^flanagan] This was a book that I already had a great deal of respect for given its comprehensive detail, so I wasn't surprised that the Node chapter also was quite well written. The way that readable and writable streams work is relatively intuitive, but the Node documentation would be better if it included TypeScript types and was clearer about which events can be emitted by which readable streams. It seems strange that strings are used to represent arbitrary events. While there are readable stream method type signatures like `on(event: "data", listener: (chunk: any) => void): this` there is also a permissive `on(event: string | symbol, listener: (...args: any[]) => void): this` to support custom `EventEmitter` instances. [^node-types]
 
@@ -99,25 +103,27 @@ This ZooKeeper enabled reverse proxy currently serves <a href="https://test.iain
 
 Apache ZooKeeper provides a few convinces for notifying clients about changes in the data store. ZooKeeper watches are one of these features, and I put them to use for clearing the reverse proxy cache when a new replica becomes available. A target server will write the current date time to `/cacheAge` during startup, and the reverse proxy calls the function below to clear the request cache accordingly. Because watches only last for a single change notification, in the code below I have reset the watch every time it is triggered but there really has to be a more elegant and error-resilient way to do this.
 
-```typescript
-export const cacheResetWatch = async (
-  client: ZooKeeper,
-  path: string,
-  cache: NodeCache,
-) => {
-  if ((await getMaybeZnode(client, path)).isSome()) {
-    client.aw_get(
-      path,
-      (_type, _state, _path) => {
-        console.log("Clearing cache");
-        cache.close();
-        cacheResetWatch(client, path, cache);
-      },
-      (_rc, _error, _stat, _data) => {},
-    );
-  }
-};
-```
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token function-variable function">cacheResetWatch</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span>
+  client<span class="token operator">:</span> ZooKeeper<span class="token punctuation">,</span>
+  path<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span>
+  cache<span class="token operator">:</span> NodeCache<span class="token punctuation">,</span>
+<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">await</span> <span class="token function">getMaybeZnode</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> path<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isSome</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    client<span class="token punctuation">.</span><span class="token function">aw_get</span><span class="token punctuation">(</span>
+      path<span class="token punctuation">,</span>
+      <span class="token punctuation">(</span>_type<span class="token punctuation">,</span> _state<span class="token punctuation">,</span> _path<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Clearing cache"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        cache<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">cacheResetWatch</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> path<span class="token punctuation">,</span> cache<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">(</span>_rc<span class="token punctuation">,</span> _error<span class="token punctuation">,</span> _stat<span class="token punctuation">,</span> _data<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code>
+</pre>
 
 The caching logic in general needs work; the cache TTL is 120 seconds and if the current target server git commit was recorded in ZooKeeper rather than the timestamp of the last replica restart then the cache could be cleared only when the content of the target server has actually changed.
 

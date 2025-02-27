@@ -36,35 +36,37 @@ Most advice about developer blogs is to use a static site generator by the likes
 
 A little before picking up F\# I finally took the [very](https://yieldcode.blog/post/why-engineers-should-write/) [common](https://rmoff.net/2023/07/19/blog-writing-for-developers/) [advice](https://guzey.com/personal/why-have-a-blog/) for software engineers to do public-facing writing, so I wanted to preserve the ability to serve arbitrary Markdown now that I was finally putting it to use. The main server-side framework I used was Giraffe, which is mostly set of functional bindings on top of C\#'s ASP.NET .[^giraffe] The Node website used Handlebars templates, but I moved these over to Razor pages without much issue when I couldn't find a .NET Handlebars engine that worked well. As is called out by the Giraffe docs, F\#'s eager evaluation of functions means that routes are only evaluated the first time that they are requested, where the same initial result will be used for future requests. Giraffe's `warbler` functions need to be used for accessing dynamic resources, but eager evaluation for static content probably has some performance benefits by forgoing unnecessary re-renders from Markdown to HTML. However, as shown below I was following the lessons from Wlaschin's _Domain Modelling Made Functional_ by using the type system only build `/post/:markdownPath` paths for existing Markdown files. This meant that I'd need to restart the application whenever I'd write a new post.
 
-```fsharp
-module AppHandlers
+<pre class="language-fsharp tabindex="0">
+<code class="language-fsharp>
+<span class="token keyword">module</span> AppHandlers
 
-//...
-module MarkdownPath =
-    let create path =
-        match path with
-        | path when (File.Exists path) && (Path.GetExtension path = ".md") -> Some(MarkdownPath path)
-        | _ -> None
+<span class="token comment">//...</span>
+<span class="token keyword">module</span> MarkdownPath <span class="token operator">=</span>
+    <span class="token keyword">let</span> create path <span class="token operator">=</span>
+        <span class="token keyword">match</span> path <span class="token keyword">with</span>
+        <span class="token operator">|</span> path <span class="token keyword">when</span> <span class="token punctuation">(</span>File<span class="token punctuation">.</span>Exists path<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>Path<span class="token punctuation">.</span>GetExtension path <span class="token operator">=</span> <span class="token string">".md"</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token function">Some</span><span class="token punctuation">(</span>MarkdownPath path<span class="token punctuation">)</span>
+        <span class="token operator">|</span> _ <span class="token operator">-></span> None
 
-    let toString (MarkdownPath path) = path
-//...
+    <span class="token keyword">let</span> toString <span class="token punctuation">(</span>MarkdownPath path<span class="token punctuation">)</span> <span class="token operator">=</span> path
+<span class="token comment">//...</span>
 
-let createRouteHandler markdownPath =
-    match MarkdownPath.toString markdownPath |> Path.GetFileName with
-    | "landing.md" -> route "/" >=> markdownFileHandler LeftHeaderMarkdown markdownPath "Iain Schmitt"
-    | "resume.md" ->
-        route "/resume"
-        >=> markdownFileHandler LeftHeaderMarkdown markdownPath "Iain Schmitt's Resume"
-    | _ ->
-        route $"/post/{Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)}"
-        >=> markdownFileHandler PostMarkdown markdownPath "Iain Schmitt"
+<span class="token keyword">let</span> createRouteHandler markdownPath <span class="token operator">=</span>
+    <span class="token keyword">match</span> MarkdownPath<span class="token punctuation">.</span>toString markdownPath <span class="token operator">|></span> Path<span class="token punctuation">.</span>GetFileName <span class="token keyword">with</span>
+    <span class="token operator">|</span> <span class="token string">"landing.md"</span> <span class="token operator">-></span> route <span class="token string">"/"</span> <span class="token operator">>=</span><span class="token operator">></span> markdownFileHandler LeftHeaderMarkdown markdownPath <span class="token string">"Iain Schmitt"</span>
+    <span class="token operator">|</span> <span class="token string">"resume.md"</span> <span class="token operator">-></span>
+        route <span class="token string">"/resume"</span>
+        <span class="token operator">>=</span><span class="token operator">></span> markdownFileHandler LeftHeaderMarkdown markdownPath <span class="token string">"Iain Schmitt's Resume"</span>
+    <span class="token operator">|</span> _ <span class="token operator">-></span>
+        route $<span class="token string">"/post/{Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)}"</span>
+        <span class="token operator">>=</span><span class="token operator">></span> markdownFileHandler PostMarkdown markdownPath <span class="token string">"Iain Schmitt"</span>
 
-let appRoutes: list<HttpHandler> =
-    Directory.GetFiles markdownRoot
-    |> Array.choose MarkdownPath.create
-    |> Array.map createRouteHandler
-    |> Array.toList
-```
+<span class="token keyword">let</span> appRoutes<span class="token punctuation">:</span> <span class="token class-name">list</span><span class="token operator">&lt;</span>HttpHandler<span class="token operator">></span> <span class="token operator">=</span>
+    Directory<span class="token punctuation">.</span>GetFiles markdownRoot
+    <span class="token operator">|></span> Array<span class="token punctuation">.</span>choose MarkdownPath<span class="token punctuation">.</span>create
+    <span class="token operator">|></span> Array<span class="token punctuation">.</span>map createRouteHandler
+    <span class="token operator">|></span> Array<span class="token punctuation">.</span>toList
+</code>
+</pre>
 
 While I'm sure I could get some Headless CMS working to my liking, Markdown is just plaintext, so I decided to essentially use GitHub CI/CD Actions as a CMS; the deploy pipeline would build and deploy the application with all Markdown files in `WebRoot/markdown/` after merge commits. GitHub actions worked well in another F\# project, [^previouspost] but I decided to make things more interesting by self-hosting the website. While the domain records for this website are served on a Digital Ocean VM, Nginx on said VM runs a reverse proxy to my home router. A port forwarding rule that only applies to the Digital Ocean IP address forwards traffic to a server on a DMZ VLAN, which hosts the application. One of these days I'll implement some caching on the Digital Ocean Nginx and set up another reverse proxy VM in a different geography, but that's almost entirely for show given what little bandwidth this website needs. At this point I don't have any website analytics outside of Nginx logs, but some minor F\# middleware would fix that to give me some visibility on page views.
 

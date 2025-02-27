@@ -19,32 +19,36 @@ let getCurrentTargetZnodePath hostAddress hostPort =
     $"{TARGETS_ZNODE_PATH}/{hostAddress}:{hostPort}"
 
 let configureZookeeper (zkConnectString: string) (hostAddress: string) (hostPort: string) =
-   task {
-        let zooKeeper = getZooKeeper zkConnectString
-        let! targetListStat = zooKeeper.existsAsync TARGETS_ZNODE_PATH
-        let currentTargetZnodePath = getCurrentTargetZnodePath hostAddress hostPort
+    task {
+        
+        match zkConnectString with
+        | "-1" -> () //I have no earthly idea why, but even when the ZK connect string is set to "-1" there are still dev ZK errors thrown
+        | _ ->
+            let zooKeeper = getZooKeeper zkConnectString
+            let! targetListStat = zooKeeper.existsAsync TARGETS_ZNODE_PATH
+            let currentTargetZnodePath = getCurrentTargetZnodePath hostAddress hostPort
 
-        if (isNull targetListStat) then
-            zooKeeper.createAsync (TARGETS_ZNODE_PATH, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
+            if (isNull targetListStat) then
+                zooKeeper.createAsync (TARGETS_ZNODE_PATH, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
+                |> ignore
+
+            let! hostTargetStat = zooKeeper.existsAsync currentTargetZnodePath
+
+            if (isNull hostTargetStat |> not) then
+                zooKeeper.deleteAsync (currentTargetZnodePath, -1) |> ignore
+
+            zooKeeper.createAsync (currentTargetZnodePath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL)
             |> ignore
 
-        let! hostTargetStat = zooKeeper.existsAsync currentTargetZnodePath
+            zooKeeper.createAsync ("/cacheAge", null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
+            |> ignore
 
-        if (isNull hostTargetStat |> not) then
-            zooKeeper.deleteAsync (currentTargetZnodePath, -1) |> ignore
-
-        zooKeeper.createAsync (currentTargetZnodePath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL)
-        |> ignore
-
-        zooKeeper.createAsync ("/cacheAge", null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
-        |> ignore
-
-        zooKeeper.setDataAsync (
-            "/cacheAge",
-            Encoding.ASCII.GetBytes(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() |> Convert.ToString),
-            -1
-        )
-        |> ignore
+            zooKeeper.setDataAsync (
+                "/cacheAge",
+                Encoding.ASCII.GetBytes(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() |> Convert.ToString),
+                -1
+            )
+            |> ignore
 
     }
     |> ignore

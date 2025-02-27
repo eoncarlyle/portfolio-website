@@ -31,4 +31,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+  <Target Name="ApplySyntaxHighlighting" BeforeTargets="Build" AfterTargets="CopyFilesToOutputDirectory">
+    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(OutDir)WebRoot/markdown"/>
+  </Target>
+
+  <Target Name="ApplySyntaxHighlightingDuringDevelopment" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(ProjectDir)WebRoot/markdown" />
+  </Target>
 </Project>

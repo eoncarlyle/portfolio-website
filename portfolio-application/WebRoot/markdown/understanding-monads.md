@@ -8,146 +8,162 @@ The Node reverse proxy explained in my <a href="/post/my-needlessly-complicated-
 
 Some say that once you understand monads you lose the ability to explain them. [^paradox] This can't bode well for this explanation, but let's give it a shot. A better question than 'what are monads and why would you use them' is 'what are the practical differences between monads and functors'. Functors by themselves are pretty powerful: the _Mostly Adequate_ guide explains them well, the gist being 'A Functor is a type that implements `map` and obeys some laws', with said laws shown below:
 
-```javascript
-// identity
-map(id) === id;
+<pre class="language-javascript tabindex="0">
+<code class="language-javascript>
+<span class="token comment">// identity</span>
+<span class="token function">map</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token operator">===</span> id<span class="token punctuation">;</span>
 
-// composition
-compose(map(f), map(g)) === map(compose(f, g));
+<span class="token comment">// composition</span>
+<span class="token function">compose</span><span class="token punctuation">(</span><span class="token function">map</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">map</span><span class="token punctuation">(</span>g<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token function">map</span><span class="token punctuation">(</span><span class="token function">compose</span><span class="token punctuation">(</span>f<span class="token punctuation">,</span> g<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-const compLaw1 = compose(map(append(" romanus ")), map(append(" sum")));
-const compLaw2 = map(compose(append(" romanus "), append(" sum")));
-compLaw1(Container.of("civis")); // Container("civis romanus sum")
-compLaw2(Container.of("civis")); // Container("civis romanus sum")
-```
+<span class="token keyword">const</span> compLaw1 <span class="token operator">=</span> <span class="token function">compose</span><span class="token punctuation">(</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">" romanus "</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">map</span><span class="token punctuation">(</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">" sum"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> compLaw2 <span class="token operator">=</span> <span class="token function">map</span><span class="token punctuation">(</span><span class="token function">compose</span><span class="token punctuation">(</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">" romanus "</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">append</span><span class="token punctuation">(</span><span class="token string">" sum"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">compLaw1</span><span class="token punctuation">(</span><span class="token maybe-class-name">Container</span><span class="token punctuation">.</span><span class="token method function property-access">of</span><span class="token punctuation">(</span><span class="token string">"civis"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Container("civis romanus sum")</span>
+<span class="token function">compLaw2</span><span class="token punctuation">(</span><span class="token maybe-class-name">Container</span><span class="token punctuation">.</span><span class="token method function property-access">of</span><span class="token punctuation">(</span><span class="token string">"civis"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Container("civis romanus sum")</span>
+</code>
+</pre>
 
 The rest of this post will assume familiarity with the `Either`, `Option`, and `IO` types, the latter of which is implemented in `fp-ts/IO`. Note that all three of these types are both monads and functors, as all monads are functors but not vice versa. The characteristic function of functors is `map`, which calls a function on the value contained within the functor. The IO type specific `map` function has been imported as `mapIO` below:
 
-```typescript
-import { pipe } from "fp-ts/function";
-import { IO, chain as chainIO, map as mapIO, of as ofIO } from "fp-ts/IO";
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> pipe <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"fp-ts/function"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> <span class="token constant">IO</span><span class="token punctuation">,</span> chain <span class="token keyword">as</span> chainIO<span class="token punctuation">,</span> map <span class="token keyword">as</span> mapIO<span class="token punctuation">,</span> <span class="token keyword">of</span> <span class="token keyword">as</span> ofIO <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"fp-ts/IO"</span><span class="token punctuation">;</span>
 
-const effect: IO<string> = ofIO("myString");
+<span class="token keyword">const</span> effect<span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token operator">></span> <span class="token operator">=</span> <span class="token function">ofIO</span><span class="token punctuation">(</span><span class="token string">"myString"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-const singleMap: (fa: IO<string>) => IO<string> = mapIO((input: string) =>
-  input.toUpperCase(),
-);
-const singleMapFunction: IO<string> = singleMap(effect);
-const singleMapApplied: string = singleMapFunction(); // = "MYSTRING"
-```
+<span class="token keyword">const</span> <span class="token function-variable function">singleMap</span><span class="token operator">:</span> <span class="token punctuation">(</span>fa<span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token operator">></span> <span class="token operator">=</span> <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>input<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span>
+  input<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> singleMapFunction<span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token operator">></span> <span class="token operator">=</span> <span class="token function">singleMap</span><span class="token punctuation">(</span>effect<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> singleMapApplied<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> <span class="token function">singleMapFunction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// = "MYSTRING"</span>
+</code>
+</pre>
 
 In the segment above, the argument to `mapIO` is a function that accepts a string and returns another string. The return value is itself a function, and it accepts an `IO<string>` and returns another `IO<string>`. This can be useful to sequentially apply multiple successive functions on the functor's value. While this can look messy in languages without a pipeline operator, the `fp-ts` pipe function can clean this up making `doubleMapMessy` and `doubleMapPipe` equivalent in the following.
 
-```typescript
-const doubleMapMessy: IO<string> = mapIO((input: string) =>
-  input.toUpperCase(),
-)(mapIO((input: string) => input.repeat(2))(effect));
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token keyword">const</span> doubleMapMessy<span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token operator">></span> <span class="token operator">=</span> <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>input<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span>
+  input<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>input<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span> input<span class="token punctuation">.</span><span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">(</span>effect<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-const doubleMapPipe: IO<string> = pipe(
-  effect,
-  mapIO((input: string) => input.toUpperCase()),
-  mapIO((input: string) => input.repeat(2)),
-);
-const doubleMapPipeApplied: string = doubleMapPipe()// = "MYSTRINGMYSTRING"
-```
+<span class="token keyword">const</span> doubleMapPipe<span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token operator">></span> <span class="token operator">=</span> <span class="token function">pipe</span><span class="token punctuation">(</span>
+  effect<span class="token punctuation">,</span>
+  <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>input<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span> input<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>input<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span> input<span class="token punctuation">.</span><span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> doubleMapPipeApplied<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> <span class="token function">doubleMapPipe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment">// = "MYSTRINGMYSTRING"</span>
+</code>
+</pre>
 
 While all the functions provided to `mapIO` thus far have had types `IO<string> => IO<string>`, note the type signature of `mapIO`:
 
-```typescript
-export declare const map: <A, B>(f: (a: A) => B) => (fa: IO<A>) => IO<B>
-```
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token keyword">export</span> <span class="token keyword">declare</span> <span class="token keyword">const</span> map<span class="token operator">:</span> <span class="token operator">&lt;</span><span class="token constant">A</span><span class="token punctuation">,</span> <span class="token constant">B</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token function-variable function">f</span><span class="token operator">:</span> <span class="token punctuation">(</span>a<span class="token operator">:</span> <span class="token constant">A</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">B</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span>fa<span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token constant">A</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token constant">B</span><span class="token operator">></span>
+</code>
+</pre>
 
 This means that we can use `map` with `string => void` functions, which would be appropriate for logging to standard output. To make things clearer, I've added some type information in the segment below.
 
-```typescript
-const mapWithSideEffect: IO<void> = pipe(
-  effect,
-  // IO<string>
-  mapIO((input: string) => input.toUpperCase()),
-  //(f: (a: A) => B) => (fa: IO<A>) => IO<B>; A: string, B: string
-  mapIO((input: string) => input.repeat(2)),
-  //(f: (a: A) => B) => (fa: IO<A>) => IO<B>; A: string, B: string
-  mapIO((input: string) => console.log(input)),
-  //(f: (a: A) => B) => (fa: IO<A>) => IO<B>; A: string, B: void
-);
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token keyword">const</span> mapWithSideEffect<span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token keyword">void</span><span class="token operator">></span> <span class="token operator">=</span> <span class="token function">pipe</span><span class="token punctuation">(</span>
+  effect<span class="token punctuation">,</span>
+  <span class="token comment">// IO&lt;string></span>
+  <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>input<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span> input<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token comment">//(f: (a: A) => B) => (fa: IO&lt;A>) => IO&lt;B>; A: string, B: string</span>
+  <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>input<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span> input<span class="token punctuation">.</span><span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token comment">//(f: (a: A) => B) => (fa: IO&lt;A>) => IO&lt;B>; A: string, B: string</span>
+  <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>input<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>input<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token comment">//(f: (a: A) => B) => (fa: IO&lt;A>) => IO&lt;B>; A: string, B: void</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-//Logs "MYSTRINGMYSTRING"
-mapWithSideEffect();
-```
+<span class="token comment">//Logs "MYSTRINGMYSTRING"</span>
+<span class="token function">mapWithSideEffect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code>
+</pre>
 
 Given all of this, why bother with monads? While we've only seen examples from the IO monad, everything shown here would allow you to convert `Option<string>` to `Option<number>` while deserialising a property that may not exist, or from `Result<UserValidationError, User>`  to `Result<BalanceValidationError, Balance>`.
 
 A problem arises when we need to combine different `IO` operations. Let's say we have a `logFilePath` in `myConfig.json`. It is entirely reasonable for an application to read the log file path from the configuration file before writing to the log, but map functions aren't meant to handle this. Strangely, the segment below will compile even though the type hint for `pureMapWriteToConfig` is incorrect: it should be `IO<() => void>` instead as shown by the related comment. Because of this, `mapWriteToConfig()` doesn't actually log anything, which shouldn't have surprised us in the first place.
 
-```typescript
-import { pipe } from "fp-ts/function";
-import { IO, chain as chainIO, map as mapIO, of as ofIO } from "fp-ts/IO";
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> pipe <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"fp-ts/function"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> <span class="token constant">IO</span><span class="token punctuation">,</span> chain <span class="token keyword">as</span> chainIO<span class="token punctuation">,</span> map <span class="token keyword">as</span> mapIO<span class="token punctuation">,</span> <span class="token keyword">of</span> <span class="token keyword">as</span> ofIO <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"fp-ts/IO"</span><span class="token punctuation">;</span>
 
-import { readFileSync, writeFileSync } from "node:fs";
-interface Config {
-  logFilePath: string;
-}
+<span class="token keyword">import</span> <span class="token punctuation">{</span> readFileSync<span class="token punctuation">,</span> writeFileSync <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"node:fs"</span><span class="token punctuation">;</span>
+<span class="token keyword">interface</span> <span class="token class-name">Config</span> <span class="token punctuation">{</span>
+  logFilePath<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-const getFileJson =
-  (fileName: string): IO<Config> =>
-  () =>
-    JSON.parse(readFileSync(fileName, "utf-8")) as Config;
+<span class="token keyword">const</span> getFileJson <span class="token operator">=</span>
+  <span class="token punctuation">(</span>fileName<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span>Config<span class="token operator">></span> <span class="token operator">=></span>
+  <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span>
+    <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>fileName<span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">as</span> Config<span class="token punctuation">;</span>
 
-const pureMapWriteToConfig = (configFileName: string, log: string): IO<void> =>
-  pipe(
-    getFileJson(configFileName),
-    mapIO((config: Config) => {
-      console.log(`Map config: ${JSON.stringify(config)}`);
-      return config;
-    }),
-    mapIO((config: Config) => () => writeFileSync(config.logFilePath, log)),
-    // mapIO<Config, () => void>(f: (a: Config) => () => void): (fa: IO<Config>) => IO<() => void>
-  );
+<span class="token keyword">const</span> pureMapWriteToConfig <span class="token operator">=</span> <span class="token punctuation">(</span>configFileName<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span> log<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token keyword">void</span><span class="token operator">></span> <span class="token operator">=></span>
+  <span class="token function">pipe</span><span class="token punctuation">(</span>
+    <span class="token function">getFileJson</span><span class="token punctuation">(</span>configFileName<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>config<span class="token operator">:</span> Config<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Map config: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> config<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>config<span class="token operator">:</span> Config<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token function">writeFileSync</span><span class="token punctuation">(</span>config<span class="token punctuation">.</span>logFilePath<span class="token punctuation">,</span> log<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">// mapIO&lt;Config, () => void>(f: (a: Config) => () => void): (fa: IO&lt;Config>) => IO&lt;() => void></span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-const mapWriteToConfig = pureMapWriteToConfig("mapConfig.json", "myMapLog");
-mapWriteToConfig();
+<span class="token keyword">const</span> mapWriteToConfig <span class="token operator">=</span> <span class="token function">pureMapWriteToConfig</span><span class="token punctuation">(</span><span class="token string">"mapConfig.json"</span><span class="token punctuation">,</span> <span class="token string">"myMapLog"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">mapWriteToConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-/*
+<span class="token comment">/*
 $ wc -l mapLog.txt
   0 mapLog.txt
-*/
-```
+*/</span>
+</code>
+</pre>
 
 Once we have the config file represented as an `IO<Config>` instance, we need to read it and do an IO operation for the log file. That means we need some function that can accept a `(config: Config) => IO<void>` as well as the incoming `IO<Config>`. This is known by a few different names, including `bind` and `flatMap`, but `fp-ts` calls this `chain`. This is the characteristic function that separates monads from non-monad functors:
 
-```typescript
-export declare const chain: <A, B>(f: (a: A) => IO<B>) => (ma: IO<A>) => IO<B>
-```
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token keyword">export</span> <span class="token keyword">declare</span> <span class="token keyword">const</span> chain<span class="token operator">:</span> <span class="token operator">&lt;</span><span class="token constant">A</span><span class="token punctuation">,</span> <span class="token constant">B</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token function-variable function">f</span><span class="token operator">:</span> <span class="token punctuation">(</span>a<span class="token operator">:</span> <span class="token constant">A</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token constant">B</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span>ma<span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token constant">A</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token constant">B</span><span class="token operator">></span>
+</code>
+</pre>
 
 The `chain` function is imported as `chainIO`, so `chainWriteToConfig` logs successfully when called.
 
-```typescript
-const pureChainWriteToConfig = (
-  configFileName: string,
-  log: string,
-): IO<void> =>
-  pipe(
-    getFileJson(configFileName),
-    mapIO((config: Config) => {
-      console.log(`Chain config: ${JSON.stringify(config)}`);
-      return config;
-    }),
-    chainIO((config: Config) => () => writeFileSync(config.logFilePath, log)),
-    //chainIO<Config, void>(f: (a: Config) => IO<void>): (ma: IO<Config>) => IO<void>
-  );
+<pre class="language-typescript tabindex="0">
+<code class="language-typescript>
+<span class="token keyword">const</span> pureChainWriteToConfig <span class="token operator">=</span> <span class="token punctuation">(</span>
+  configFileName<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span>
+  log<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token constant">IO</span><span class="token operator">&lt;</span><span class="token keyword">void</span><span class="token operator">></span> <span class="token operator">=></span>
+  <span class="token function">pipe</span><span class="token punctuation">(</span>
+    <span class="token function">getFileJson</span><span class="token punctuation">(</span>configFileName<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token function">mapIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>config<span class="token operator">:</span> Config<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Chain config: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> config<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token function">chainIO</span><span class="token punctuation">(</span><span class="token punctuation">(</span>config<span class="token operator">:</span> Config<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token function">writeFileSync</span><span class="token punctuation">(</span>config<span class="token punctuation">.</span>logFilePath<span class="token punctuation">,</span> log<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">//chainIO&lt;Config, void>(f: (a: Config) => IO&lt;void>): (ma: IO&lt;Config>) => IO&lt;void></span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-const chainWriteToConfig = pureChainWriteToConfig(
-  "chainConfig.json",
-  "myChainLog",
-);
-chainWriteToConfig();
+<span class="token keyword">const</span> chainWriteToConfig <span class="token operator">=</span> <span class="token function">pureChainWriteToConfig</span><span class="token punctuation">(</span>
+  <span class="token string">"chainConfig.json"</span><span class="token punctuation">,</span>
+  <span class="token string">"myChainLog"</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">chainWriteToConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-/*
+<span class="token comment">/*
 $ cat chainLog.txt
 myChainLog
-*/
+*/</span>
 
-```
+</code>
+</pre>
 
 Chapter 9 of the _Mostly Adequate_ guide explains monads somewhat differently. They introduce `join` as the flattening of `Monad<Mondad<T>>` into `Monad<T>` making `chain` equivalent to a `map` followed by a `join`. The examples they provided use function composition rather than pipes, but this doesn't change much.
 
