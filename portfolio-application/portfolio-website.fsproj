@@ -25,6 +25,10 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
 
+<PropertyGroup>
+  <WebRootPath>$(OutputPath)WebRoot</WebRootPath>
+</PropertyGroup>
+
   <ItemGroup>
     <None Include="web.config" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Views\*.cshtml;WebRoot\**\*">
@@ -32,11 +36,20 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="ApplySyntaxHighlighting" BeforeTargets="Build" AfterTargets="CopyFilesToOutputDirectory">
-    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(OutDir)WebRoot/markdown"/>
+  <Target Name="IntstallNodePackages" BeforeTargets="Build" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install"/>
   </Target>
 
-  <Target Name="ApplySyntaxHighlightingDuringDevelopment" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(ProjectDir)WebRoot/markdown" />
+  <Target Name="ApplySyntaxHighlighting" BeforeTargets="Build" AfterTargets="IntstallNodePackages" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(ProjectDir)out/WebRoot/markdown"/>
   </Target>
+
+  <Target Name="IntstallNodePackagesDuringDevelopment" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install"/>
+  </Target>
+
+  <Target Name="ApplySyntaxHighlightingDuringDevelopment" AfterTargets="IntstallNodePackagesDuringDevelopment" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(OutDir)WebRoot/markdown" />
+  </Target>
+
 </Project>
