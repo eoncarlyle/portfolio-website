@@ -94,7 +94,7 @@ jobs:
 
   deploy_test:
     needs: [check_changes, build_zk_proxy, build_portfolio, setup_network]
-    if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
+    if: needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true'
     runs-on: self-hosted
 
     steps:
@@ -151,14 +151,56 @@ jobs:
         run: |
           sudo podman ps --format "{{.Names}}: {{.Status}}"
 
-      - name: Verify success
+          # Check if all expected containers are running
+          expected_containers=()
+
+          # Always expect ZooKeeper containers
+          expected_containers+=("zk1-test" "zk2-test" "zk3-test")
+
+          # Add proxy containers if they should be deployed
+          if [[ "${{ needs.check_changes.outputs.actions_changed }}" == "true" || "${{ needs.check_changes.outputs.zk_proxy_changed }}" == "true" ]]; then
+            expected_containers+=("zk-reverse-proxy-1-test" "zk-reverse-proxy-2-test")
+          fi
+
+          # Add portfolio containers if they should be deployed
+          if [[ "${{ needs.check_changes.outputs.actions_changed }}" == "true" || "${{ needs.check_changes.outputs.portfolio_changed }}" == "true" ]]; then
+            expected_containers+=("portfolio-application-1-test" "portfolio-application-2-test")
+          fi
+
+          # Check each expected container
+          for container in "${expected_containers[@]}"; do
+            if ! sudo podman ps --format "{{.Names}}" | grep -q "$container"; then
+              echo "Error: Container $container is not running!"
+              exit 1
+            fi
+          done
+
+          echo "All expected containers are running"
+
+      - name: Verify Application Health
         run: |
-          curl -I https://test.iainschmitt.com
+          # Test that the application is responding properly
+          max_retries=5
+          retry_count=0
+
+          while [ $retry_count -lt $max_retries ]; do
+            if curl -s -I https://test.iainschmitt.com | grep -q "HTTP/"; then
+              echo "Application is responding successfully"
+              exit 0
+            else
+              echo "Application not responding properly, retrying in 5 seconds..."
+              sleep 5
+              retry_count=$((retry_count + 1))
+            fi
+          done
+
+          echo "Error: Application health check failed after $max_retries attempts"
+          exit 1
 
   deploy_prod:
-    needs: [deploy_test, check_changes]
-    if: always() && (needs.check_changes.outputs.zk_proxy_changed == 'true' || needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
+    needs: deploy_test
     runs-on: self-hosted
+    if: success() && (needs.deploy_test.result == 'success')
 
     steps:
       - name: Deploy ZooKeeper Ensemble
@@ -180,7 +222,6 @@ jobs:
           done
 
       - name: Deploy Reverse Proxies
-        if: (needs.check_changes.outputs.actions_changed == 'true' ) ||  (needs.check_changes.outputs.zk_proxy_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -195,7 +236,6 @@ jobs:
           done
 
       - name: Deploy Portfolio Applications
-        if: (needs.check_changes.outputs.actions_changed == 'true') || ( needs.check_changes.outputs.portfolio_changed == 'true')
         run: |
           for i in {1..2}; do
             sudo podman run -d \
@@ -214,12 +254,34 @@ jobs:
         run: |
           sudo podman ps --format "{{.Names}}: {{.Status}}"
 
-      - name: Verify success
-        run: |
-          curl -I https://iainschmitt.com
+          # Check if all containers are running
+          expected_containers=("zk1" "zk2" "zk3" "zk-reverse-proxy-1" "zk-reverse-proxy-2" "portfolio-application-1" "portfolio-application-2")
 
-      #- name: Verify ZooKeeper Status
-      #  run: |
-      #    for i in {1..3}; do
-      #      sudo podman exec -it zk$i zkServer.sh status
-      #    done
+          for container in "${expected_containers[@]}"; do
+            if ! sudo podman ps --format "{{.Names}}" | grep -q "$container"; then
+              echo "Error: Container $container is not running!"
+              exit 1
+            fi
+          done
+
+          echo "All expected containers are running"
+
+      - name: Verify Production Health
+        run: |
+          # Test that the production application is responding properly
+          max_retries=5
+          retry_count=0
+
+          while [ $retry_count -lt $max_retries ]; do
+            if curl -s -I https://iainschmitt.com | grep -q "HTTP/"; then
+              echo "Production application is responding successfully"
+              exit 0
+            else
+              echo "Production application not responding properly, retrying in 5 seconds..."
+              sleep 5
+              retry_count=$((retry_count + 1))
+            fi
+          done
+
+          echo "Error: Production health check failed after $max_retries attempts"
+          exit 1
