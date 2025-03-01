@@ -49,6 +49,6 @@
 
     <Target Name="RunSyntaxHighlighter" DependsOnTargets="InstallNodePackages" BeforeTargets="PrepareForBuild">
         <Message Text="[MSBuild] Running Syntax Highlighter, Migrating Posts" Importance="high" />
-        <Exec Command="node $(ProjectDir)syntax-highlighting/index.js ../posts $(SyntaxHighlighterOutputDir)" />
+        <Exec Command="node $(ProjectDir)syntax-highlighting/index.js posts $(SyntaxHighlighterOutputDir)" />
     </Target>
 </Project>
