@@ -43,7 +43,7 @@
 
     <!-- Define the output directory based on configuration -->
     <PropertyGroup>
-        <SyntaxHighlighterOutputDir Condition="'$(Configuration)' == 'Release'">$(OutDir)WebRoot/markdown</SyntaxHighlighterOutputDir>
+        <SyntaxHighlighterOutputDir Condition="'$(Configuration)' == 'Release'">out/WebRoot/markdown</SyntaxHighlighterOutputDir>
         <SyntaxHighlighterOutputDir Condition="'$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/WebRoot/markdown</SyntaxHighlighterOutputDir>
     </PropertyGroup>
 
