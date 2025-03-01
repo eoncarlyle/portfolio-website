@@ -36,20 +36,19 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="IntstallNodePackages" BeforeTargets="Build" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install"/>
-  </Target>
+    <Target Name="InstallNodePackages" BeforeTargets="PrepareForBuild">
+        <Message Text="[MSBuild] Installing Syntax Highlighter Node Packages" Importance="high" />
+        <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install" />
+    </Target>
 
-  <Target Name="ApplySyntaxHighlighting" BeforeTargets="Build" AfterTargets="IntstallNodePackages" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(ProjectDir)out/WebRoot/markdown"/>
-  </Target>
+    <!-- Define the output directory based on configuration -->
+    <PropertyGroup>
+        <SyntaxHighlighterOutputDir Condition="'$(Configuration)' == 'Release'">$(OutDir)WebRoot/markdown</SyntaxHighlighterOutputDir>
+        <SyntaxHighlighterOutputDir Condition="'$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/WebRoot/markdown</SyntaxHighlighterOutputDir>
+    </PropertyGroup>
 
-  <Target Name="IntstallNodePackagesDuringDevelopment" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install"/>
-  </Target>
-
-  <Target Name="ApplySyntaxHighlightingDuringDevelopment" AfterTargets="IntstallNodePackagesDuringDevelopment" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(OutDir)WebRoot/markdown" />
-  </Target>
-
+    <Target Name="RunSyntaxHighlighter" DependsOnTargets="InstallNodePackages" BeforeTargets="PrepareForBuild">
+        <Message Text="[MSBuild] Running Syntax Highlighter, Migrating Posts" Importance="high" />
+        <Exec Command="node $(ProjectDir)syntax-highlighting/index.js ../posts $(SyntaxHighlighterOutputDir)" />
+    </Target>
 </Project>

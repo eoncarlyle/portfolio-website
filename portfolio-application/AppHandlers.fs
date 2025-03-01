@@ -34,17 +34,13 @@ module MarkdownPath =
 
     let toString (MarkdownPath path) = path
 
-let contentRoot = Directory.GetCurrentDirectory()
-let webRoot = Path.Combine(contentRoot, "WebRoot")
-let markdownRoot = Path.Combine(webRoot, "markdown")
-
 let error404Msg = "The page that you are looking for does not exist!"
 let error500Msg = "Internal server error"
 
 let markdownPipeline =
     MarkdownPipelineBuilder().UseAdvancedExtensions().UseYamlFrontMatter().Build()
 
-let markdownPaths =
+let markdownPaths markdownRoot =
     Directory.GetFiles markdownRoot |> Array.choose MarkdownPath.create
 
 let markdownFileName markdownPath =
@@ -69,7 +65,7 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     >=> razorHtmlView (fst renderTuple) None (snd renderTuple) None
 
 
-let postList =
+let postList markdownRoot =
 
     let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
         if line.StartsWith(prefix) then
@@ -100,7 +96,7 @@ let postList =
         $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
 
     let postLinks =
-        markdownPaths
+        markdownPaths markdownRoot
         |> Array.map (fun markdownPath ->
             let maybeHeader = tryGetHeader markdownPath
 
@@ -114,7 +110,7 @@ let postList =
 
     String.Join("\n", Array.concat [ [| "<ul>" |]; postLinks; [| "</ul>" |] ])
 
-let markdownFileHandler markdownViewName markdownPath header =
+let markdownFileHandler markdownViewName markdownRoot markdownPath header =
     let htmlContentsFromFile =
         MarkdownPath.toString markdownPath
         |> File.ReadAllText
@@ -123,7 +119,7 @@ let markdownFileHandler markdownViewName markdownPath header =
 
     let htmlContents =
         match markdownFileName markdownPath with
-        | "landing" -> [ htmlContentsFromFile; postList ] |> String.concat "\n"
+        | "landing" -> [ htmlContentsFromFile; postList markdownRoot ] |> String.concat "\n"
         | _ -> htmlContentsFromFile
 
     razorViewHandler markdownViewName (dict [ ("Body", box htmlContents); ("Header", box header) ])
@@ -131,8 +127,7 @@ let markdownFileHandler markdownViewName markdownPath header =
 let errorRazorViewHandler errorCode body =
     razorViewHandler ErrorMarkdown (dict [ ("ErrorCode", box errorCode); ("Body", box body) ])
 
-let headHandler: Handler =
-    setStatusCode 200
+let headHandler: Handler = setStatusCode 200
 
 let error404Handler: Handler =
     setStatusCode 404
@@ -142,18 +137,22 @@ let error404Handler: Handler =
 let error500Handler: Handler =
     clearResponse >=> setStatusCode 500 >=> errorRazorViewHandler 500 error500Msg
 
-let createRouteHandler markdownPath =
+let createRouteHandler markdownRoot markdownPath =
     match MarkdownPath.toString markdownPath |> Path.GetFileName with
-    | "landing.md" -> route "/" >=> markdownFileHandler LeftHeaderMarkdown markdownPath "Iain Schmitt"
+    | "landing.md" ->
+        route "/"
+        >=> markdownFileHandler LeftHeaderMarkdown markdownRoot markdownPath "Iain Schmitt"
     | "uses.md" ->
         route "/uses"
-        >=> markdownFileHandler PostMarkdown markdownPath "Iain Schmitt's Uses Page"
+        >=> markdownFileHandler PostMarkdown markdownRoot markdownPath "Iain Schmitt's Uses Page"
     | "resume.md" ->
         route "/resume"
-        >=> markdownFileHandler LeftHeaderMarkdown markdownPath "Iain Schmitt's Resume"
+        >=> markdownFileHandler LeftHeaderMarkdown markdownRoot markdownPath "Iain Schmitt's Resume"
     | _ ->
         route $"/post/{markdownFileName markdownPath}"
-        >=> markdownFileHandler PostMarkdown markdownPath "Iain Schmitt"
+        >=> markdownFileHandler PostMarkdown markdownRoot markdownPath "Iain Schmitt"
 
-let appRoutes: list<HttpHandler> =
-    markdownPaths |> Array.map createRouteHandler |> Array.toList
+let appRoutes (markdownRoot: String) : list<HttpHandler> =
+    markdownPaths markdownRoot
+    |> Array.map (createRouteHandler markdownRoot)
+    |> Array.toList
