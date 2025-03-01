@@ -152,6 +152,7 @@ let createRouteHandler markdownRoot markdownPath =
         route $"/post/{markdownFileName markdownPath}"
         >=> markdownFileHandler PostMarkdown markdownRoot markdownPath "Iain Schmitt"
 
+
 let appRoutes (markdownRoot: String) : list<HttpHandler> =
     markdownPaths markdownRoot
     |> Array.map (createRouteHandler markdownRoot)
