@@ -36,19 +36,25 @@
     </Content>
   </ItemGroup>
 
-    <Target Name="InstallNodePackages" BeforeTargets="PrepareForBuild">
-        <Message Text="[MSBuild] Installing Syntax Highlighter Node Packages" Importance="high" />
-        <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install" />
-    </Target>
+<PropertyGroup>
+  <SyntaxHighlighterOutputDir Condition="'$(Configuration)' == 'Release'">out/WebRoot/markdown</SyntaxHighlighterOutputDir>
+  <SyntaxHighlighterOutputDir Condition="'$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/WebRoot/markdown</SyntaxHighlighterOutputDir>
+</PropertyGroup>
 
-    <!-- Define the output directory based on configuration -->
-    <PropertyGroup>
-        <SyntaxHighlighterOutputDir Condition="'$(Configuration)' == 'Release'">$(OutDir)WebRoot/markdown</SyntaxHighlighterOutputDir>
-        <SyntaxHighlighterOutputDir Condition="'$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/WebRoot/markdown</SyntaxHighlighterOutputDir>
-    </PropertyGroup>
+<Target Name="InstallNodePackages" BeforeTargets="PrepareForBuild">
+  <Message Text="[MSBuild] Installing Syntax Highlighter Node Packages" Importance="high" />
+  <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install" />
+</Target>
 
-    <Target Name="RunSyntaxHighlighter" DependsOnTargets="InstallNodePackages" BeforeTargets="PrepareForBuild">
-        <Message Text="[MSBuild] Running Syntax Highlighter, Migrating Posts" Importance="high" />
-        <Exec Command="node $(ProjectDir)syntax-highlighting/index.js posts $(SyntaxHighlighterOutputDir)" />
-    </Target>
+<!-- New target to ensure output directory exists -->
+<Target Name="EnsureOutputDirectoryExists" BeforeTargets="RunSyntaxHighlighter">
+  <MakeDir Directories="$(SyntaxHighlighterOutputDir)" />
+  <Message Text="[MSBuild] Ensuring output directory exists: $(SyntaxHighlighterOutputDir)" Importance="high" />
+</Target>
+
+<Target Name="RunSyntaxHighlighter" DependsOnTargets="InstallNodePackages;EnsureOutputDirectoryExists" BeforeTargets="PrepareForBuild">
+  <Message Text="[MSBuild] Running Syntax Highlighter, Migrating Posts" Importance="high" />
+  <Exec Command="node $(ProjectDir)syntax-highlighting/index.js posts $(SyntaxHighlighterOutputDir)" />
+</Target>
+
 </Project>
