@@ -47,7 +47,8 @@ async function highlightFileAndMigrate(inputFile, outputFile) {
 }
 
 try {
-  if (process.argv.length !== 4) throw Error(`[Syntax Highlighting]: Illegal number (${process.argv.length}) of arrguments provided`);
+  if (process.argv.length !== 4)
+    throw Error(`[Syntax Highlighting]: Illegal number (${process.argv.length}) of arrguments provided`);
 
   const postsDirectory = process.argv[2];
   const markdownDirectory = process.argv[3];
