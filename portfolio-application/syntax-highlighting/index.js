@@ -31,7 +31,7 @@ async function highlightFileAndMigrate(inputFile, outputFile) {
     const defaultSyntaxHighlighting = await codeToHtml(sliceWithoutLang, { lang: language, theme: "catppuccin-mocha" });
     const adjustedSyntaxHighlighting = defaultSyntaxHighlighting.replace(
       "background-color:#1e1e2e;color:#cdd6f4",
-      "background-color:#181825;color:#cdd6f4;padding:1em;border-radius:0.3em",
+      "background-color:#181825;color:#cdd6f4;padding:1em;border-radius:0.3em;overflow:auto",
     );
     const sliceIncludingLangAndClosingBackticks = currentFileContents.slice(backticks[index], backticks[index + 1] + 3);
     replacementPair.push([sliceIncludingLangAndClosingBackticks, adjustedSyntaxHighlighting]);
