@@ -11,9 +11,9 @@ open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.Razor
 
-let webApp =
+let webApp markdownRoot =
     choose
-        [ GET >=> choose AppHandlers.appRoutes
+        [ GET >=> choose (AppHandlers.appRoutes markdownRoot)
           HEAD >=> AppHandlers.headHandler
           AppHandlers.error404Handler ]
 
@@ -22,12 +22,14 @@ let internalErrorHandler (ex: Exception) (logger: ILogger) =
     AppHandlers.error500Handler
 
 let configureApp (app: IApplicationBuilder) =
+    let markdownRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot", "markdown")
+
     app
         .UseGiraffeErrorHandler(internalErrorHandler)
         .UseHttpsRedirection()
         .UseStaticFiles()
         .UseResponseCaching()
-        .UseGiraffe(webApp)
+        .UseGiraffe(webApp markdownRoot)
 
 let configureServices (services: IServiceCollection) =
     let sp = services.BuildServiceProvider()
@@ -70,8 +72,8 @@ let main args =
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
                 .UseUrls($"http://{hostAddress}:{hostPort}")
-                .UseContentRoot(AppHandlers.contentRoot)
-                .UseWebRoot(AppHandlers.webRoot)
+                .UseWebRoot(Path.Combine(AppContext.BaseDirectory))
+                .UseWebRoot(Path.Combine(AppContext.BaseDirectory, "WebRoot"))
                 .Configure(Action<IApplicationBuilder> configureApp)
                 .ConfigureServices(configureServices)
                 .ConfigureLogging(configureLogging)

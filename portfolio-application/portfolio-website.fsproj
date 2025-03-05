@@ -25,6 +25,10 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <WebRootPath>$(OutputPath)WebRoot</WebRootPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="web.config" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Views\*.cshtml;WebRoot\**\*">
@@ -32,11 +36,24 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="ApplySyntaxHighlighting" BeforeTargets="Build" AfterTargets="CopyFilesToOutputDirectory">
-    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(OutDir)WebRoot/markdown"/>
+  <PropertyGroup>
+    <SyntaxHighlighterOutputDir Condition="'$(Configuration)' == 'Release'">out/WebRoot/markdown</SyntaxHighlighterOutputDir>
+    <SyntaxHighlighterOutputDir Condition="'$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/WebRoot/markdown</SyntaxHighlighterOutputDir>
+  </PropertyGroup>
+
+  <Target Name="InstallNodePackages" BeforeTargets="PrepareForBuild">
+    <Message Text="[MSBuild] Installing Syntax Highlighter Node Packages" Importance="high" />
+    <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install" />
   </Target>
 
-  <Target Name="ApplySyntaxHighlightingDuringDevelopment" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js $(ProjectDir)WebRoot/markdown" />
+  <Target Name="EnsureOutputDirectoryExists" BeforeTargets="RunSyntaxHighlighter">
+    <MakeDir Directories="$(SyntaxHighlighterOutputDir)" />
+    <Message Text="[MSBuild] Ensuring output directory exists: $(SyntaxHighlighterOutputDir)" Importance="high" />
   </Target>
+
+  <Target Name="RunSyntaxHighlighter" DependsOnTargets="InstallNodePackages;EnsureOutputDirectoryExists" BeforeTargets="PrepareForBuild">
+    <Message Text="[MSBuild] Running Syntax Highlighter, Migrating Posts" Importance="high" />
+    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js posts $(SyntaxHighlighterOutputDir)" />
+  </Target>
+
 </Project>

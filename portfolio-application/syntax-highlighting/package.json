@@ -1,0 +1,11 @@
+{
+  "name": "syntax-highlighting",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "eoncarlyle",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "shiki": "^3.1.0"
+  }
+}
