@@ -5,10 +5,13 @@ open System.IO
 open System.Collections.Generic
 open Giraffe
 open Giraffe.Razor
+open Giraffe.ViewEngine
 open Markdig
 open Markdig.Extensions.Yaml
 open Markdig.Syntax
 open Microsoft.AspNetCore
+open Microsoft.AspNetCore.Components.RenderTree
+open Microsoft.AspNetCore.Http
 
 type MarkdownViewName =
     | DirectMarkdown
@@ -153,7 +156,22 @@ let createRouteHandler markdownRoot markdownPath =
         >=> markdownFileHandler PostMarkdown markdownRoot markdownPath "Iain Schmitt"
 
 
-let appRoutes (markdownRoot: String) : list<HttpHandler> =
+let markdownRoutes (webRoot: String) : list<HttpHandler> =
+    let markdownRoot = Path.Combine(webRoot, "markdown")
     markdownPaths markdownRoot
     |> Array.map (createRouteHandler markdownRoot)
     |> Array.toList
+
+let pdfHandler webRoot pdfFileName : HttpHandler =
+    let pdfPath = Path.Combine(webRoot, "pdf", pdfFileName)
+    streamFile true pdfPath None None
+        
+let nonHtmlRoutes webRoot =
+   [
+       route "/wedding/seating" >=>  pdfHandler webRoot "wedding-seating-chart.pdf"
+       route "/wedding/julias-game" >=> redirectTo true "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+       route "/wedding/iains-game" >=> redirectTo true "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+   ]
+   
+  
+let appRoutes webRoot = (markdownRoutes webRoot) @ (nonHtmlRoutes webRoot)

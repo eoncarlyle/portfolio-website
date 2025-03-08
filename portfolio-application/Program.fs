@@ -2,6 +2,7 @@ module Portfolio.App
 
 open System
 open System.IO
+open AppHandlers
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Cors.Infrastructure
 open Microsoft.AspNetCore.Hosting
@@ -11,18 +12,18 @@ open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.Razor
 
-let webApp markdownRoot =
+let webApp webRoot =
     choose
-        [ GET >=> choose (AppHandlers.appRoutes markdownRoot)
-          HEAD >=> AppHandlers.headHandler
-          AppHandlers.error404Handler ]
+        [ GET >=> choose (appRoutes webRoot)
+          HEAD >=> headHandler
+          error404Handler ]
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
     AppHandlers.error500Handler
 
 let configureApp (app: IApplicationBuilder) =
-    let markdownRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot", "markdown")
+    let markdownRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot")
 
     app
         .UseGiraffeErrorHandler(internalErrorHandler)

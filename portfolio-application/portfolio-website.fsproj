@@ -36,6 +36,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WebRoot\pdf\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <SyntaxHighlighterOutputDir Condition="'$(Configuration)' == 'Release'">out/WebRoot/markdown</SyntaxHighlighterOutputDir>
     <SyntaxHighlighterOutputDir Condition="'$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/WebRoot/markdown</SyntaxHighlighterOutputDir>
