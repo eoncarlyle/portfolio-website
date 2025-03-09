@@ -12,25 +12,22 @@ open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.Razor
 
-let webApp webRoot =
-    choose
-        [ GET >=> choose (appRoutes webRoot)
-          HEAD >=> headHandler
-          error404Handler ]
+let routes webRoot =
+    choose [ GET >=> choose (appRoutes webRoot); HEAD >=> headHandler; error404Handler ]
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
     AppHandlers.error500Handler
 
 let configureApp (app: IApplicationBuilder) =
-    let markdownRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot")
+    let webRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot")
 
     app
         .UseGiraffeErrorHandler(internalErrorHandler)
         .UseHttpsRedirection()
         .UseStaticFiles()
         .UseResponseCaching()
-        .UseGiraffe(webApp markdownRoot)
+        .UseGiraffe(routes webRoot)
 
 let configureServices (services: IServiceCollection) =
     let sp = services.BuildServiceProvider()
@@ -44,29 +41,23 @@ let configureLogging (builder: ILoggingBuilder) =
 
 //TODO: better validation
 type NetworkArgs =
-    { ZkConnectString: string
-      HostAddress: string
+    { HostAddress: string
       HostPort: string }
 
 let getNetworkArgs args =
     match (Array.length args) with
-    | 3 ->
+    | 2 ->
         Some
-            { ZkConnectString = Array.get args 0
-              HostAddress = Array.get args 1
-              HostPort = Array.get args 2 }
+            { HostAddress = Array.get args 0
+              HostPort = Array.get args 1 }
     | _ -> None
 
 [<EntryPoint>]
 let main args =
-    // Intentionally unrecoverably fails if bad
+    // Intentional unrecoverable failure if incorrect
     let networkArgs = getNetworkArgs args |> Option.get
-
-    let zkConnectString = networkArgs.ZkConnectString
     let hostAddress = networkArgs.HostAddress
     let hostPort = networkArgs.HostPort
-
-    AppZooKeeper.configureZookeeper zkConnectString hostAddress hostPort
 
     Host
         .CreateDefaultBuilder(args)
