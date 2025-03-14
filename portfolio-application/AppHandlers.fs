@@ -165,13 +165,13 @@ let markdownRoutes (webRoot: String) : list<HttpHandler> =
 let pdfHandler webRoot pdfFileName : HttpHandler =
     let pdfPath = Path.Combine(webRoot, "pdf", pdfFileName)
     streamFile true pdfPath None None
-        
+
 let nonHtmlRoutes webRoot =
    [
        route "/wedding/seating" >=>  pdfHandler webRoot "wedding-seating-chart.pdf"
-       route "/wedding/julias-game" >=> redirectTo true "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-       route "/wedding/iains-game" >=> redirectTo true "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+       route "/wedding/julias-game" >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
+       route "/wedding/iains-game" >=> redirectTo true "https://connectionsgame.org/game/?X5SMRJ"
    ]
-   
-  
+
+
 let appRoutes webRoot = (markdownRoutes webRoot) @ (nonHtmlRoutes webRoot)
