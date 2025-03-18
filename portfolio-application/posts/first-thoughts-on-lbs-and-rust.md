@@ -24,9 +24,12 @@ As far as the langauge is concerned, it's a pretty good one. It has a mix of lan
 > ### Answer
 > The problem is that `handles.iter()` provides shared `&JoinHandle<()>` references to the handles but does not grant ownership of them.
 
-It is easy to see the value of LLMs as search engines that can interpolate between queries, but this is pretty good evidence in favour of Bryne Hobart's argument that 'AI Ruins Education the way Pulleys Ruin Powerlifting'. [^hobart]
+It is easy to see the value of LLMs as search engines that can interpolate between queries, but this is pretty good evidence in favour of Bryne Hobart's argument that 'AI Ruins Education the way Pulleys Ruin Powerlifting'. [^hobart] Being as specific as you possibly can in writing about a topic is a great way to push your understanding; you're better off learning from an engaging professor, but LLMs can sometimes give you something close.
 
 Because the same semaphore needs to be shared across threads I ended up using Rusts' atomic reference counting pointer, `Arc<T>`, in every solution so far. McNamara's _Rust in Action_ describes this smart pointer as "Rust's ambassador. it can share values across threads, gaurenteeing that these will not interfere with each other". While the semaphore is acquired and released by different threads, the semaphore state is handled by concurrency primitives within the semaphore struct. I expected a little more of a fight from the Rust compiler, but the same ceramony is required for `Semaphore.acquire()` and adding an element to a collection contained in a mutex. Speaking of the semaphores themselves, I was a little surprised to learn that Rust doesn't have them in the standard library so I just used Sean Chen's implementation of them. [^chen]
+
+- Talk about the strange queue implications & saftey
+- Complain about the mutexes/locks
 
 ```fsharp
 let problem_3_8_thread
