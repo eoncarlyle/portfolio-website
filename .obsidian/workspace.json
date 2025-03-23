@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "portfolio-application/WebRoot/markdown/memory-management-notes.md",
+                "file": "portfolio-application/posts/first-thoughts-on-lbs-and-rust.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "memory-management-notes"
+              "title": "first-thoughts-on-lbs-and-rust"
             }
           }
         ],
@@ -55,7 +55,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "alphabetical",
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -193,6 +194,7 @@
   },
   "active": "74783201b4a90769",
   "lastOpenFiles": [
+    "portfolio-application/posts/ddmf-review.md",
     "portfolio-application/WebRoot/images/3Blue1BrownChatGptStill.jpg",
     "portfolio-application/WebRoot/markdown/return-to-the-physical.md",
     "portfolio-application/WebRoot/markdown/memory-management-notes.md",
