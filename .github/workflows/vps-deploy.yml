@@ -98,7 +98,7 @@ jobs:
           curl -I https://test.iainschmitt.com
 
   deploy_prod:
-    needs: deploy_test
+    needs: [deploy_test, build_and_push]
     runs-on: [self-hosted, new-york-0]
 
     steps:
