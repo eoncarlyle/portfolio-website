@@ -11,11 +11,10 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/portfolio-application
-  # Calendar versioning strategy (YYYY.MM.DD.MINOR)
 
 jobs:
   build_and_push:
-    runs-on: [self-hosted, new-york-0] # Using your self-hosted runner
+    runs-on: [self-hosted, new-york-0]
 
     permissions:
       contents: read
@@ -32,25 +31,29 @@ jobs:
 
       - name: Generate version info
         run: |
-          # Generate a consistent version string with the current date and run number
-          VERSION="$(date +'%Y.%m.%d').${{ github.run_number }}"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Log in to the Container registry
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | sudo podman login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo ${{ secrets.GITHUB_TOKEN }} | sudo podman login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Extract metadata for container
         id: meta
         run: |
-          echo "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
+          # Create a sanitized version variable to ensure it's not empty
+          VERSION_TAG="${VERSION:-latest}"
+          echo "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION_TAG},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
 
       - name: Build and push container image
         run: |
           cd ./portfolio-application
-          sudo podman build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} .
-          sudo podman tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          # Make sure VERSION is not empty to avoid the parse error
+          VERSION="${VERSION:-$(date +'%Y.%m.%d').${{ github.run_number }}}"
+
+          # Build with the version tag
+          sudo podman build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION} .
+          sudo podman tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
           sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
   deploy_test:
@@ -60,7 +63,7 @@ jobs:
     steps:
       - name: Log in to GitHub Container Registry
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | sudo podman login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo ${{ secrets.GITHUB_TOKEN }} | sudo podman login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Setup Network
         run: |
@@ -72,7 +75,8 @@ jobs:
 
       - name: Pull latest image
         run: |
-          sudo podman pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          VERSION="${VERSION:-$(date +'%Y.%m.%d').${{ github.run_number }}}"
+          sudo podman pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
 
       - name: Deploy to test environment
         run: |
@@ -82,7 +86,7 @@ jobs:
             --network podman_bridge_rootfull \
             --ip 192.168.100.71 \
             --tls-verify=false \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION:-latest} \
             192.168.100.71 1080
 
       - name: Verify Container Deployments
@@ -106,13 +110,14 @@ jobs:
             --network podman_bridge_rootfull \
             --ip 192.168.100.41 \
             --tls-verify=false \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION:-latest} \
             192.168.100.41 1080
 
       - name: Tag as stable if successful
         if: success()
         run: |
-          sudo podman tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable
+          VERSION="${VERSION:-$(date +'%Y.%m.%d').${{ github.run_number }}}"
+          sudo podman tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable
           sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable
 
       - name: Verify Container Deployments
