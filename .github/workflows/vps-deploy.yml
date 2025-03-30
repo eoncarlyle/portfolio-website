@@ -12,6 +12,10 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/portfolio-application
   # Calendar versioning strategy (YYYY.MM.DD.MINOR)
+  YEAR: ${{ format('{0:yyyy}', github.event.repository.pushed_at) }}
+  MONTH: ${{ format('{0:MM}', github.event.repository.pushed_at) }}
+  DAY: ${{ format('{0:dd}', github.event.repository.pushed_at) }}
+  VERSION: ${{ format('{0:yyyy.MM.dd}', github.event.repository.pushed_at) }}.${{ github.run_number }}
 
 jobs:
   build_and_push:
@@ -35,7 +39,8 @@ jobs:
           cd portfolio-application
           dotnet publish -c Release
 
-      - name: Generate version info
+      - name: Generate version info if needed
+        if: env.VERSION == ''
         run: |
           echo "VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_ENV
 
