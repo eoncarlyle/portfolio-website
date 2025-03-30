@@ -8,75 +8,23 @@ on:
       - "portfolio-application/**"
       - ".github/workflows/**"
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/portfolio-application
-  # Calendar versioning strategy (YYYY.MM.DD.MINOR)
-  YEAR: ${{ format('{0:yyyy}', github.event.repository.pushed_at) }}
-  MONTH: ${{ format('{0:MM}', github.event.repository.pushed_at) }}
-  DAY: ${{ format('{0:dd}', github.event.repository.pushed_at) }}
-  VERSION: ${{ format('{0:yyyy.MM.dd}', github.event.repository.pushed_at) }}.${{ github.run_number }}
-
 jobs:
-  build_and_push:
-    runs-on: [self-hosted, new-york-0] # Using your self-hosted runner
-
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "8.0.x"
-
-      - name: Build .NET application
-        run: |
-          cd portfolio-application
-          dotnet publish -c Release
-
-      - name: Generate version info if needed
-        if: env.VERSION == ''
-        run: |
-          echo "VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_ENV
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=${{ env.VERSION }}
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./portfolio-application
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-  deploy_test:
-    needs: build_and_push
+  build_portfolio:
     runs-on: [self-hosted, new-york-0]
 
     steps:
-      - name: Log in to GitHub Container Registry
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | sudo podman login ghcr.io -u ${{ github.actor }} --password-stdin
+      - uses: actions/checkout@v4
 
+      - name: Build Portfolio Application
+        run: |
+          cd portfolio-application
+          dotnet publish -c Release
+          sudo podman build -t localhost/portfolio-application:latest .
+
+  setup_network:
+    needs: [build_portfolio]
+    runs-on: self-hosted
+    steps:
       - name: Setup Network
         run: |
           sudo podman network exists podman_bridge_rootfull || \
@@ -85,11 +33,12 @@ jobs:
             --gateway 192.168.100.1 \
             podman_bridge_rootfull
 
-      - name: Pull latest image
-        run: |
-          sudo podman pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+  deploy_test:
+    needs: [build_portfolio, setup_network]
+    runs-on: self-hosted
 
-      - name: Deploy to test environment
+    steps:
+      - name: Deploy Portfolio Applications
         run: |
           sudo podman run -d \
             --name portfolio-application-1-test \
@@ -97,7 +46,7 @@ jobs:
             --network podman_bridge_rootfull \
             --ip 192.168.100.71 \
             --tls-verify=false \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+            localhost/portfolio-application:latest \
             192.168.100.71 1080
 
       - name: Verify Container Deployments
@@ -109,11 +58,11 @@ jobs:
           curl -I https://test.iainschmitt.com
 
   deploy_prod:
-    needs: deploy_test
+    needs: [deploy_test, build_portfolio]
     runs-on: [self-hosted, new-york-0]
 
     steps:
-      - name: Deploy to production environment
+      - name: Deploy Portfolio Applications
         run: |
           sudo podman run -d \
             --name portfolio-application-1 \
@@ -121,14 +70,8 @@ jobs:
             --network podman_bridge_rootfull \
             --ip 192.168.100.41 \
             --tls-verify=false \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+            localhost/portfolio-application:latest \
             192.168.100.41 1080
-
-      - name: Tag as stable if successful
-        if: success()
-        run: |
-          sudo podman tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable
-          sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable
 
       - name: Verify Container Deployments
         run: |
