@@ -8,23 +8,63 @@ on:
       - "portfolio-application/**"
       - ".github/workflows/**"
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/portfolio-application
+
 jobs:
-  build_portfolio:
+  build_and_push:
     runs-on: [self-hosted, new-york-0]
 
-    steps:
-      - uses: actions/checkout@v4
+    permissions:
+      contents: read
+      packages: write
 
-      - name: Build Portfolio Application
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build .NET application
         run: |
           cd portfolio-application
           dotnet publish -c Release
-          sudo podman build -t localhost/portfolio-application:latest .
 
-  setup_network:
-    needs: [build_portfolio]
-    runs-on: self-hosted
+      - name: Generate version info
+        run: |
+          echo "VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Log in to the Container registry
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | sudo podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Extract metadata for container
+        id: meta
+        run: |
+          # Create a sanitized version variable to ensure it's not empty
+          VERSION_TAG="${VERSION:-latest}"
+          echo "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION_TAG},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
+
+      - name: Build and push container image
+        run: |
+          cd ./portfolio-application
+          # Make sure VERSION is not empty to avoid the parse error
+          VERSION="${VERSION:-$(date +'%Y.%m.%d').${{ github.run_number }}}"
+
+          # Build with the version tag
+          sudo podman build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION} .
+          sudo podman tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
+          sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+  deploy_test:
+    needs: build_and_push
+    runs-on: [self-hosted, new-york-0]
+
     steps:
+      - name: Log in to GitHub Container Registry
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | sudo podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Setup Network
         run: |
           sudo podman network exists podman_bridge_rootfull || \
@@ -33,12 +73,12 @@ jobs:
             --gateway 192.168.100.1 \
             podman_bridge_rootfull
 
-  deploy_test:
-    needs: [build_portfolio, setup_network]
-    runs-on: self-hosted
+      - name: Pull latest image
+        run: |
+          VERSION="${VERSION:-$(date +'%Y.%m.%d').${{ github.run_number }}}"
+          sudo podman pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
 
-    steps:
-      - name: Deploy Portfolio Applications
+      - name: Deploy to test environment
         run: |
           sudo podman run -d \
             --name portfolio-application-1-test \
@@ -46,7 +86,7 @@ jobs:
             --network podman_bridge_rootfull \
             --ip 192.168.100.71 \
             --tls-verify=false \
-            localhost/portfolio-application:latest \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION:-latest} \
             192.168.100.71 1080
 
       - name: Verify Container Deployments
@@ -58,11 +98,11 @@ jobs:
           curl -I https://test.iainschmitt.com
 
   deploy_prod:
-    needs: [deploy_test, build_portfolio]
+    needs: deploy_test
     runs-on: [self-hosted, new-york-0]
 
     steps:
-      - name: Deploy Portfolio Applications
+      - name: Deploy to production environment
         run: |
           sudo podman run -d \
             --name portfolio-application-1 \
@@ -70,7 +110,7 @@ jobs:
             --network podman_bridge_rootfull \
             --ip 192.168.100.41 \
             --tls-verify=false \
-            localhost/portfolio-application:latest \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION:-latest} \
             192.168.100.41 1080
 
       - name: Verify Container Deployments
