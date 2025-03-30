@@ -1,0 +1,83 @@
+name: Build and Deploy Container Images to VPS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "portfolio-application/**"
+      - ".github/workflows/**"
+
+jobs:
+  build_portfolio:
+    runs-on: [self-hosted, new-york-0]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Portfolio Application
+        run: |
+          cd portfolio-application
+          dotnet publish -c Release
+          sudo podman build -t localhost/portfolio-application:latest .
+
+  setup_network:
+    needs: [check_changes, build_portfolio]
+    runs-on: self-hosted
+    steps:
+      - name: Setup Network
+        run: |
+          sudo podman network exists podman_bridge_rootfull || \
+          sudo podman network create --driver bridge \
+            --subnet 192.168.100.0/24 \
+            --gateway 192.168.100.1 \
+            podman_bridge_rootfull
+
+  deploy_test:
+    needs: [check_changes, build_portfolio, setup_network]
+    if: always() && (needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy Portfolio Applications
+        run: |
+          sudo podman run -d \
+            --name portfolio-application-1-test \
+            --replace \
+            --network podman_bridge_rootfull \
+            --ip 192.168.100.71 \
+            --tls-verify=false \
+            localhost/portfolio-application:latest \
+            192.168.100.71 1080
+
+      - name: Verify Container Deployments
+        run: |
+          sudo podman ps --format "{{.Names}}: {{.Status}}"
+
+      - name: Verify success
+        run: |
+          curl -I https://test.iainschmitt.com
+
+  deploy_prod:
+    needs: [deploy_test, build_portfolio]
+    runs-on: [self-hosted, new-york-0]
+
+    steps:
+      - name: Deploy Portfolio Applications
+        run: |
+          sudo podman run -d \
+            --name portfolio-application-1 \
+            --replace \
+            --network podman_bridge_rootfull \
+            --ip 192.168.100.41 \
+            --tls-verify=false \
+            localhost/portfolio-application:latest \
+            192.168.100.41 1080
+
+      - name: Verify Container Deployments
+        run: |
+          sudo podman ps --format "{{.Names}}: {{.Status}}"
+
+      - name: Verify success
+        run: |
+          curl -I https://iainschmitt.com

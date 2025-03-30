@@ -1,12 +1,16 @@
-name: Build and Deploy Container Images
+name: Build and Deploy Container Images to Lab
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "portfolio-application/**"
-      - ".github/workflows/**"
+  # This workflow will never run automatically
+  workflow_dispatch:
+    inputs:
+      run_disabled_workflow:
+        description: "DISABLED WORKFLOW: NOT RUN UNTIL WAN FIXED"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - "no"
 
 jobs:
   check_changes:
