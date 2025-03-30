@@ -45,21 +45,28 @@ jobs:
           echo "VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Log in to the Container registry
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | sudo podman login ghcr.io -u ${{ github.actor }} --password-stdin
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata for container
+      - name: Extract metadata for Docker
         id: meta
-        run: |
-          echo "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ env.VERSION }}
+            type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push container image
-        run: |
-          cd ./portfolio-application
-          sudo podman build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} .
-          sudo podman tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-          sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./portfolio-application
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   deploy_test:
     needs: build_and_push
