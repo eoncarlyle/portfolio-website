@@ -17,4 +17,10 @@ COPY . ./
 
 RUN dotnet publish -c Release -o out
 
-ENTRYPOINT ["dotnet", "out/portfolio-website.App.dll"]
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+WORKDIR /app
+
+COPY --from=build /app/out ./
+
+ENTRYPOINT ["dotnet", "portfolio-website.App.dll"]
