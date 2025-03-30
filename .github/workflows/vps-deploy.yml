@@ -24,6 +24,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.0.x"
+
       - name: Build .NET application
         run: |
           cd portfolio-application
@@ -75,6 +80,7 @@ jobs:
 
       - name: Pull latest image
         run: |
+          # Use VERSION variable with a default if it's not set
           VERSION="${VERSION:-$(date +'%Y.%m.%d').${{ github.run_number }}}"
           sudo podman pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
 
