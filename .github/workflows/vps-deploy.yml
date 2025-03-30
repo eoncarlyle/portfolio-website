@@ -22,7 +22,7 @@ jobs:
           sudo podman build -t localhost/portfolio-application:latest .
 
   setup_network:
-    needs: [check_changes, build_portfolio]
+    needs: [build_portfolio]
     runs-on: self-hosted
     steps:
       - name: Setup Network
@@ -34,8 +34,7 @@ jobs:
             podman_bridge_rootfull
 
   deploy_test:
-    needs: [check_changes, build_portfolio, setup_network]
-    if: always() && (needs.check_changes.outputs.portfolio_changed == 'true' || needs.check_changes.outputs.actions_changed == 'true')
+    needs: [build_portfolio, setup_network]
     runs-on: self-hosted
 
     steps:
@@ -65,7 +64,7 @@ jobs:
     steps:
       - name: Deploy Portfolio Applications
         run: |
-          sudo podman run -d  \
+          sudo podman run -d \
             --name portfolio-application-1 \
             --replace \
             --network podman_bridge_rootfull \
