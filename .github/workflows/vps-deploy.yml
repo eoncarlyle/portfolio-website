@@ -20,18 +20,19 @@ jobs:
       contents: read
       packages: write
 
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build .NET application
-        run: |
-          cd portfolio-application
-          dotnet publish -c Release
-
       - name: Generate version info
+        id: version
         run: |
-          echo "VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_ENV
+          VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Generated version: $VERSION"
 
       - name: Log in to the Container registry
         run: |
@@ -75,8 +76,7 @@ jobs:
 
       - name: Pull latest image
         run: |
-          VERSION="${VERSION:-$(date +'%Y.%m.%d').${{ github.run_number }}}"
-          sudo podman pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
+          sudo podman pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build_and_push.outputs.version }}
 
       - name: Deploy to test environment
         run: |
@@ -86,7 +86,7 @@ jobs:
             --network podman_bridge_rootfull \
             --ip 192.168.100.71 \
             --tls-verify=false \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION:-latest} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build_and_push.outputs.version }} \
             192.168.100.71 1080
 
       - name: Verify Container Deployments
@@ -110,7 +110,7 @@ jobs:
             --network podman_bridge_rootfull \
             --ip 192.168.100.41 \
             --tls-verify=false \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION:-latest} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build_and_push.outputs.version }} \
             192.168.100.41 1080
 
       - name: Verify Container Deployments
