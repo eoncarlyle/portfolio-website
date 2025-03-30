@@ -65,7 +65,7 @@ jobs:
     steps:
       - name: Deploy Portfolio Applications
         run: |
-          sudo podman run -d \
+          sudo podman run -d  \
             --name portfolio-application-1 \
             --replace \
             --network podman_bridge_rootfull \
