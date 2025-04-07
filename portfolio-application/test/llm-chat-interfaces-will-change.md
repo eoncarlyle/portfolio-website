@@ -1,0 +1,26 @@
+---
+title: LLM Chat Interfaces Will Change
+date: 2025.01.23
+---
+# LLM Chat Interfaces Will Change
+
+Grant Sanderson is the mind behind 3Blue1Brown, a math YouTube channel featuring exceptional [visualisation and animation](https://www.youtube.com/watch?v=cy8r7WSuT1I) created with his own animation library, Manim. [^manim] In October 2024 he published a walkthrough video of animating a Lorenz attractor in Manim. [^manim-demo] At 13:25 Sanderson shows his desktop ChatGPT a shared screen, and this image has stuck with me for months:
+
+![Still from 13:25 of "How I animate 3Blue1Brown | A Manim demo with Ben Sparks. 3Blue1Brown YouTube Channel](https://iainschmitt.com/images/3Blue1BrownChatGptStill.jpg)
+
+This is several weeks of Sanderson's ChatGPT queries. Like most people routinely using language models (LLMs), some of Sanderson's queries are on a spectrum between a search-engine-style ('Translate Sentences') and queries that require extensive back-and-forth ('Adjust LSP-pyslp').[^note0] This makes designing LLM chat interfaces somewhat confusing. Are you designing something more like a traditional search engine, or something more like an instant messenger application? A lot of queries are one-and-done, but sometimes a one-off question requires a longer, interactive follow-up. This has UX implications: if all of a user's queries to an LLM chat interface are one-off questions, then there's no reason to store the ~25 most recent questions in the sidebar for the same reason that existing search engines don't do this.
+
+This confusion extends to _using_ the LLM chat interfaces. My first two ChatGPT conversations were about software engineering and economics, which I gave the labels 'Technology' and 'Economics'. Almost all of my ChatGPT conversations are in one of these two buckets, and I would make similar categories like 'Social' for questions outside my first two conversations. But my 'Technology' chat got so long that both loading the page and submitting the queries was taking an increasing amount of time. The page load is a fixable problem and could be fixed by only fetching the most recent messages and dynamically fetching them if I scrolled upwards, but given that most large-language models send the entire conversation history to store context within a conversation, it's not hard to see why the queries themselves were taking longer too. This prompted me to make a 'Technology 2' chat. Claude gives you a shorter leash, and if a single conversations gets too long it will show a 'Tip: Long chats cause you to reach your usage limits faster' above the text input.
+
+While ChatGPT's meteoric rise into what Ben Thompson has described as an 'accidental consumer tech company' can make us forget this, there are a lot of internet users who haven't given LLM chat interfaces a try.[^accidental-consumer-tech] These users seem to get what they need out of search engines and go on with their lives. They think about their computing devices about as much as the average person thinks about electricity transmission — not at all, except for the rare cases when things aren't working. But what helped get Google from commonly known to ubiquitously used was an obsession on removing as much friction as possible from a process that was already pretty frictionless: type what you want to find in this box, and we'll show you a list of 10 blue links. In contrast, LLM chat interface developers for now have to pick a point on the continuum between search queries and full conversations, and that introduces friction for a user who isn't sure whether to open a new chat, work with an existing chat, or just go back to Google where they know what to expect. If you work with LLM chats every day this might seem somewhat ridiculous to suggest, but if OpenAI and Anthropic are going to become consumer tech giants they will need to craft user interfaces designed for the next 500 million customers, consumers very different in their levels of enthusiasm about tracking frontier model development
+
+OpenAI, Anthropic, Google DeepMind, and their competitors are incredibly capable organisations full of talented engineers. I'd hazard a bet that their UX designers and frontend engineers have been thinking about this for longer than these chat interfaces have been widely available to the public. It's not an impossible task to sort and identify one-shot messages and longer conversations, but the interface that figures this out will have a better chance attracting and retaining new users.
+
+
+[^manim]: [3Blue1Brown. 2025. Manim. [v1.7.2]. Software repository. GitHub.](https://github.com/3b1b/manim)
+
+[^manim-demo]: [Sanderson, G. 2023. How I animate 3Blue1Brown | A Manim demo with Ben Sparks. 3Blue1Brown YouTube Channel.](https://www.youtube.com/watch?v=rbu7Zu5X1zI)
+
+[^note0]: Regarding the "Learning Meme Ideas" chat: I'm dying to know a) what prompted this b) what is in that conversation and c) what Sanderson did with that information
+
+[^accidental-consumer-tech]: [Thompson, B. 2023. The Accidental Consumer Tech Company; ChatGPT, Meta, and Product-Market Fit; Aggregation and APIs. Stratechery (March 28, 2023).](https://stratechery.com/2023/the-accidental-consumer-tech-company-chatgpt-meta-and-product-market-fit-aggregation-and-apis/)
