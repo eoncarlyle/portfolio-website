@@ -158,6 +158,7 @@ let createRouteHandler markdownRoot markdownPath =
 
 let markdownRoutes (webRoot: String) : list<HttpHandler> =
     let markdownRoot = Path.Combine(webRoot, "markdown")
+
     markdownPaths markdownRoot
     |> Array.map (createRouteHandler markdownRoot)
     |> Array.toList
@@ -166,12 +167,8 @@ let pdfHandler webRoot pdfFileName : HttpHandler =
     let pdfPath = Path.Combine(webRoot, "pdf", pdfFileName)
     streamFile true pdfPath None None
 
-let nonHtmlRoutes webRoot =
-   [
-       route "/wedding/seating" >=>  pdfHandler webRoot "wedding-seating-chart.pdf"
-       route "/wedding/julias-game" >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
-       route "/wedding/iains-game" >=> redirectTo true "https://connectionsgame.org/game/?X5SMRJ"
-   ]
+let nonHtmlRoutes webRoot = []
 
 
-let appRoutes webRoot = (markdownRoutes webRoot) @ (nonHtmlRoutes webRoot)
+let appRoutes webRoot =
+    (markdownRoutes webRoot) @ (nonHtmlRoutes webRoot)
