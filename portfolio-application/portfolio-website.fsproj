@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Compile Include="AppHandlers.fs" />
-    <Compile Include="AppZooKeeper.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
