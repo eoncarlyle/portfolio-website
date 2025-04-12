@@ -3,7 +3,7 @@ title: Prism Proxy Bug
 date: 2025.04.12
 ---
 # Prism Proxy Bug: STOP-2386
-A few disclaimers to start - nothing in this blog post discloses proprietary information from either SPS or our customers, and I did get company permission prior to writing this. This post and everything else on this website is written in my personal capacity and not on behalf of SPS or any previous employers; all opinions expressed here are my own. With that out of the way, my company uses the `@stoplight/prism-cli` reverse proxy to enforce Open-API specifications on HTTP ingress for some of our REST API applications. When working properly, this requires less defensive programming from API authors and automates interface enforcement between services. Earlier this year, one of our Prism proxies crashed while processing a relatively large request that included a special character, `ü`.
+A few disclaimers to start - nothing in this blog post discloses proprietary information from either SPS or our customers, and I did get company permission prior to writing this. This post and everything else on this website is written in my personal capacity and not on behalf of SPS or any previous employers; all opinions expressed here are my own. With that out of the way, my development team at work uses the `@stoplight/prism-cli` reverse proxy to enforce Open-API specifications on HTTP ingress for some of our REST API applications. When working properly, this requires less defensive programming from API authors and automates interface enforcement between services. Earlier this year, one of our Prism proxies crashed while processing a relatively large request that included a special character, `ü`.
 
 ```text
 /Users/iain/code/prism/node_modules/split2/index.js:44
