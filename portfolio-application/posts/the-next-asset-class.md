@@ -3,7 +3,7 @@ title: The next big asset class?
 date: 2025.05.22
 ---
 
-# The Next Big Asset Class?
+# The next big asset class?
 
 One anecdote that Byrne Hobart is fond of is that when Warren Buffett was getting his start in equity investing most Americans believed that the stock market was a place to bid on livestock. In Hobart's telling, one lesson that Americans took away from the 1929 crash was that equities were scammy nonsense best left entirely alone; Buffett came into the equities investing business late enough to have a fresh perspective but early enough where there were still many proverbial $100 bills left on the sidewalk. This is in part why Hobart argues that the Warren Buffett of the mid-21st century will be someone who gets their start in a new asset class: while there are still plenty of opportunities in traditional asset classes, getting an opportunity to shoot the fish-in-a-barrel before anyone else is a hard first start to beat.
 
