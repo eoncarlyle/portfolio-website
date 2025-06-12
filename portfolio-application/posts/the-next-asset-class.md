@@ -19,7 +19,7 @@ The question of 'which entities can list and resolve markets' strikes me as the 
 
 The repository Git history shows that `probably-not-next-asset-class.md` was the old name for this file, because in the process of writing this post I convinced myself that the non-regulatory barriers to prediction market adoption are solvable. Whether or not someone sees enough of an opportunity in fixing them remains to be seen, but a future where prediction markets are the next asset class looks to be one where prediction markets look like more of an NYSE or NASDAQ with third parties increasingly involved as brokers, market makers, and investment banks. The gains from specialisation that equities exchanges enjoy would then be shared by prediction markets, and a virtuous cycle between liquidity providers and traders could be established.
 
-[^polymarket-footnote]: And, unlike Polymarket, none of its executives have been detained by the United States federal government at least as far as I'm aware)
+[^polymarket-footnote]: And, unlike Polymarket, none of its executives have been detained by the United States federal government at least as far as I'm aware
 [^cftc-2023]: ["Statement of Chairman Rostin Behnam Regarding CFTC Order to Prohibit Kalshi Political Control Derivatives Contracts"](https://www.cftc.gov/PressRoom/SpeechesTestimony/behnamstatement092223)
 [^the-diff-otc]: [The Diff "OTC Markets Group: Monopoly, Jr."](https://www.thediff.co/archive/otc-markets-group-monopoly-jr/)
 [^market-maker-program]: [Kalshi Support "Market Maker Program"](https://help.kalshi.com/markets/market-maker-program)
