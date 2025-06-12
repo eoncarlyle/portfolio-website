@@ -13,7 +13,7 @@ A list of the hardware and software that I depend on in my daily work
   - Apple Watch SE 44mm
 
 ## Mouse and keyboard
-  - Office primary keyboard: Sinc Rev. 4 Split Staggered 75%/TKL Keyboard with Kalih box brown tactile switches and Keychron BoW PBY keycaps
+  - Office primary keyboard: Sinc Rev. 4 Split Staggered 75%/TKL Keyboard with Invokeys Daydreamer silent tactile switches and Keychron BoW PBY keycaps
   - Office secondary keyboard: GMMK Pro 75% with Cherry MX Grey linear switches and PBTfans WoB keycaps
   - Home daily driver: GMMK Pro 75% with Invokeys Blueberry Chiffon tactile switches and PBTfans BoW keycaps
   - Deliberately loud home keyboard: GMMK 1 85% with Kalih Box Jade clicky switches and with PBTfans Retro 100 keycaps
@@ -31,7 +31,7 @@ A list of the hardware and software that I depend on in my daily work
   - Fedora server OS
   - Kitty terminal emulator
   - TMUX terminal multiplexer
-  - Vim and Zed plain-text editor
+  - Vim and Zed plain-text editors
   - Obsidian markdown editor
   - IntelliJ and JetBrains Rider IDEs
   - Rectangle Pro window manager
