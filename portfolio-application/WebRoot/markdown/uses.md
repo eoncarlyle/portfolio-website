@@ -14,9 +14,10 @@ A list of the hardware and software that I depend on in my daily work
 
 ## Mouse and keyboard
   - Office primary keyboard: Sinc Rev. 4 Split Staggered 75%/TKL Keyboard with Invokeys Daydreamer silent tactile switches and Keychron BoW PBY keycaps
-  - Office secondary keyboard: GMMK Pro 75% with Cherry MX Grey linear switches and PBTfans WoB keycaps
+  - Office secondary keyboard: KBDFans Tiger Lite TKL with Invokeys Matcha Reserve linear switches and PBTfans Mischief keycaps
   - Home daily driver: GMMK Pro 75% with Invokeys Blueberry Chiffon tactile switches and PBTfans BoW keycaps
-  - Deliberately loud home keyboard: GMMK 1 85% with Kalih Box Jade clicky switches and with PBTfans Retro 100 keycaps
+  - Clicky home keyboard: GMMK 1 85% with Kalih Box Jade clicky switches and with PBTfans Retro 100 keycaps
+  - Linear home keyboard: GMMK Pro 75% with Cherry MX Grey linear switches and PBTfans WoB keycaps
   - Office mouse: Logitech MX Master 3S
   - Home mouse: Razer Basilisk
 
