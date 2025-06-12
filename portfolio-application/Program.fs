@@ -11,6 +11,8 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.Razor
+open Microsoft.AspNetCore.Http
+open Microsoft.AspNetCore.StaticFiles
 
 let routes webRoot =
     choose [ GET >=> choose (appRoutes webRoot); HEAD >=> headHandler; error404Handler ]
@@ -22,10 +24,20 @@ let internalErrorHandler (ex: Exception) (logger: ILogger) =
 let configureApp (app: IApplicationBuilder) =
     let webRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot")
 
+    let staticFileOptions = StaticFileOptions()
+
+    let prepareResponse =
+        fun (context: StaticFileResponseContext) ->
+            let headers = context.Context.Response.Headers
+            headers.CacheControl <- "public,max-age=604800"
+            headers.Expires <- DateTimeOffset.UtcNow.AddDays(7).ToString("R")
+
+    staticFileOptions.OnPrepareResponse <- prepareResponse
+
     app
         .UseGiraffeErrorHandler(internalErrorHandler)
         .UseHttpsRedirection()
-        .UseStaticFiles()
+        .UseStaticFiles(staticFileOptions)
         .UseResponseCaching()
         .UseGiraffe(routes webRoot)
 
