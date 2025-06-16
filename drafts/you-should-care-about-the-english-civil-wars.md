@@ -31,9 +31,32 @@ But not to be outdone, parliament and later republican governments were more tha
 
 After the second English Civil War, the hardliners Oliver Cromwell and Henry Irenton used similarly shameful tactics to gain power. Infighting in parliament after victory in the first war gave the king an opening to start the second. When he again lost, many moderates in parliament wanted to put him back on the throne under the Treaty of Newport. While parliament in this day was hardly a representative body, it was reasonably representative of the public's view of the king: roughly half of England and Wales supported him over parliament with strong majorities in many parts of the kingdom. Rather than trying to convince their fellow MPs to draw a tougher line with the king, the army marched onto London with Cromwell and Irenton's backing. Allegedly without their knowledge, Colonel Thomas Pride had a list of royalist and moderate MPs to physically bar from parliament. These rightfully elected MPs were prevented from taking their place in parliament until 1659, and the much more pliant chamber made it possible to execute the King and engage in all manner of radical experiments in republican goverment.
 
-Discussion of abuses of power from the revolutionaries would be absent without talking about expropriating land from the Irish. After Cromwell's conquest of Ireland, parliament started the process fo confiscating 2.5 million acres of land from Irish Catholic landlords to give to English soldiers. The act of Parliament that enabled this technically called for the 80,000 Irish people to be executed to make way for the English, but luckily less than 1000 people were executed as part of the disapropriation. The dispossesd Irish from every corner of the island were banished to the relativley barren county of Connaught on small plots of land.
+Discussion of abuses of power from the revolutionaries would be absent without talking about expropriating land from the Irish. After Cromwell's conquest of Ireland, parliament started the process fo confiscating 2.5 million acres of land from Irish Catholic landlords to give to English soldiers. The act of Parliament that enabled this technically called for the 80,000 Irish people to be executed to make way for the English, but luckily less than 1000 people were executed as part of the disapropriation. The dispossesd Irish from every corner of the island were banished to small plots of land in the relatively barren county of Connaught.
+
+"According to the best evidence we have (and it is imperfect), catholics owned 59 per cent of the land of Ireland on the eve of the rebellion in 1641, and they predominated in all but two counties outside Ulster. By 1688 the proportion had shrunk to 22 per cent"
+
 
 # Religious Freedom
+In England, Wales, and Scottland a strong majority of the population was protestant, and throughout the conflict Catholics were subject to recusancy fines and other forms of persecution. While King Charles I was a devout protestant, his marraige to the Catholic Queen Henrietta Maria from France fomented more than a few conspiracies that he was on the cusp of reimposing Catholicsism on the state protestant church. In England, what would become Anglican doctrine was hotly debated between both members of the clergy and the lay public. The purtains of the era argued that the existing episcopal hierarchy of bishops, emphasis sacrements in worship, and ornate churches reeked of residual catholicism that had to be purged. This was a broad social movement where Calvinism was the dominant theology, and their opponents included anti-Calvinists of different stripes, bishops who wanted to preseve their standing, and others who simply wanted to preseve the tradition and sacrements that had been a part of their worship for as long as they could remember.
+
+While the king's unconstitutional taxation was facing opposition throughout England, his heavy-handed approach to the state church ruffled at least as many feathers. As supreme governour of the church, the King appointed many ceramonialist bishops. Few members of the clergy were as staunch supporters of the King as William Laud, whose loyalty was rewarded by his appoitnement to the archishop of Canterburry, the highest office in the Church of England. Laud was staunchly anti-puritain and wasn't shy about using the power of the state to harass his theological enemies. Extrajudicial punishment out of the Star Chamber [^star-chamber] were the order of the day, most notably against three men in 1637 who criticized the episcopal hierarchy in print. As punishment their ears were cut off, they were locked in a pillory, fined £5,000. The shocked crowds treated them as martyrs, draping them in garlands as they made their way to their prisons.
+
+Puritains were not inclined to turn the other cheek once they found political power:
+
+> Clotworthy and his men proceeded to the side chapels, where they broke up two paintings of the Virgin and of St Francis, perhaps the iconoclasts’ least favourite saint. In the vestry, they flung a large statue of the Virgin and Child to the floor, and then smashed the Virgin’s face and the face of her child with feet and then with clubs. The sound of splintering stone spurred them on. In the chapel garden, they found another statue of St Francis, which they also destroyed, and another crucifix, ripe for breaking. The crackling fires that the soldiers lit burned long into the night, consuming shreds of canvas, books, rich embroidered vestments. On Good Friday, the soldiers destroyed some minor masterpieces – Matthew Goodrich’s and Thomas de Critz’s oval ceiling painting of the Assumption of the Virgin, a work even larger than Rubens’s Crucifixion. The remnants not burnt were again flung into the Thames.
+^ Purkis
+
+"What made all the resentment towards icons and symbols far more intense were the Laudian reforms that had overturned the Church of England in the 1630s. One of Parliament’s main missions was to remedy all this. In Suffolk, William Dowsing led a campaign which destroyed decorations in 150 churches. Dowsing was careful, meticulous, a keeper of long lists and records."
+^ Purkiss
+
+"Is brotherly love, and a healing spirit of that force and value amongst us that it ought? ... Do we first search for the kingdom of Christ within us, before we seek one without us? ... Do we not more contend for saints having rule in the world, than over their own hearts? ... Do not some of us affirm ourselves to be the only true ministry, and true churches of Christ, and only to have the ordinances in purity, excluding our brethren, though of equal gifts? ... Do we remember old puritan, or rather primitive simplicity, self-denial, mercy to the poor, uprightness and justice?"
+
+"formal toleration of catholics. He replied that a public declaration granting them full religious freedom was politically impossible, but claimed that they had less cause for complaint under his government than under that of the Long Parliament. He himself, he said, had shown compassion to very many; he had plucked many out of the fire-the raging fire of persecution, which did tyrannize over their consciences, and encroached by an arbitrariness of power over their estates'. He hoped to do more for them as soon as he could remove certain impediments, but in the event his second parliament was to press him in the opposite direction. Nevertheless Bordeaux assured Mazarin that catholic priests were moving freely about London"
+
+
+Some of Laud's early tyrannies included excommunicating and imprisoning puritains.
+
+King Charles I's wife, Queen Henrietta Maria,
 
 # Religious Freedom
 - Imposing Book of Common Prayer on the scots
@@ -47,6 +70,12 @@ Discussion of abuses of power from the revolutionaries would be absent without t
 
 # Broader lessons
 - Many offramps to conflict
+- Other characters
+  - Marquis of Montrose
+  - Pepys
+  - The naraganset guy
+  - The protocomunists
+  - Quakers
 - True nature of civil wars
 
 # Conclusion
@@ -87,5 +116,5 @@ Austin Woolrych. 2004. _Britain in Revolution: 1625-1660_. Oxfrod University Pre
 Jonathan Healey. 2023. _The Blazing World: A New History of Revolutionary England, 1603-1689_. Bloomsbruy, London, UK.
 
 [^useless-parliament]: In this era some sittings of parliament were given names, and this one's is the 'Useless Parliament'
-
 [^constitutional-paralells]: The paralells with Article I, the fifth amendment, and the third amendment almost go without saying.
+[^star-chamber]: While this is a figure of spech in modern times, this wa a literal part of the English court in the 17th century
