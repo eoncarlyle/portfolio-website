@@ -13,9 +13,10 @@ It is easy to forget how near the spectre of civil war was to the founding. Conf
 
 The English parliament had fought and won a revolutionary war for the right to govern themselves, tossing the English poltical and social hiearchy into disarray. Parliament lauched from one unstable constitution to another before the start of the protecerate government in 1653. The Brittish Isles were ruled as a republic with three branches of government with checks and balances, lead by Parlimentary Cavalry commander and the now Lord Protector Oliver Cromwell. Political stability finally returned after a decade of chaos, but Cromwell's death on September 3rd, 1658 spelled the end to Brittish self rule. Oliver Cromwell's son and successor wasn't nearly as capable at keeping conflicts between Parliament and the army at bay, leading to King Charles II's restoration on May 8th, 1660.
 
-America's founding fathers built an enduring republic, succecceding where their forefathers had failed a century earlier. The conflict is embarassingly underemphasized in American civic education: two decades of chaos that killed hundreds of thousands of people and devestated the lives of many more taught the liberal tradition invavluble lessions in how not to organize society.
+America's founding fathers built an enduring republic, succecceding where their forefathers had failed a century earlier. The conflict is embarassingly underemphasized in American civic education: two decades of chaos that killed hundreds of thousands of people and devestated the lives of many more taught the liberal tradition invavluble lessions in how not to organize society. The first of these lessions is on rule of law.
 
 # Rule of Law
+
 Even before the boths sides started trying to kill one other, King Charles I and his parliaments never got along. At this point in time parliaments were only elected and called to session at the order of the King. This was almost always in order to grant the King money, money that was almost always used to fight wars. In this day both franchise and membership in the House of Commons was restricted to only the wealthiest property owning men, and the House of Lords was an unelected body just as it remains today. Settled law was that taxes could not be raised without the consent of parliament, as the king needed buy-in from wealthy subjects. When the King called his first parliament [^useless-parliament] in 1625 the House of Commons broke with over a century of tradition and didn't grant the King the authority to collect import tariffs for life. Undettred, the King simply collected the duties anyway until 1641. Unable to make much progress with parliament, the king decided to demand extraparliemntary forced loans to fund the crown:
 
 > ...in 1626 commissioners were appointed to levy the equivalent of five subsidies from everyone who was rated in the subsidy books. To the public at large it was indistinguishable from a large parliamentary grant, except that parliament had not granted it. Financially the Forced Loan was a success because very nearly five subsidies were collected, but seventy-six gentlemen went to prison rather than pay it. (At least fifteen peers also refused to pay, but significantly only one was imprisoned; peers were privileged, even in disobedience.) **Five of the imprisoned refugees launched a cause celebre by taking out writs of habeas corpus, which required the crown to state the reason for their imprisonment; they hoped thereby to bring the legality of the Loan under the judgment of the common law. The judges had collectively declined the king's request to pronounce it legal in advance, and he had sacked the senior Lord Chief Justice in consequence.**
@@ -35,7 +36,10 @@ After the second English Civil War, the hardliners Oliver Cromwell and Henry Ire
 
 Discussion of abuses of power from the revolutionaries cannot leave out the expropriation of land from the Irish. After Cromwell's conquest of Ireland, parliament started the process fo confiscating 2.5 million acres of land from Irish Catholic landlords to give to English soldiers. The act of Parliament that enabled this technically called for the 80,000 Irish people to be executed to make way for the English, but luckily less than 1000 people were executed as part of the disapropriation. The dispossesd Irish from every corner of the island were banished to small plots of land in the relatively barren county of Connaught. The best historial accounting implies that catholics went from owning 59% of Irish land in 1641 to just 22% by 1688.
 
-# Religious Freedom
+Howerver, across all three kingdoms the conflict was about more than constitutional concerns. While the protestant reformation was in the rear view mirror, it's concequences were still playing out on the Brittish Isles.
+
+# Religious Disputes
+
 In England, Wales, and Scottland a strong majority of the population was protestant, and throughout the conflict Catholics were subject to recusancy fines and other forms of persecution. While King Charles I was a devout protestant, his marraige to the Catholic Queen Henrietta Maria from France fomented more than a few conspiracies that he was on the cusp of reimposing Catholicsism on the state protestant church. In England, what would become Anglican doctrine was hotly debated between both members of the clergy and the lay public. The purtains of the era argued that the existing episcopal hierarchy of bishops, emphasis sacrements in worship, and ornate churches reeked of residual catholicism that had to be purged. This was a broad social movement where Calvinism was the dominant theology, and their opponents included anti-Calvinists of different stripes, bishops who wanted to preseve their standing, and others who simply wanted to preseve the tradition and sacrements that had been a part of their worship for as long as they could remember.
 
 While the king's unconstitutional taxation was facing opposition throughout England, his heavy-handed approach to the state church ruffled at least as many feathers. As supreme governour of the church, the King appointed many ceramonialist bishops. Few members of the clergy were as staunch supporters of the King as William Laud, whose loyalty was rewarded by his appoitnement to the archishop of Canterburry, the highest office in the Church of England. Laud was staunchly anti-puritain and wasn't shy about using the power of the state to harass his theological enemies. Extrajudicial punishment out of the Star Chamber [^star-chamber] were the order of the day, most notably against three men in 1637 who criticized the episcopal hierarchy in print. As punishment their ears were cut off, they were locked in a pillory, fined £5,000. The shocked crowds treated them as martyrs, draping them in garlands as they made their way to their prisons.
@@ -50,30 +54,37 @@ Once armed conflict was coming to a close in England in the 1650s, parliament st
 
 Perhaps most suprisingly, Oliver Cromwell offered assurances that recusancy laws punishing non-protestants wouldn't be enforced on London's Jewish community, which had been underground to the extent it existed at all since the explusion of all Brittish Jews in 1290. This started a small Jewish migration to London in the 1650s, paving the road to outright legalisation in 1664 after the restoration.
 
-This is not what many radical puritains wanted in revolutionary Britain. But most of Britain wasn't keen on either Archbishop Laud or doctrinaire Calvinists to use the levers of state power to oppress dissenting views. 'Live and let live', at least for some sects, was chosen out of exhaustion more than anything else.
+This is all not what many radical puritains wanted in revolutionary Britain. But most of Britain wasn't keen on either Archbishop Laud or doctrinaire Calvinists to use the levers of state power to oppress dissenting views. 'Live and let live', at least for some sects, was chosen out of exhaustion more than anything else.
 
-# Stability and Progress
+In the last plank of this story, let's ask why so many of these changes weren't durrable. This is perhaps best told by tracing the arc of a yet undiscussed yet rather important character in the conflict.
+
+# Stability in Political Revolutions
+
 While Cromwell may be better known to history, he was second in command behind Sir Thomas Fairfax. Early on in the conflict parliament's armies struggled in the field, leading them to completely upend their command structure to form a more national force under a professional officer corp where members of parliament were bared from serving. Fairfax, who cared more for real battles than poltical ones, was chosen as it's first commander. This army, the New Model Army, was more meritocratic and displined in the field than both the royal force and the parliamentary armies that proceeded it, owing much of this to Fairfax and Cromwell.
 
-Yet fifteen years after Fairfax took up the command against Charles I, he was one of twelve men sent across the English channel to formally invite the late king's son to the throne. Why
+Yet fifteen years after Fairfax took up the command against Charles I, he was one of twelve men sent across the English channel to formally invite the late king's son to the throne. What happened to change his mind?
 
-TLDR lots of change, albeit change that wouldn't have happened if Charles had taken a deal
-- 1648 Pride's purge
-- Killing of the king: mention anecdote of his wife
-- 1649 No constitution with a 'council of state' running the government
-- 1653 Nominated Assembly
-- 1653 Instrument of Government
-- 1657 Humble Petition and Advice
-- 1659 No constitution
+- 1648: Army purge of moderate and royalist MPs
+- 1649: King Charles I's trial, where none other than his wife shouted ‘Not half! Not a quarter of the people of England. Oliver Cromwell is a traitor!’
+- Subsequent execution of the King at which point England and Scottland essentially didn't have a constitution and a 'Council of State' was running the government
+- 1653: The sort-lived 'Nominated Assembly' government followed by the Instrument of Government constitution later that year where Fairfax's former second-in-command was appointed to Lord Protector and head of state for life
+- 1657: The second Cromwellian constitution, the Humble Petition and Advice
+- 1658: Oliver Cromwell's death
 
-While Oliver's eldest son, Richard, was named as his successor, his plans to shrink the size of the army lead to him being deposed less than a year later. The only other center of power in England consisted of a handful of MPs - either the radicals first elected in 1640 who were extreme enough to survive Pride's Purge, or those who won elections to fill the vacated seats. This body just as unpopular as the army it was vying for power with, and with Oliver Cromwell's death there was no one who could keep the two sides at bay. Parliament voted to dismss army leadership, and after a two-week standoff in October 1659 the army forcibly disolved parliament.
+This is a tremendous amout of political change to take place in ten years. This is not what Fairfax had fought for, and by the early 1650s he was dissiliusioned from politics entirely.
 
-At this point the country went into open revolt. That December General George Monck raised an army in Scottland and marched south not to restore the current parliament but rather to establish order and call for free, general elections for the first time in 20 years. On his way south, the gout-ridden one-time rebel Fairfax joined Monck, he too believing that the time for political experimentation was over. On May 1st, 1660, the newly elected parliament declared that 'the government is, and ought to be, by King, Lords, and Commons' - surprising absolutely no one and delighting the entire country.
+Oliver Cromwell was a formidable statesmen, and as of 1657 it appeared that republican Briatin was on a stable footing: if you squint, the American republic followed a similar trajectory between Cornwallis's surrender and the ratification of the constitution. But the undoing of the republic was that no one else could balance the interests of parliament, the army, and the people. Before his death he named his eldest son Richard as his successor, but Richard's plans to shrink the size of the army lead to him being deposed less than a year later. The only other center of power in England consisted of a handful of MPs - either the radicals first elected in 1640 who were extreme enough to survive Pride's Purge, or those who won elections to fill the vacated seats. This body just as unpopular as the army it was vying for power with, and with Oliver Cromwell's death there was no one who could keep the two sides at bay. Parliament voted to dismss army leadership, and after a two-week standoff in October 1659 the army forcibly disolved parliament.
 
-- Mention explosion in sects
-- Could not place everything onto Cromwell
-- Military/civil relations
-- Cannot make social progress without social order/succession
+At this point the country went into open revolt. That December General George Monck raised an army in Scottland and marched south not to restore the current parliament but rather to establish order and call for free, general elections for the first time in 20 years. When he heard of Monck's plan, the gout-ridden one-time rebel Fairfax raised troops in York in support. Enough was enough: the time for republican political experimentation was over. The political capital and military power of Monck and his allies was no match for the half-hearted military junta in London. On May 1st, 1660, the newly elected parliament declared that 'the government is, and ought to be, by King, Lords, and Commons' - surprising absolutely no one. Fairfax and the rest of the parliamentary delegation visited the King's exile court in the Dutch city of Breda, and on the King's return London, a one time hotbed of revolution, cellebrated for three days straight.
+
+Told this way, the conflict is an object lession in a couple of things:
+1) Durable self-governing requires stability: otherwise too many people needed to make a republican government work correctly will take their ball and go home
+2) Civilian control of the military by the executive branch is incredibly important
+3) 'Have a permanent succession of one-in-a-generation political talents' is not a viable succession plan
+
+# Much, much more
+
+In the tumult between the coronation of King Charles I and the return of his son as king, there are very few iredeemly bad or unimpeachably good characters. Many switched sides throughout the conflict, and not everyone then or now agrees on what the conflict was even about. Alltogether this makes for a fascinating part of history and it's little wonder that Tyler Cowen has written "you can’t read enough books about 17th century England".
 
 # Broader lessons
 - Many offramps to conflict
@@ -136,6 +147,7 @@ Alexander Hamilton, James Madison, and John Jay. 1788. The Federalist Papers. J.
 Austin Woolrych. 2004. _Britain in Revolution: 1625-1660_. Oxfrod University Press, Oxford, UK.
 Jonathan Healey. 2023. _The Blazing World: A New History of Revolutionary England, 1603-1689_. Bloomsbruy, London, UK.
 Diane Purkiss. 2006. _The English Civil War: A People's History_. HarperCollins, London, UK.
+Tyler Cowen. February 22, 2023. Marginal Revolution. "What I've been reading". Retrieved from https://marginalrevolution.com/marginalrevolution/2023/02/what-ive-been-reading-235.html.
 
 [^useless-parliament]: In this era some sittings of parliament were given names, and this one's is the 'Useless Parliament'
 [^constitutional-paralells]: The paralells with Article I, the fifth amendment, and the third amendment almost go without saying.
