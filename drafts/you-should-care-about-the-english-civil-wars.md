@@ -5,18 +5,17 @@ date: 2025.06.11
 
 # You should care about the English Civil Wars
 
-Less than 150 years before the American Revolution, conflict between the King Charles I and parliament over both the extent of his powers and the established protestant Church's doctrine in England and Scotland started three English Civil Wars and several knock-on conflicts between 1642 and 1652. The second English Civil War culminated in parliament trying and convicting the King of high treason before executing him in front of the palace of Whitehall on January 30th, 1649, leaving England without a king for the first time since before the Norman Conquest: the English parliament had fought and won a revolutionary war for the right to govern themselves.
 
-But it wasn't to last.
+In May 1660, Sir Thomas Fairfax crossed the English Channel with eleven other men to formally invite King Charles II to reclaim the throne. Fifteen years earlier, Fairfax had commanded the army that defeated and executed Charles's father. What made a successful revolutionary general personally restore the monarchy he'd helped destroy?
 
-Parliament launched from one unstable constitution to another before the start of the protectorate government in 1653. Oliver Cromwell became Lord Protector in 1653, finally bringing stability after a decade of chaos. But Cromwell's death on September 3rd, 1658 spelled the end to British self rule. His eldest son and successor wasn't nearly as capable of keeping conflicts between Parliament and the army at bay, leading to King Charles II's restoration on May 8th, 1660.
+The answer teaches us why America's founders succeeded at building an enduring republic where their forefathers had failed. The English Civil Wars are a cautionary tale to the liberal tradition on how strong leadership cannot replace a commitment to the rule of law and to republican institutions that are greater than any one man. American civic education criminally ignores this story: two decades of chaos that killed hundreds of thousands of people and devastated the lives of many more taught the liberal tradition invaluable lessons in how not to organize society.
 
-America's founding fathers built an enduring republic, succeeding where their forefathers had failed a century earlier. The conflict is embarrassingly underemphasized in American civic education: two decades of chaos that killed hundreds of thousands of people and devastated the lives of many more taught the liberal tradition invaluable lessons in how not to organize society. The first of these lessons is on rule of law.
+Conflict between King Charles I and parliament over both the extent of his powers and the established protestant Church's doctrine in England and Scotland started three English Civil Wars and several knock-on conflicts between 1642 and 1652. The second English Civil War culminated in parliament trying and convicting the King of high treason before executing him in front of the palace of Whitehall on January 30th, 1649, leaving England without a king for the first time since before the Norman Conquest: the English parliament had fought and won a revolutionary war for the right to govern themselves.  Parliament stumbled from one failed constitution to another until Fairfax's old second in command, Oliver Cromwell, became Lord Protector in 1653. When Cromwell died in 1658, his eldest son and successor couldn't keep the republic together, leading to King Charles II's restoration on May 8th, 1660.
 
-## Rule of Law
+## Backdrop to the Rebellion
 
 Even before both sides started trying to kill each other, King Charles I and his parliaments never got along. While parliament only represented the wealthiest property-owning men in the kingdom, settled law was that taxes could not be raised without the consent of parliament: any king without buy-in from wealthy subjects faced an uphill climb to getting anything accomplished
-
+    
 When the King called his first parliament [^useless-parliament] in 1625 the House of Commons broke with over a century of tradition and didn't grant the King the authority to collect import tariffs for life. Undeterred, the King simply collected the duties anyway until 1641. Unable to make much progress with parliament, the king decided to demand extra-parliamentary forced loans to fund the crown. When five knights petitioned for writs of habeas corpus, the Chief Justice of the King's Bench didn't commit to declaring the forced loans legal before the proceedings and was _sacked by the king in response_.
 
 The plight of the five knights meant that parliament conditioned any funding to the crown on the 1628 Petition of Right. This document forbade taxation without the consent of parliament, imprisonment without due process, or quartering soldiers in civilian homes without consent. [^constitutional-paralells] The King's ascent of the Petition of Right did not prevent further disagreements with Parliament and decided that the juice was no longer worth the squeeze. From 1629 to 1640 the King did his best to stay out of military engagements that would require funding from parliament and funding with strings attached. The King and his councillors used every trick in the book to raise money without parliament:
@@ -28,15 +27,38 @@ The plight of the five knights meant that parliament conditioned any funding to 
 
 It's little wonder that when the King called a parliament in 1640 it would be less than two years before both sides would meet on the battlefield.
 
-But not to be outdone, parliament and later republican governments were more than capable of trampling on the rule of law. In 1638 when war broke out with Scotland, the trusted royal advisor Earl of Strafford helped lead the military response and was convinced that hardliners in Parliament were collaborating with the Scottish rebels. In response, the commons accused and tried him for high treason. Extra seating was built in Westminster for the whole public to see how treacherous Strafford was, but representing himself in the impeachment proceedings he embarrassed the commons by showing all of England how flimsy their case was. Parliament's star witness claimed that Strafford was trying to use Irish soldiers to suppress English subjects, but every other piece of testimony showed that Strafford was arguing for Irish soldiers to be used for the war in Scotland.
+## Why Republics Fail
+
+But not to be outdone, parliament and later republican governments were all too willing to run roughshod over the rule of law.
+
+In 1638 when war broke out with Scotland, the trusted royal advisor Earl of Strafford helped lead the military response and was convinced that hardliners in Parliament were collaborating with the Scottish rebels. In response, the commons accused and tried him for high treason. Extra seating was built in Westminster for the whole public to see how treacherous Strafford was, but representing himself in the impeachment proceedings he embarrassed the commons by showing all of England how flimsy their case was. Parliament's star witness claimed that Strafford was trying to use Irish soldiers to suppress English subjects, but every other piece of testimony showed that Strafford was arguing for Irish soldiers to be used for the war in Scotland.
 
 Undeterred, parliament passed a Bill of Attainder; an act of parliament that could _declare someone guilty of a crime without a trial or jury_. Missteps by the king later that year meant that he no longer had the political capital to save his friend and ever expect anything from another parliament, so royal assent of the bill meant that Strafford was publicly executed on May 12th, 1641 in front of a crowd of 100,000 people.
 
-After the second English Civil War, the hardliners Oliver Cromwell and Henry Irenton used similarly shameful tactics to gain power. Infighting in parliament after victory in the first war gave the king an opening to start the second. When he again lost, many moderates in parliament wanted to put him back on the throne under the Treaty of Newport. While parliament in this day was hardly a representative body, it was reasonably representative of the public's view of the king: roughly half of England and Wales supported him over parliament, with strong majorities in many parts of the kingdom. Rather than trying to convince their fellow MPs to draw a tougher line with the king, the army marched onto London with Cromwell and Irenton's backing. Allegedly without their knowledge, Colonel Thomas Pride had a list of royalist and moderate MPs to physically bar from parliament: these rightfully elected MPs were prevented from taking their place in parliament for eleven years. This much more pliant chamber made it possible to execute the King and engage in all manner of radical experiments in republican government.
+After the second English Civil War, the hardliners Oliver Cromwell and Henry Irenton used similarly shameful tactics to gain power. Infighting in parliament after victory in the first war gave the king an opening to start the second, and when he again lost in 1648, many moderates in parliament wanted to put him back on the throne under the Treaty of Newport. While parliament in this day was hardly a representative body, it was reasonably representative of the public's view of the king: roughly half of England and Wales supported him over parliament, with strong majorities in many parts of the kingdom. Rather than trying to convince their fellow MPs to draw a tougher line with the king, the army marched onto London with Cromwell and Irenton's backing. Allegedly without their knowledge, Colonel Thomas Pride had a list of royalist and moderate MPs to physically bar from parliament: these rightfully elected MPs were prevented from taking their place in parliament for eleven years.
 
-Discussion of peacetime abuses of power from the revolutionaries cannot leave out the expropriation of land from the Irish. After Cromwell's conquest of Ireland, parliament started the process of confiscating 2.5 million acres of land from Irish Catholic landlords to give to English soldiers. The act of Parliament that enabled this technically called for the 80,000 Irish people to be executed to make way for the English, but luckily fewer than 1000 people were executed in the proceedings. However. The dispossessed Irish from every corner of the island were banished to small plots of land in the relatively barren county of Connaught. The best historical accounting implies that catholics went from owning 59% of Irish land in 1641 to just 22% by 1688.
+This much more pliant chamber made it possible for Cromwell and his military allies to advance their agenda, but in doing so Cromwell and his military allies weakened both the rule of law and parliament's legitimacy. Not only were these the very institutions that Fairfax and Cromwell fought a war to protect, they were crucial for any durable form of republican government.
 
-However, across all three kingdoms, the conflict was about more than constitutional concerns. While the protestant reformation was in the rearview mirror, debates over the direction of the church both caused the war and remained hotly contested in the interregnum. 
+$Continue And what was that agenda?
+
+- 1648: Army purge of moderate and royalist MPs
+- 1649: King Charles I's trial, where none other than his wife shouted ‘Not half! Not a quarter of the people of England. Oliver Cromwell is a traitor!’
+- Subsequent execution of the King, at which point England and Scotland essentially didn't have a constitution and a 'Council of State' was running the government
+- 1653: The sort-lived 'Nominated Assembly' government followed by the Instrument of Government constitution later that year when Fairfax's former second-in-command was appointed as Lord Protector and head of state for life
+- 1657: The second Cromwellian constitution, the Humble Petition and Advice
+- 1658: Oliver Cromwell's death
+
+This is a tremendous amount of political change to take place in ten years. This is not what Fairfax had fought for, and by the early 1650s he was disillusioned from politics entirely.
+
+Oliver Cromwell was a formidable statesman, and as of 1657 it appeared that republican Britain was on a stable footing: if you squint, the American republic followed a similar trajectory between Cornwallis's surrender and the ratification of the constitution. But the undoing of the republic was that no one else could balance the interests of parliament, the army, and the people. Before his death, he named his eldest son Richard as his successor, but Richard's plans to shrink the size of the army led to him being deposed less than a year later. The only other centre of power in England consisted of a handful of MPs - either the radicals first elected in 1640 who were extreme enough to survive Pride's Purge, or those who won elections to fill the vacated seats. This body just as unpopular as the army it was vying for power with, and with Oliver Cromwell's death, there was no one who could keep the two sides at bay. Parliament voted to dismiss army leadership, and after a two-week stand off in October 1659 the army forcibly dissolved parliament.
+
+At this point, the country went into open revolt. That December General George Monck raised an army in Scotland and marched south not to restore the current parliament but rather to establish order and call for free, general elections for the first time in 20 years. When he heard of Monck's plan, the gout-ridden one-time rebel Fairfax raised troops in York in support. Enough was enough: the time for republican political experimentation was over. The political capital and military power of Monck and his allies was no match for the half-hearted military junta in London. On May 1st, 1660, the newly elected parliament declared that 'the government is, and ought to be, by King, Lords, and Commons' - surprising absolutely no one. Fairfax and the rest of the parliamentary delegation visited the King's exile court in the Dutch city of Breda, and on the King's return London, a one time hotbed of revolution, celebrated for three days straight.
+
+Told this way, the conflict is an object lesson in: 
+1) Durable self-governing requires stability: otherwise too many people needed to make a republican government work correctly will take their ball and go home
+2) Civilian control of the military by the executive branch is incredibly important
+3) If your constitution is only stable when a once in a generation political talent is in charge, then it is destined to fail
+
 
 ## Religious Disputes
 
@@ -56,29 +78,6 @@ This is all not what many radical puritans wanted in revolutionary Britain. But 
 
 In the last plank of this story, let's ask why so many of these changes weren't durable. This is perhaps best told by tracing the arc of an undiscussed and rather important character in the conflict.
 
-## Stability in Political Revolutions
-
-While Cromwell may be better known to history, he was second in command behind Sir Thomas Fairfax. Early on in the conflict, parliament's armies struggled in the field, leading them to completely upend their command structure to form a more national force under a professional officer corp where members of parliament were bared from serving. Fairfax, who cared more for real battles than political ones, was chosen as it's first commander. This army, the New Model Army, was more meritocratic and disciplined in the field than both the royal force and the parliamentary armies that preceded it, owing much of this to Fairfax and Cromwell.
-
-Yet fifteen years after Fairfax took up the command against Charles I, he was one of twelve men sent across the English Channel to formally invite the late king's son to the throne. Why happened to change his mind? The post-war timeline makes this clearer.
-
-- 1648: Army purge of moderate and royalist MPs
-- 1649: King Charles I's trial, where none other than his wife shouted ‘Not half! Not a quarter of the people of England. Oliver Cromwell is a traitor!’
-- Subsequent execution of the King, at which point England and Scotland essentially didn't have a constitution and a 'Council of State' was running the government
-- 1653: The sort-lived 'Nominated Assembly' government followed by the Instrument of Government constitution later that year when Fairfax's former second-in-command was appointed as Lord Protector and head of state for life
-- 1657: The second Cromwellian constitution, the Humble Petition and Advice
-- 1658: Oliver Cromwell's death
-
-This is a tremendous amount of political change to take place in ten years. This is not what Fairfax had fought for, and by the early 1650s he was disillusioned from politics entirely.
-
-Oliver Cromwell was a formidable statesman, and as of 1657 it appeared that republican Britain was on a stable footing: if you squint, the American republic followed a similar trajectory between Cornwallis's surrender and the ratification of the constitution. But the undoing of the republic was that no one else could balance the interests of parliament, the army, and the people. Before his death, he named his eldest son Richard as his successor, but Richard's plans to shrink the size of the army led to him being deposed less than a year later. The only other centre of power in England consisted of a handful of MPs - either the radicals first elected in 1640 who were extreme enough to survive Pride's Purge, or those who won elections to fill the vacated seats. This body just as unpopular as the army it was vying for power with, and with Oliver Cromwell's death, there was no one who could keep the two sides at bay. Parliament voted to dismiss army leadership, and after a two-week stand off in October 1659 the army forcibly dissolved parliament.
-
-At this point, the country went into open revolt. That December General George Monck raised an army in Scotland and marched south not to restore the current parliament but rather to establish order and call for free, general elections for the first time in 20 years. When he heard of Monck's plan, the gout-ridden one-time rebel Fairfax raised troops in York in support. Enough was enough: the time for republican political experimentation was over. The political capital and military power of Monck and his allies was no match for the half-hearted military junta in London. On May 1st, 1660, the newly elected parliament declared that 'the government is, and ought to be, by King, Lords, and Commons' - surprising absolutely no one. Fairfax and the rest of the parliamentary delegation visited the King's exile court in the Dutch city of Breda, and on the King's return London, a one time hotbed of revolution, celebrated for three days straight.
-
-Told this way, the conflict is an object lesson in: 
-1) Durable self-governing requires stability: otherwise too many people needed to make a republican government work correctly will take their ball and go home
-2) Civilian control of the military by the executive branch is incredibly important
-3) If your constitution is only stable when a once in a generation political talent is in charge, then it is destined to fail
 
 ## Only scratching the surface
 

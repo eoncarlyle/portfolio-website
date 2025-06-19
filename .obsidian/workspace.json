@@ -194,6 +194,7 @@
   },
   "active": "74783201b4a90769",
   "lastOpenFiles": [
+    "portfolio-application/bin/Debug/net8.0/WebRoot/markdown/the-next-asset-class.md",
     "drafts/memory-management-notes.md",
     "portfolio-application/posts/mnos-and-capex-tradeoffs.md",
     "portfolio-application/posts/first-thoughts-on-lbs-and-rust.md",
@@ -230,7 +231,6 @@
     "category-theory-guide.md",
     "WebRoot/markdown/my-needlessly-complicated-reverse-proxy.md",
     "WebRoot/markdown/resume.md",
-    "bin/Debug/net8.0/WebRoot/markdown/understanding-monads.md",
     "Attachments/Pasted image 20241226121733.png",
     "Attachments/Pasted image 20241226121726.png",
     "WebRoot/images/Railway Oriented Programming Diagram.png",
