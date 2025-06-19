@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "portfolio-application/WebRoot/markdown/return-to-the-physical.md",
+                "file": "drafts/english-civil-wars.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "return-to-the-physical"
+              "title": "english-civil-wars"
             }
           },
           {
@@ -27,16 +27,15 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "drafts/you-should-care-about-the-english-civil-wars.md",
+                "file": "portfolio-application/posts/my-needlessly-complicated-reverse-proxy.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "you-should-care-about-the-english-civil-wars"
+              "title": "my-needlessly-complicated-reverse-proxy"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -192,10 +191,22 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "74783201b4a90769",
+  "active": "dcc422f437f1e7cb",
   "lastOpenFiles": [
-    "portfolio-application/bin/Debug/net8.0/WebRoot/markdown/the-next-asset-class.md",
     "drafts/memory-management-notes.md",
+    "drafts/english-civil-wars.md",
+    "portfolio-application/posts/my-needlessly-complicated-reverse-proxy.md",
+    "drafts/return-to-the-physical.md",
+    "portfolio-application/posts/understanding-monads.md",
+    "portfolio-application/posts/the-strangest-carrier-southern-linc.md",
+    "portfolio-application/posts/llm-chat-interfaces-will-change.md",
+    "portfolio-application/posts/the-next-asset-class.md",
+    "portfolio-application/posts/new-syntax-highlighting.md",
+    "portfolio-application/posts/november-2024-grab-bag.md",
+    "portfolio-application/posts/october-2024-gdple-development.md",
+    "portfolio-application/posts/reinventing-the-wheel-to-go-back-in-time.md",
+    "portfolio-application/posts/software-firms-and-subjective-judgement.md",
+    "portfolio-application/bin/Debug/net8.0/WebRoot/markdown/the-next-asset-class.md",
     "portfolio-application/posts/mnos-and-capex-tradeoffs.md",
     "portfolio-application/posts/first-thoughts-on-lbs-and-rust.md",
     "portfolio-application/posts/ddmf-review.md",
@@ -209,12 +220,6 @@
     "portfolio-application/WebRoot/markdown/the-strangest-carrier-southern-linc.md",
     "portfolio-application/WebRoot/markdown/resume.md",
     "portfolio-application/WebRoot/markdown/october-2024-gdple-development.md",
-    "portfolio-application/WebRoot/markdown/november-2024-grab-bag.md",
-    "portfolio-application/WebRoot/markdown/ddmf-review.md",
-    "portfolio-application/WebRoot/markdown/llm-chat-interfaces-will-change.md",
-    "WebRoot/markdown/reinventing-the-wheel-to-go-back-in-time.md",
-    "WebRoot/markdown/october-2024-gdple-development.md",
-    "README.md",
     "zk-reverse-proxy-core/node_modules/@esbuild/linux-s390x",
     "zk-reverse-proxy-core/node_modules/@esbuild/linux-mips64el",
     "zk-reverse-proxy-core/node_modules/@esbuild/linux-ppc64",
@@ -225,12 +230,6 @@
     "zk-reverse-proxy-core/node_modules/@esbuild/linux-arm",
     "zk-reverse-proxy-core/node_modules/@esbuild/freebsd-x64",
     "zk-reverse-proxy-core/node_modules/@esbuild/freebsd-arm64",
-    "zk-reverse-proxy-core/node_modules/fp-ts/README.md",
-    "zk-reverse-proxy-core/node_modules/fp-ts/CHANGELOG.md",
-    "WebRoot/markdown/understanding-monads.md",
-    "category-theory-guide.md",
-    "WebRoot/markdown/my-needlessly-complicated-reverse-proxy.md",
-    "WebRoot/markdown/resume.md",
     "Attachments/Pasted image 20241226121733.png",
     "Attachments/Pasted image 20241226121726.png",
     "WebRoot/images/Railway Oriented Programming Diagram.png",
