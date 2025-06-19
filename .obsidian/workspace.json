@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "portfolio-application/posts/first-thoughts-on-lbs-and-rust.md",
+                "file": "drafts/you-should-care-about-the-english-civil-wars.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "first-thoughts-on-lbs-and-rust"
+              "title": "you-should-care-about-the-english-civil-wars"
             }
           }
         ],
@@ -194,6 +194,9 @@
   },
   "active": "74783201b4a90769",
   "lastOpenFiles": [
+    "drafts/memory-management-notes.md",
+    "portfolio-application/posts/mnos-and-capex-tradeoffs.md",
+    "portfolio-application/posts/first-thoughts-on-lbs-and-rust.md",
     "portfolio-application/posts/ddmf-review.md",
     "portfolio-application/WebRoot/images/3Blue1BrownChatGptStill.jpg",
     "portfolio-application/WebRoot/markdown/return-to-the-physical.md",
@@ -228,9 +231,6 @@
     "WebRoot/markdown/my-needlessly-complicated-reverse-proxy.md",
     "WebRoot/markdown/resume.md",
     "bin/Debug/net8.0/WebRoot/markdown/understanding-monads.md",
-    "WebRoot/markdown/monads-are-for-chaining.md",
-    "WebRoot/markdown/ddmf-review.md",
-    "WebRoot/markdown/mnos-and-capex-tradeoffs.md",
     "Attachments/Pasted image 20241226121733.png",
     "Attachments/Pasted image 20241226121726.png",
     "WebRoot/images/Railway Oriented Programming Diagram.png",
