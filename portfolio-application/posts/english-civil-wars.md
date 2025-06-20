@@ -1,5 +1,5 @@
 ---
-title: The English Civil Wars and the republic that failed
+title: The English Civil Wars and the Republic That Failed
 date: 2025.06.19
 ---
 # The English Civil Wars and the Republic That Failed
