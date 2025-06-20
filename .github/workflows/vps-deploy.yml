@@ -24,6 +24,9 @@ jobs:
       version: ${{ steps.version.outputs.version }}
 
     steps:
+      - name: Clean images
+        run: sudo podman image prune -af
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
