@@ -75,10 +75,10 @@ When people romanticize strong leaders or try to shortcut constitutional process
 
 ## References
 
-Austin Woolrych. 2004. _Britain in Revolution: 1625-1660_. Oxford University Press, Oxford, UK.
-Diane Purkiss. 2006. _The English Civil War: A People's History_. HarperCollins, London, UK.
-Duncan, M. 2013-2014. Revolutions: Season 1 \[Audio podcast\].
-Jonathan Healey. 2023. _The Blazing World: A New History of Revolutionary England, 1603-1689_. Bloomsbury, London, UK.
+1) Austin Woolrych. 2004. _Britain in Revolution: 1625-1660_. Oxford University Press, Oxford, UK.
+2) Diane Purkiss. 2006. _The English Civil War: A People's History_. HarperCollins, London, UK.
+3) Duncan, M. 2013-2014. Revolutions: Season 1 \[Audio podcast\].
+4) Jonathan Healey. 2023. _The Blazing World: A New History of Revolutionary England, 1603-1689_. Bloomsbury, London, UK.
 
 [^useless-parliament]: In this era some sittings of parliament were given names, and this one's is the 'Useless Parliament'
 [^barebones]: The official name was the 'Nominated Assembly', but it was better known as "Barebone's Parliament" for one of its members, Praisegod Barbones
