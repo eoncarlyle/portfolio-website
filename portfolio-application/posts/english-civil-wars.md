@@ -73,7 +73,7 @@ While the American and French revolutions are more widely discussed, there are f
 
 When people romanticize strong leaders or try to shortcut constitutional process, they’re forgetting why England’s republic failed—and why ours could too.
 
-## References
+### References
 
 1) Austin Woolrych. 2004. _Britain in Revolution: 1625-1660_. Oxford University Press, Oxford, UK.
 2) Diane Purkiss. 2006. _The English Civil War: A People's History_. HarperCollins, London, UK.
