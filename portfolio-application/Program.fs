@@ -4,14 +4,12 @@ open System
 open System.IO
 open AppHandlers
 open Microsoft.AspNetCore.Builder
-open Microsoft.AspNetCore.Cors.Infrastructure
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.Razor
-open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.StaticFiles
 
 let routes webRoot =
@@ -19,7 +17,7 @@ let routes webRoot =
 
 let internalErrorHandler (ex: Exception) (logger: ILogger) =
     logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
-    AppHandlers.error500Handler
+    error500Handler
 
 let configureApp (app: IApplicationBuilder) =
     let webRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot")
@@ -51,7 +49,6 @@ let configureServices (services: IServiceCollection) =
 let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
 
-//TODO: better validation
 type NetworkArgs =
     { HostAddress: string
       HostPort: string }
