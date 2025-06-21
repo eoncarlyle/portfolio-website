@@ -5,6 +5,7 @@ open System.IO
 open Microsoft.AspNetCore.Http
 open Giraffe
 open Markdig
+open System.Collections.Generic
 
 type MarkdownViewName =
     | DirectMarkdown
@@ -21,6 +22,10 @@ type PostYamlHeader = { Title: string; Date: String }
 type PostYamlHeaderPair =
     { Path: MarkdownPath
       Header: PostYamlHeader }
+
+type RazorRenderPair =
+    { ViewName: string
+      ViewData: IDictionary<string, obj> }
 
 module MarkdownPath =
     let create path =

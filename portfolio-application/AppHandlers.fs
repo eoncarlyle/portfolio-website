@@ -3,24 +3,18 @@ module AppHandlers
 open System
 open System.IO
 open System.Collections.Generic
+open AngleSharp.Html
 open Giraffe
 open Giraffe.Razor
-open Giraffe.ViewEngine
 open Markdig
-open Markdig.Extensions.Yaml
-open Markdig.Syntax
-open Microsoft.AspNetCore
-open Microsoft.AspNetCore.Components.RenderTree
 open Microsoft.AspNetCore.Http
-open System.Text
-open System.Threading.Tasks
-open System.Collections.Generic
-open Microsoft.AspNetCore.Http
+open AngleSharp
+open AngleSharp.Html.Parser
+open AngleSharp.Html.Dom
 open Microsoft.AspNetCore.Mvc.ModelBinding
 open Microsoft.AspNetCore.Mvc.Razor
 open Microsoft.AspNetCore.Mvc.ViewFeatures
 open Microsoft.Extensions.DependencyInjection
-open Microsoft.AspNetCore.Antiforgery
 open FSharp.Control.Tasks
 open RazorEngine
 
@@ -30,62 +24,72 @@ open Yaml
 let error404Msg = "The page that you are looking for does not exist!"
 let error500Msg = "Internal server error"
 
+let angleSharpParser = HtmlParser()
+let angleSharpFormatter: IMarkupFormatter = PrettyMarkupFormatter()
 
-// Inline the _razorHtmlView and prevent this from _ever_ erroring
-let _razorView
-    (contentType: string)
-    (viewName: string)
-    (model: 'T option)
-    (viewData: IDictionary<string, obj> option)
-    (modelState: ModelStateDictionary option)
-    : HttpHandler =
+let formattedRazorHtmlView (razorRenderPair: RazorRenderPair) : HttpHandler =
     fun (next: HttpFunc) (ctx: HttpContext) ->
         task {
+            let viewName = razorRenderPair.ViewName
+            let viewData = razorRenderPair.ViewData
             let metadataProvider = ctx.RequestServices.GetService<IModelMetadataProvider>()
             let engine = ctx.RequestServices.GetService<IRazorViewEngine>()
 
             let tempDataDict =
                 ctx.RequestServices.GetService<ITempDataDictionaryFactory>().GetTempData ctx
 
-            let! result = renderView engine metadataProvider tempDataDict ctx viewName model viewData modelState
+            let! result = renderView engine metadataProvider tempDataDict ctx viewName None (Some viewData) None
 
             match result with
-            | Error msg -> return (failwith msg)
+            | Error msg -> return! (setStatusCode 500 >=> text ($"Critical Razor view rendering error: {msg}")) next ctx
             | Ok output ->
-                let bytes = Encoding.UTF8.GetBytes output
-                return! (setHttpHeader "Content-Type" contentType >=> setBody bytes) next ctx
-        }
+                let maybeFormattedHtml (htmlString: string): string option =
+                    try
+                        Some (angleSharpParser.ParseDocument(htmlString).ToHtml(angleSharpFormatter))
+                    with
+                    | ex -> None
 
-let _razorHtmlView
-    (viewName: string)
-    (model: 'T option)
-    (viewData: IDictionary<string, obj> option)
-    (modelState: ModelStateDictionary option)
-    : HttpHandler =
-    _razorView "text/html; charset=utf-8" viewName model viewData modelState
+                match maybeFormattedHtml output with
+                | Some formattedHtml ->
+                    return!
+                        (setHttpHeader "Content-Type" "text/html; charset=utf-8"
+                         >=> setBodyFromString formattedHtml)
+                            next
+                            ctx
+                | None -> return! (setStatusCode 500 >=> text "Critical HTML view rendering error") next ctx
+        }
 
 let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     let isStandardView = viewData.ContainsKey "Header" && viewData.ContainsKey "Body"
 
     let isErrorView = viewData.ContainsKey "Body" && viewData.ContainsKey "ErrorCode"
 
-    let renderTuple =
+    let razorRenderPair =
         match markdownViewName with
-        | DirectMarkdown when isStandardView -> "DirectMarkdown", Some viewData
-        | LeftHeaderMarkdown when isStandardView -> "LeftHeaderMarkdown", Some viewData
-        | PostMarkdown when isStandardView -> "PostMarkdown", Some viewData
-        | ErrorMarkdown when isErrorView -> "ErrorMarkdown", Some viewData
+        | DirectMarkdown when isStandardView ->
+            { ViewName = "DirectMarkdown"
+              ViewData = viewData }
+        | LeftHeaderMarkdown when isStandardView ->
+            { ViewName = "LeftHeaderMarkdown"
+              ViewData = viewData }
+        | PostMarkdown when isStandardView ->
+            { ViewName = "PostMarkdown"
+              ViewData = viewData }
+        | ErrorMarkdown when isErrorView ->
+            { ViewName = "ErrorMarkdown"
+              ViewData = viewData }
         | _ ->
             let errorData = dict [ ("ErrorCode", box 500); ("Body", box error500Msg) ]
-            "ErrorMarkdown", Some errorData
 
-    publicResponseCaching 60 None
-    >=> _razorHtmlView (fst renderTuple) None (snd renderTuple) None
+            { ViewName = "ErrorMarkdown"
+              ViewData = errorData }
+
+    publicResponseCaching 60 None >=> formattedRazorHtmlView razorRenderPair
 
 let landingPostList markdownRoot =
     String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders markdownRoot); [| "</ul>" |] ])
 
-let markdownFileHandler markdownViewName markdownRoot markdownPath bodyHeader (pageTitle: string option) =
+let markdownFileHandler markdownViewName markdownRoot markdownPath markdownHeader (maybeMetaPageTitle: string option) =
     let htmlContentsFromFile =
         MarkdownPath.toString markdownPath
         |> File.ReadAllText
@@ -97,7 +101,14 @@ let markdownFileHandler markdownViewName markdownRoot markdownPath bodyHeader (p
         | "landing" -> [ htmlContentsFromFile; landingPostList markdownRoot ] |> String.concat "\n"
         | _ -> htmlContentsFromFile
 
-    razorViewHandler markdownViewName (dict [ ("Body", box htmlContents); ("Header", box bodyHeader) ])
+    let metaPageTitle = Option.defaultValue markdownHeader maybeMetaPageTitle
+
+    razorViewHandler
+        markdownViewName
+        (dict
+            [ ("Body", box htmlContents)
+              ("Header", box markdownHeader)
+              ("Title", box metaPageTitle) ])
 
 let errorRazorViewHandler errorCode body =
     razorViewHandler ErrorMarkdown (dict [ ("ErrorCode", box errorCode); ("Body", box body) ])
@@ -112,7 +123,7 @@ let error404Handler: Handler =
 let error500Handler: Handler =
     clearResponse >=> setStatusCode 500 >=> errorRazorViewHandler 500 error500Msg
 
-let createRouteHandler markdownRoot markdownPath =
+let markdownRouteHandler markdownRoot markdownPath : HttpHandler =
     match MarkdownPath.toString markdownPath |> Path.GetFileName with
     | "landing.md" ->
         route "/"
@@ -142,7 +153,7 @@ let markdownRoutes (webRoot: String) : list<HttpHandler> =
     let markdownRoot = Path.Combine(webRoot, "markdown")
 
     markdownPaths markdownRoot
-    |> Array.map (createRouteHandler markdownRoot)
+    |> Array.map (markdownRouteHandler markdownRoot)
     |> Array.toList
 
 let pdfHandler webRoot pdfFileName : HttpHandler =
