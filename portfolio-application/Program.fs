@@ -51,7 +51,6 @@ let configureServices (services: IServiceCollection) =
 let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
 
-//TODO: better validation
 type NetworkArgs =
     { HostAddress: string
       HostPort: string }

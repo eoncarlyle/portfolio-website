@@ -12,42 +12,57 @@ open Markdig.Syntax
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Components.RenderTree
 open Microsoft.AspNetCore.Http
+open System.Text
+open System.Threading.Tasks
+open System.Collections.Generic
+open Microsoft.AspNetCore.Http
+open Microsoft.AspNetCore.Mvc.ModelBinding
+open Microsoft.AspNetCore.Mvc.Razor
+open Microsoft.AspNetCore.Mvc.ViewFeatures
+open Microsoft.Extensions.DependencyInjection
+open Microsoft.AspNetCore.Antiforgery
+open FSharp.Control.Tasks
+open RazorEngine
 
-type MarkdownViewName =
-    | DirectMarkdown
-    | LeftHeaderMarkdown
-    | PostMarkdown
-    | ErrorMarkdown
-
-type MarkdownPath = private MarkdownPath of string
-
-type Handler = HttpFunc -> Http.HttpContext -> HttpFuncResult
-
-type PostYamlHeader = { Title: string; Date: String }
-
-type PostYamlHeaderPair =
-    { Path: MarkdownPath
-      Header: PostYamlHeader }
-
-module MarkdownPath =
-    let create path =
-        match path with
-        | path when (File.Exists path) && (Path.GetExtension path = ".md") -> Some(MarkdownPath path)
-        | _ -> None
-
-    let toString (MarkdownPath path) = path
+open Types
+open Yaml
 
 let error404Msg = "The page that you are looking for does not exist!"
 let error500Msg = "Internal server error"
 
-let markdownPipeline =
-    MarkdownPipelineBuilder().UseAdvancedExtensions().UseYamlFrontMatter().Build()
 
-let markdownPaths markdownRoot =
-    Directory.GetFiles markdownRoot |> Array.choose MarkdownPath.create
+// Inline the _razorHtmlView and prevent this from _ever_ erroring
+let _razorView
+    (contentType: string)
+    (viewName: string)
+    (model: 'T option)
+    (viewData: IDictionary<string, obj> option)
+    (modelState: ModelStateDictionary option)
+    : HttpHandler =
+    fun (next: HttpFunc) (ctx: HttpContext) ->
+        task {
+            let metadataProvider = ctx.RequestServices.GetService<IModelMetadataProvider>()
+            let engine = ctx.RequestServices.GetService<IRazorViewEngine>()
 
-let markdownFileName markdownPath =
-    Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)
+            let tempDataDict =
+                ctx.RequestServices.GetService<ITempDataDictionaryFactory>().GetTempData ctx
+
+            let! result = renderView engine metadataProvider tempDataDict ctx viewName model viewData modelState
+
+            match result with
+            | Error msg -> return (failwith msg)
+            | Ok output ->
+                let bytes = Encoding.UTF8.GetBytes output
+                return! (setHttpHeader "Content-Type" contentType >=> setBody bytes) next ctx
+        }
+
+let _razorHtmlView
+    (viewName: string)
+    (model: 'T option)
+    (viewData: IDictionary<string, obj> option)
+    (modelState: ModelStateDictionary option)
+    : HttpHandler =
+    _razorView "text/html; charset=utf-8" viewName model viewData modelState
 
 let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
     let isStandardView = viewData.ContainsKey "Header" && viewData.ContainsKey "Body"
@@ -65,55 +80,12 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
             "ErrorMarkdown", Some errorData
 
     publicResponseCaching 60 None
-    >=> razorHtmlView (fst renderTuple) None (snd renderTuple) None
+    >=> _razorHtmlView (fst renderTuple) None (snd renderTuple) None
 
+let landingPostList markdownRoot =
+    String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders markdownRoot); [| "</ul>" |] ])
 
-let postList markdownRoot =
-
-    let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
-        if line.StartsWith(prefix) then
-            Some(line.Substring(prefix.Length).Trim())
-        else
-            None
-
-    let tryParsePostYamlHeader (lines: string array) =
-        let tryTitle = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "title:")
-        let tryDate = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "date:")
-
-        match tryTitle, tryDate with
-        | Some title, Some date -> Some { Title = title; Date = date }
-        | _ -> None
-
-    let tryGetHeader (markdownPath: MarkdownPath) =
-        MarkdownPath.toString markdownPath
-        |> File.ReadAllText
-        |> (fun markdownContents ->
-            Markdown
-                .Parse(markdownContents, markdownPipeline)
-                .Descendants<YamlFrontMatterBlock>())
-        |> Seq.tryHead
-        |> Option.map (fun yamlBlock -> yamlBlock.Lines.Lines |> Seq.map _.ToString() |> Seq.toArray)
-        |> Option.bind tryParsePostYamlHeader
-
-    let getHeaderHtml (pair: PostYamlHeaderPair) =
-        $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
-
-    let postLinks =
-        markdownPaths markdownRoot
-        |> Array.map (fun markdownPath ->
-            let maybeHeader = tryGetHeader markdownPath
-
-            match maybeHeader with
-            | Some header -> Some { Path = markdownPath; Header = header }
-            | _ -> None)
-        |> Array.choose id
-        |> Array.sortBy (fun pair -> DateTime.Parse(pair.Header.Date))
-        |> Array.rev
-        |> Array.map getHeaderHtml
-
-    String.Join("\n", Array.concat [ [| "<ul>" |]; postLinks; [| "</ul>" |] ])
-
-let markdownFileHandler markdownViewName markdownRoot markdownPath header =
+let markdownFileHandler markdownViewName markdownRoot markdownPath bodyHeader (pageTitle: string option) =
     let htmlContentsFromFile =
         MarkdownPath.toString markdownPath
         |> File.ReadAllText
@@ -122,10 +94,10 @@ let markdownFileHandler markdownViewName markdownRoot markdownPath header =
 
     let htmlContents =
         match markdownFileName markdownPath with
-        | "landing" -> [ htmlContentsFromFile; postList markdownRoot ] |> String.concat "\n"
+        | "landing" -> [ htmlContentsFromFile; landingPostList markdownRoot ] |> String.concat "\n"
         | _ -> htmlContentsFromFile
 
-    razorViewHandler markdownViewName (dict [ ("Body", box htmlContents); ("Header", box header) ])
+    razorViewHandler markdownViewName (dict [ ("Body", box htmlContents); ("Header", box bodyHeader) ])
 
 let errorRazorViewHandler errorCode body =
     razorViewHandler ErrorMarkdown (dict [ ("ErrorCode", box errorCode); ("Body", box body) ])
@@ -144,16 +116,26 @@ let createRouteHandler markdownRoot markdownPath =
     match MarkdownPath.toString markdownPath |> Path.GetFileName with
     | "landing.md" ->
         route "/"
-        >=> markdownFileHandler LeftHeaderMarkdown markdownRoot markdownPath "Iain Schmitt"
+        >=> markdownFileHandler
+                LeftHeaderMarkdown
+                markdownRoot
+                markdownPath
+                "Iain Schmitt"
+                (Some "Iain Schmitt's Personal Website")
     | "uses.md" ->
         route "/uses"
-        >=> markdownFileHandler PostMarkdown markdownRoot markdownPath "Iain Schmitt's Uses Page"
+        >=> markdownFileHandler PostMarkdown markdownRoot markdownPath "Iain Schmitt's Uses Page" None
     | "resume.md" ->
         route "/resume"
-        >=> markdownFileHandler LeftHeaderMarkdown markdownRoot markdownPath "Iain Schmitt's Resume"
+        >=> markdownFileHandler LeftHeaderMarkdown markdownRoot markdownPath "Iain Schmitt's Resume" None
     | _ ->
         route $"/post/{markdownFileName markdownPath}"
-        >=> markdownFileHandler PostMarkdown markdownRoot markdownPath "Iain Schmitt"
+        >=> markdownFileHandler
+                PostMarkdown
+                markdownRoot
+                markdownPath
+                "Iain Schmitt"
+                (maybeYamlHeader markdownPath |> Option.map _.Title)
 
 
 let markdownRoutes (webRoot: String) : list<HttpHandler> =

@@ -20,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="Yaml.fs" />
     <Compile Include="AppHandlers.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
