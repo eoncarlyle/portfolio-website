@@ -10,7 +10,6 @@ open Markdig
 open Microsoft.AspNetCore.Http
 open AngleSharp
 open AngleSharp.Html.Parser
-open AngleSharp.Html.Dom
 open Microsoft.AspNetCore.Mvc.ModelBinding
 open Microsoft.AspNetCore.Mvc.Razor
 open Microsoft.AspNetCore.Mvc.ViewFeatures
@@ -39,7 +38,8 @@ let formattedRazorHtmlView (razorRenderPair: RazorRenderPair) : HttpHandler =
                 ctx.RequestServices.GetService<ITempDataDictionaryFactory>().GetTempData ctx
 
             let! result = renderView engine metadataProvider tempDataDict ctx viewName None (Some viewData) None
-
+            
+            // TODO: Change to ahead-of-time templating where route handler created from value-bearing options
             match result with
             | Error msg -> return! (setStatusCode 500 >=> text ($"Critical Razor view rendering error: {msg}")) next ctx
             | Ok output ->
