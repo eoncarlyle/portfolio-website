@@ -38,25 +38,16 @@ let formattedRazorHtmlView (razorRenderPair: RazorRenderPair) : HttpHandler =
                 ctx.RequestServices.GetService<ITempDataDictionaryFactory>().GetTempData ctx
 
             let! result = renderView engine metadataProvider tempDataDict ctx viewName None (Some viewData) None
-            
+
             // TODO: Change to ahead-of-time templating where route handler created from value-bearing options
             match result with
             | Error msg -> return! (setStatusCode 500 >=> text ($"Critical Razor view rendering error: {msg}")) next ctx
             | Ok output ->
-                let maybeFormattedHtml (htmlString: string): string option =
-                    try
-                        Some (angleSharpParser.ParseDocument(htmlString).ToHtml(angleSharpFormatter))
-                    with
-                    | ex -> None
-
-                match maybeFormattedHtml output with
-                | Some formattedHtml ->
-                    return!
-                        (setHttpHeader "Content-Type" "text/html; charset=utf-8"
-                         >=> setBodyFromString formattedHtml)
-                            next
-                            ctx
-                | None -> return! (setStatusCode 500 >=> text "Critical HTML view rendering error") next ctx
+                return!
+                    (setHttpHeader "Content-Type" "text/html; charset=utf-8"
+                     >=> setBodyFromString output)
+                        next
+                        ctx
         }
 
 let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
