@@ -1,14 +1,24 @@
 # Kafka in one file
 
-When Redis's original BSD open-source liscences was revoked, Machine Learning Engineer Vicki Boykis mourned the occasion with "I love Redis with a loyalty that I reserve for close friends and family and the first true day of spring, because Redis is software made for me, the developer." While I have certainly worked with Redis far less than Boykis, this is a good description for how I feel about SQLite. There may be more impactful software projects, but there is no software that I love so unreservedly as SQLite.
+On a piece of software whose lack of existence confuses me.
 
-Most 'how to get started with relational databases' blogs and books don't use SQLite, case in point When I was learning the basics of SQL I had to download a .pkg MySQL with this clunky editor, and it's probably still downloaded on my Mac, untouched since that holiday break I was using it.[^1] If you're setting up the database for a side project is more cumbersome, because you have to provision compute, make sure it is accessible over the network, and secure it accordingly. But with SQLite, one file. That's it. No daemon, no extra compute, no managed service. The daemonless, single file setup means you can check your database into version control or swap out between test and production with a single-line change. While it isn't as performant as PostgreSQL, the performance ceiling may be higher than you realise, emphasis mine:
+## A love letter to SQLite
+
+When Redis's original BSD open-source licence was changed, Machine Learning Engineer Vicki Boykis mourned the occasion with "I love Redis with a loyalty that I reserve for close friends and family and the first true day of spring, because Redis is software made for me, the developer." While I have certainly worked with Redis far less than Boykis, this is exactly how I feel about SQLite. There may be more impactful software projects, but there is no software that I love so unreservedly as SQLite.
+
+Despite how objectively great it is, most 'how to get started with relational databases' blogs and books don't use SQLite: when I was learning the basics of SQL I had to download a `.pkg` with MySQL with this clunky editor; it's probably still downloaded on my Mac, untouched since that holiday break I was using it.[^1] If you're setting up a new database for a project you'll have to provision compute, make sure it is available over the network, and secure it accordingly. 
+
+But with SQLite, you create a file and then run `sqlite3 myNewDatabase.sqlite` to setup your new tables. That's it. There's no daemon, no extra compute, no managed service. The daemonless, single file setup means you can check your database into version control or swap out between test and production with a single-line change. While it isn't as performant as PostgreSQL, the performance ceiling may be higher than you realise, emphasis mine:
 
 > The SQLite website (https://sqlite.org/) uses SQLite itself, of course, and as of this writing (2015) it handles about *400K to 500K HTTP requests per day, about 15-20% of which are dynamic pages touching the database. Dynamic content uses about 200 SQL statements per webpage*. This setup runs on a single VM that shares a physical server with 23 others and yet still keeps the load average below 0.1 most of the time.
 
-Not only can you check your database into version control
-- Can commit database into source control
+# Event Stream System Administration
 
+A few weeks back I had the idea of standing up Apache Kafka behind a reverse proxy for use in a [side project](https://github.com/eoncarlyle/januaryplayground). I have plenty of compute in my home server rack, but it is all hidden behind a reverse proxy on a Digital Ocean VPS to avoid exposing my private IP address. The idea was to open the broker up to any IP address and secure it with mTLS. At first Nginx streams didn't work on the VPS so I moved over to HAProxy, but I had this annoying issue where the certificate presented by the Kafka domain name was for an unrelated application on Nginx on the same DMZ server. Given that the reverse proxy went through a port-forwarding rule straight to port 9093 where Kafka was listening, I don't know what this was happening. I am a half decent Linux system administrator and this was a big part of my last job, but in the end I decided to give up and started running the broker directly on the VPS. I have considerably less CPU, RAM, and disk to work with, but at least mTLS  works. It all reminded me of what it is like to setup a database from scratch and made me grateful that we are using a Kafka managed service at work.
+
+It all made me think that surely _someone_ has created a high-quality, open-source "SQLite of event streams" because that is exactly what I want. Given that SQLite fit my needs well as a database we're not talking about all that much data, but I find event streams interesting to work with and I wanted to use them for some inter-service messaging. 
+
+- Mention chapter 3 of 'Distributed Services with Go'
 
 SQLite doesn't require a seperate daemon and exists as a single file. I would love the event stream equivalent of this.
 - https://sqlite.org/wal.html
@@ -38,5 +48,8 @@ SQLite doesn't require a seperate daemon and exists as a single file. I would lo
 
 ## References
 https://vickiboykis.com/2024/04/16/redis-is-forked/
+https://sqlite.org/whentouse.html
 
 [^1]: The reasons for not using SQLite to teach relationship databases aren't terrible in that you want to teach people the platforms they will be using at larger enterprises, but early on those benefits are, I think, swamped by how lightweight SQLite is
+
+[^2]: This was for a [side project](https://github.com/eoncarlyle/januaryplayground) that I wanted to introduce some event streaming into
