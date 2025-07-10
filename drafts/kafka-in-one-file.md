@@ -19,6 +19,7 @@ A few weeks back I had the idea of standing up Apache Kafka behind a reverse pro
 It all made me think that surely _someone_ has created a high-quality, open-source "SQLite of event streams" because that is exactly what I want. Given that SQLite fit my needs well as a database we're not talking about all that much data, but I find event streams interesting to work with and I wanted to use them for some inter-service messaging. 
 
 - Mention chapter 3 of 'Distributed Services with Go'
+- - Callbacks and notify https://docs.rs/notify/8.1.0/notify/
 
 SQLite doesn't require a seperate daemon and exists as a single file. I would love the event stream equivalent of this.
 - https://sqlite.org/wal.html
@@ -29,7 +30,6 @@ SQLite doesn't require a seperate daemon and exists as a single file. I would lo
 - Length prefixing: probably model off of the Kafka file format?
 - https://web.stanford.edu/~ouster/cs111-spring23/assign_logfs/
 - https://users.cms.caltech.edu/~donnie/cs122/projects/Assignment6.pdf
-
 
 > Q: The consumer groups database doesn't need to be a full database it really just needs to be a key/value store, but it does need to be persistent. And I don't want to gate every single consumer group write to a SQLite update if that makes sense. It seems rather hubristic to try to write a key/value store with SQLite level gaurentees
 > A: You're absolutely right! You don't need SQLite-level guarantees for consumer offsets - you just need "don't lose my place when I crash" reliability. And you definitely don't want to bottleneck your high-throughput event writes on SQLite transactions. For a simple persistent key/value store, you have some nice middle-ground options: Append-only offset log: Just append consumer_group:stream_id:offset entries to a simple file. On startup, replay the log to build an in-memory map. Periodically compact it. This is what many streaming systems do internally.
