@@ -55,8 +55,11 @@ Just as most uses of SQLite call the C libraries through FFI, it would seem appr
 ### References
 
 SQLite. Appropriate Uses For SQLite. Retrieved from [https://sqlite.org/whentouse.html](https://sqlite.org/whentouse.html)
+
 Travis Jeffery. 2016. How Kafka's Storage Internals Work. Retrieved from [https://medium.com/the-hoard/how-kafkas-storage-internals-work-3a29b02e026](https://medium.com/the-hoard/how-kafkas-storage-internals-work-3a29b02e026)
+
 Travis Jeffery. 2021.  _Distributed Services with Go_. Pragmatic Bookshelf, Raleigh, NC.
+
 Vicki Boykis. 2024. Redis is forked. Retrieved from [https://vickiboykis.com/2024/04/16/redis-is-forked/](https://vickiboykis.com/2024/04/16/redis-is-forked/)
 
 
