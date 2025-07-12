@@ -39,6 +39,7 @@ SQLite doesn't require a seperate daemon and exists as a single file. I would lo
 - Message keys
 
 ## Don't _need_ to have
+- On consumer groups: consumer offset events could be appended with everyhing else - pointers at front of file for search?
 - Deletion/Compaction: will be a real pain
 - Consumer groups
   - Persistence is a pain and should almost certainly done in SQLite if I opted for this, doesn't break the spirit of 'Kafka in one file'
