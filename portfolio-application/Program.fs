@@ -13,13 +13,10 @@ open Giraffe.Razor
 open Microsoft.AspNetCore.Mvc.Razor
 open Microsoft.AspNetCore.StaticFiles
 
-let routes webRoot (razorViewEngine: IRazorViewEngine) =
-    choose
-        [ GET >=> choose (appRoutes webRoot razorViewEngine)
-          HEAD >=> headHandler
-          error404Handler ]
+let routes webRoot =
+    choose [ GET >=> choose (appRoutes webRoot); HEAD >=> headHandler; error404Handler ]
 
-let internalErrorHandler (razorViewEngine: IRazorViewEngine) =
+let internalErrorHandler =
     fun (ex: Exception) (logger: ILogger) ->
         logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
         error500Handler
@@ -36,14 +33,13 @@ let configureApp (app: IApplicationBuilder) =
     staticFileOptions.OnPrepareResponse <- prepareResponse
 
     let webRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot")
-    let razorViewEngine = app.ApplicationServices.GetService<IRazorViewEngine>()
 
     app
-        .UseGiraffeErrorHandler(internalErrorHandler razorViewEngine)
+        .UseGiraffeErrorHandler(internalErrorHandler)
         .UseHttpsRedirection()
         .UseStaticFiles(staticFileOptions)
         .UseResponseCaching()
-        .UseGiraffe(routes webRoot razorViewEngine)
+        .UseGiraffe(routes webRoot)
 
 let configureServices (services: IServiceCollection) =
     let sp = services.BuildServiceProvider()

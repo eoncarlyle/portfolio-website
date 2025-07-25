@@ -35,13 +35,14 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
                 let! result = renderView engine metadataProvider tempDataDict ctx viewName None (Some viewData) None
 
                 match result with
-                | Error msg -> return! (setStatusCode 500 >=> text ($"Critical Razor view rendering error: {msg}")) next ctx
                 | Ok output ->
                     return!
                         (setHttpHeader "Content-Type" "text/html; charset=utf-8"
-                        >=> setBodyFromString output)
+                         >=> setBodyFromString output)
                             next
                             ctx
+                | Error msg ->
+                    return! (setStatusCode 500 >=> text ($"Critical Razor view rendering error: {msg}")) next ctx
             }
 
     let isStandardView = viewData.ContainsKey "Header" && viewData.ContainsKey "Body"
@@ -71,7 +72,6 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
 
 
 let markdownFileHandler markdownRoot markdownPath markdownViewName markdownHeader (maybeMetaPageTitle: string option) =
-
     let htmlContentsFromFile =
         MarkdownPath.toString markdownPath
         |> File.ReadAllText
@@ -79,7 +79,7 @@ let markdownFileHandler markdownRoot markdownPath markdownViewName markdownHeade
         |> _.Replace("&#8617", "&#8617&#65038")
 
     let landingPostList =
-            String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders markdownRoot); [| "</ul>" |] ])
+        String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders markdownRoot); [| "</ul>" |] ])
 
     let htmlContents =
         match markdownFileName markdownPath with
@@ -139,5 +139,5 @@ let nonHtmlRoutes webRoot =
       route "/wedding/iains-game"
       >=> redirectTo true "https://connectionsgame.org/game/?X5SMRJ" ]
 
-let appRoutes webRoot (razorViewEngine: IRazorViewEngine) =
+let appRoutes webRoot =
     (markdownRoutes webRoot) @ (nonHtmlRoutes webRoot)
