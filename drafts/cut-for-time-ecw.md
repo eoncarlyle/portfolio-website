@@ -22,3 +22,11 @@
 > Once free of the mob the Speakers of both Houses, with eight peers and fifty-seven MPs, left Westminster and took refuge with the army... For a week the members remaining at Westminster made a show of carrying on business under illegitimate replacement speakers, and forbade the army to come within thirty miles.
 
 > The New Model's entry into London was a well staged demonstration of its strength and discipline. Fairfax did not hasten it, for he wanted no bloodshed. He drew up his 15,000 men on Hounslow Health on 3 August-their ranks stretched for a mile and a half-and escorted the two Speakers, fourteen peers, and about a hundred MPs in a review of them. Not a shot was fired nor a sword drawn when his regiments encircled the City next day, and when he escorted the returning members to the Palace of Westminster on the 5th his men wore laurel leaves in their hats and the church bells pealed. To complete the triumph, all his twenty regiments paraded in Hyde Park on the 7th, a Saturday, before marching to Cheapside with colours flying, trumpets playing, and drums beating. From that artery of the old City they spread out and moved through all its streets, to be greeted not sullenly but with enthusiastic plaudits. Their orderliness impressed everybody; they took not so much as an apple, it was said, and the contrast with the recent behaviour of the reformadoes was taken to heart. What would it have been like, one wonders, if they had been able to bring back the king!
+
+- When you hear about several thoundand men marching on London it is important to keep preportions in perspective: there were only ~5.3 million people in England at that time, so this would be something more like _150,000_ men marching on London today
+
+- Cromwell, along with several of parliament's officers, were simultaneously serving as MPs and as military officeers. Add this to the 'why we bother with seperations of powers'
+
+- Irish conflict was one of the most civil warish of civil wars: Lord Inchiquin: King -> parliament 1644 -> confederates in 1647 -> king 1648
+
+- Purchasing army officer commisions in the 18th century brittish military makes a lot more sense in light of 17th century britain: it keeps aristocratic control of the armed forces rather than let in talented outsiders who are not as bought into the established order
