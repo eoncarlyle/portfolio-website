@@ -3,13 +3,10 @@ module AppHandlers
 open System
 open System.IO
 open System.Collections.Generic
-open AngleSharp.Html
 open Giraffe
 open Giraffe.Razor
 open Markdig
 open Microsoft.AspNetCore.Http
-open AngleSharp
-open AngleSharp.Html.Parser
 open Microsoft.AspNetCore.Mvc.ModelBinding
 open Microsoft.AspNetCore.Mvc.Razor
 open Microsoft.AspNetCore.Mvc.ViewFeatures
@@ -23,36 +20,32 @@ open Yaml
 let error404Msg = "The page that you are looking for does not exist!"
 let error500Msg = "Internal server error"
 
-let angleSharpParser = HtmlParser()
-let angleSharpFormatter: IMarkupFormatter = PrettyMarkupFormatter()
-
-let formattedRazorHtmlView (razorRenderPair: RazorRenderPair) : HttpHandler =
-    fun (next: HttpFunc) (ctx: HttpContext) ->
-        task {
-            let viewName = razorRenderPair.ViewName
-            let viewData = razorRenderPair.ViewData
-            let metadataProvider = ctx.RequestServices.GetService<IModelMetadataProvider>()
-            let engine = ctx.RequestServices.GetService<IRazorViewEngine>()
-
-            let tempDataDict =
-                ctx.RequestServices.GetService<ITempDataDictionaryFactory>().GetTempData ctx
-
-            let! result = renderView engine metadataProvider tempDataDict ctx viewName None (Some viewData) None
-
-            // TODO: Change to ahead-of-time templating where route handler created from value-bearing options
-            match result with
-            | Error msg -> return! (setStatusCode 500 >=> text ($"Critical Razor view rendering error: {msg}")) next ctx
-            | Ok output ->
-                return!
-                    (setHttpHeader "Content-Type" "text/html; charset=utf-8"
-                     >=> setBodyFromString output)
-                        next
-                        ctx
-        }
-
 let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
-    let isStandardView = viewData.ContainsKey "Header" && viewData.ContainsKey "Body"
+    let formattedRazorHtmlView (razorRenderPair: RazorRenderPair) : HttpHandler =
+        fun (next: HttpFunc) (ctx: HttpContext) ->
+            task {
+                let viewName = razorRenderPair.ViewName
+                let viewData = razorRenderPair.ViewData
+                let metadataProvider = ctx.RequestServices.GetService<IModelMetadataProvider>()
+                let engine = ctx.RequestServices.GetService<IRazorViewEngine>()
 
+                let tempDataDict =
+                    ctx.RequestServices.GetService<ITempDataDictionaryFactory>().GetTempData ctx
+
+                let! result = renderView engine metadataProvider tempDataDict ctx viewName None (Some viewData) None
+
+                match result with
+                | Ok output ->
+                    return!
+                        (setHttpHeader "Content-Type" "text/html; charset=utf-8"
+                         >=> setBodyFromString output)
+                            next
+                            ctx
+                | Error msg ->
+                    return! (setStatusCode 500 >=> text ($"Critical Razor view rendering error: {msg}")) next ctx
+            }
+
+    let isStandardView = viewData.ContainsKey "Header" && viewData.ContainsKey "Body"
     let isErrorView = viewData.ContainsKey "Body" && viewData.ContainsKey "ErrorCode"
 
     let razorRenderPair =
@@ -77,19 +70,20 @@ let razorViewHandler markdownViewName (viewData: IDictionary<string, obj>) =
 
     publicResponseCaching 60 None >=> formattedRazorHtmlView razorRenderPair
 
-let landingPostList markdownRoot =
-    String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders markdownRoot); [| "</ul>" |] ])
 
-let markdownFileHandler markdownViewName markdownRoot markdownPath markdownHeader (maybeMetaPageTitle: string option) =
+let markdownFileHandler markdownRoot markdownPath markdownViewName markdownHeader (maybeMetaPageTitle: string option) =
     let htmlContentsFromFile =
         MarkdownPath.toString markdownPath
         |> File.ReadAllText
         |> fun markdownContents -> Markdown.ToHtml(markdownContents, markdownPipeline)
         |> _.Replace("&#8617", "&#8617&#65038")
 
+    let landingPostList =
+        String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders markdownRoot); [| "</ul>" |] ])
+
     let htmlContents =
         match markdownFileName markdownPath with
-        | "landing" -> [ htmlContentsFromFile; landingPostList markdownRoot ] |> String.concat "\n"
+        | "landing" -> [ htmlContentsFromFile; landingPostList ] |> String.concat "\n"
         | _ -> htmlContentsFromFile
 
     let metaPageTitle = Option.defaultValue markdownHeader maybeMetaPageTitle
@@ -115,30 +109,18 @@ let error500Handler: Handler =
     clearResponse >=> setStatusCode 500 >=> errorRazorViewHandler 500 error500Msg
 
 let markdownRouteHandler markdownRoot markdownPath : HttpHandler =
+    //Note: providing dependencies via functions works better due to partial application here
+    let render = markdownFileHandler markdownRoot markdownPath
+
     match MarkdownPath.toString markdownPath |> Path.GetFileName with
     | "landing.md" ->
         route "/"
-        >=> markdownFileHandler
-                LeftHeaderMarkdown
-                markdownRoot
-                markdownPath
-                "Iain Schmitt"
-                (Some "Iain Schmitt's Personal Website")
-    | "uses.md" ->
-        route "/uses"
-        >=> markdownFileHandler PostMarkdown markdownRoot markdownPath "Iain Schmitt's Uses Page" None
-    | "resume.md" ->
-        route "/resume"
-        >=> markdownFileHandler LeftHeaderMarkdown markdownRoot markdownPath "Iain Schmitt's Resume" None
+        >=> render LeftHeaderMarkdown "Iain Schmitt" (Some "Iain Schmitt's Personal Website")
+    | "uses.md" -> route "/uses" >=> render PostMarkdown "Iain Schmitt's Uses Page" None
+    | "resume.md" -> route "/resume" >=> render LeftHeaderMarkdown "Iain Schmitt's Resume" None
     | _ ->
         route $"/post/{markdownFileName markdownPath}"
-        >=> markdownFileHandler
-                PostMarkdown
-                markdownRoot
-                markdownPath
-                "Iain Schmitt"
-                (maybeYamlHeader markdownPath |> Option.map _.Title)
-
+        >=> render PostMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
 
 let markdownRoutes (webRoot: String) : list<HttpHandler> =
     let markdownRoot = Path.Combine(webRoot, "markdown")

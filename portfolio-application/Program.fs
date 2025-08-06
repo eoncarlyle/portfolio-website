@@ -10,18 +10,18 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.Razor
+open Microsoft.AspNetCore.Mvc.Razor
 open Microsoft.AspNetCore.StaticFiles
 
 let routes webRoot =
     choose [ GET >=> choose (appRoutes webRoot); HEAD >=> headHandler; error404Handler ]
 
-let internalErrorHandler (ex: Exception) (logger: ILogger) =
-    logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
-    error500Handler
+let internalErrorHandler =
+    fun (ex: Exception) (logger: ILogger) ->
+        logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
+        error500Handler
 
 let configureApp (app: IApplicationBuilder) =
-    let webRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot")
-
     let staticFileOptions = StaticFileOptions()
 
     let prepareResponse =
@@ -31,6 +31,8 @@ let configureApp (app: IApplicationBuilder) =
             headers.Expires <- DateTimeOffset.UtcNow.AddDays(7).ToString("R")
 
     staticFileOptions.OnPrepareResponse <- prepareResponse
+
+    let webRoot = Path.Combine(AppContext.BaseDirectory, "WebRoot")
 
     app
         .UseGiraffeErrorHandler(internalErrorHandler)
