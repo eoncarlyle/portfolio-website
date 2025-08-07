@@ -9,7 +9,6 @@ open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
-open Giraffe.Razor
 open Microsoft.AspNetCore.Mvc.Razor
 open Microsoft.AspNetCore.StaticFiles
 
@@ -45,7 +44,6 @@ let configureServices (services: IServiceCollection) =
     let sp = services.BuildServiceProvider()
     let env = sp.GetService<IWebHostEnvironment>()
     let viewsFolderPath = Path.Combine(env.ContentRootPath, "Views")
-    services.AddRazorEngine viewsFolderPath |> ignore
     services.AddCors().AddResponseCaching().AddGiraffe() |> ignore
 
 let configureLogging (builder: ILoggingBuilder) =
