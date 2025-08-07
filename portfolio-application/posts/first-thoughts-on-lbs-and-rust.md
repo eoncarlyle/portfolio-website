@@ -1,5 +1,5 @@
 ---
-title: First Thoughts <em>The Little Book of Semaphores</em> and Rust
+title: First Thoughts on <em>The Little Book of Semaphores</em> and Rust
 date: 2025.03.17
 ---
 
