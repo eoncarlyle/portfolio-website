@@ -14,6 +14,9 @@ approval.
  - Terrestrial boradband helps both
  - Talk about Verizon FiOS, AT&T fiber offerings
  - Terrestrial broadband makes a lot of sense for a couple of reasons
+ - Rest of T-Mobil Fiber rollout
+  - Metronet
+  - Lumos Fiber
 
 
 - Note about unchanging concrentration, segmentation between cable + FWA/fiber (those who don't care about speed all that much vs. those who do)
