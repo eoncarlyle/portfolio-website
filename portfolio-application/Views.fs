@@ -1,6 +1,8 @@
 module Views
 
 open Giraffe.ViewEngine
+open System
+open Types
 
 let layout (pageTitle: string) (content: XmlNode list) =
     html
@@ -50,3 +52,24 @@ let postMarkdownView (title: string) (header: string) (body: string) =
           hr []
           rawText body
           div [ _class "center" ] [ a [ _href "/" ] [ encodedText "Back to home" ] ] ]
+
+let rssItem (pair: PostYamlHeaderPair) (content: string) (baseUrl: string) =
+    tag
+        "item"
+        []
+        [ tag "title" [] [ encodedText pair.Header.Title ]
+          tag "link" [] [ encodedText $"{baseUrl}/post/{markdownFileName pair.Path}" ]
+          tag "pubDate" [] [ encodedText (DateTime.Parse(pair.Header.Date).ToString("R")) ]
+          tag "description" [] [ rawText $"<![CDATA[{content}]]>" ] ]
+
+let rssChannelView (title: string) (link: string) (description: string) (items: XmlNode list) =
+    tag
+        "rss"
+        [ attr "version" "2.0" ]
+        [ tag
+              "channel"
+              []
+              [ tag "title" [] [ encodedText title ]
+                tag "link" [] [ encodedText link ]
+                tag "description" [] [ encodedText description ]
+                yield! items ] ]

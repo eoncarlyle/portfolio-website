@@ -6,6 +6,7 @@ open Markdig
 open Markdig.Extensions.Yaml
 open Markdig.Syntax
 open System
+open Views
 
 let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
     if line.StartsWith(prefix) then
@@ -35,7 +36,7 @@ let maybeYamlHeader (markdownPath: MarkdownPath) =
 let getHeaderHtml (pair: PostYamlHeaderPair) =
     $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
 
-let postLinksFromYamlHeaders markdownRoot =
+let getPostYamlHeaders markdownRoot : PostYamlHeaderPair array =
     markdownPaths markdownRoot
     |> Array.map (fun markdownPath ->
         let maybeHeader = maybeYamlHeader markdownPath
@@ -45,5 +46,22 @@ let postLinksFromYamlHeaders markdownRoot =
         | _ -> None)
     |> Array.choose id
     |> Array.sortBy (fun pair -> DateTime.Parse(pair.Header.Date))
-    |> Array.rev
-    |> Array.map getHeaderHtml
+
+let postLinksFromYamlHeaders markdownRoot =
+    getPostYamlHeaders markdownRoot |> Array.map getHeaderHtml
+
+let rssChannel (markdownRoot: string) (baseUrl: string) =
+    let posts = getPostYamlHeaders markdownRoot
+
+    let items =
+        posts
+        |> Array.map (fun pair ->
+            let content =
+                MarkdownPath.toString pair.Path
+                |> File.ReadAllText
+                |> fun md -> Markdown.ToHtml(md, markdownPipeline)
+
+            rssItem pair content baseUrl)
+        |> Array.toList
+
+    rssChannelView "iainschmitt.com" baseUrl "Iain Schmitt's Blog" items
