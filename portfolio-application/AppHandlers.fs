@@ -13,7 +13,7 @@ open Microsoft.Extensions.DependencyInjection
 open Giraffe.ViewEngine
 
 open Types
-open Posts
+open Yaml
 open Views
 
 let error404Msg = "The page that you are looking for does not exist!"
@@ -112,12 +112,16 @@ let pdfHandler webRoot pdfFileName : HttpHandler =
     let pdfPath = Path.Combine(webRoot, "pdf", pdfFileName)
     streamFile true pdfPath None None
 
-//let rssHandler markdownRoot (baseUrl: string) : HttpHandler =
-//    setHttpHeader "Content-Type" "application/rss+xml; charset=utf-8"
-//    >=> (rssChannel markdownRoot baseUrl |> RenderView.AsString.xmlNode |> htmlView)
+let rssHandler markdownRoot (baseUrl: string) : HttpHandler =
+    let rss = rssChannel markdownRoot baseUrl
+
+    fun next ctx ->
+        let xml = RenderView.AsString.xmlNode rss
+        ctx.SetContentType "application/rss+xml; charset=utf-8"
+        ctx.WriteStringAsync xml
 
 let nonHtmlRoutes webRoot =
-    [ //route "/rss" >=> rssHandler (getMarkdownRoot webRoot) "iainschmitt.com"
+    [ route "/rss" >=> rssHandler (getMarkdownRoot webRoot) "https://iainschmitt.com"
       route "/wedding/julias-game"
       >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
       route "/wedding/iains-game"
