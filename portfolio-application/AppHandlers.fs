@@ -10,6 +10,7 @@ open Microsoft.AspNetCore.Mvc.ModelBinding
 open Microsoft.AspNetCore.Mvc.Razor
 open Microsoft.AspNetCore.Mvc.ViewFeatures
 open Microsoft.Extensions.DependencyInjection
+open Giraffe.ViewEngine
 
 open Types
 open Yaml
@@ -98,8 +99,10 @@ let markdownRouteHandler markdownRoot markdownPath : HttpHandler =
         route $"/post/{markdownFileName markdownPath}"
         >=> render PostMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
 
+let getMarkdownRoot webRoot = Path.Combine(webRoot, "markdown")
+
 let markdownRoutes (webRoot: String) : list<HttpHandler> =
-    let markdownRoot = Path.Combine(webRoot, "markdown")
+    let markdownRoot = getMarkdownRoot webRoot
 
     markdownPaths markdownRoot
     |> Array.map (markdownRouteHandler markdownRoot)
@@ -109,8 +112,17 @@ let pdfHandler webRoot pdfFileName : HttpHandler =
     let pdfPath = Path.Combine(webRoot, "pdf", pdfFileName)
     streamFile true pdfPath None None
 
+let rssHandler markdownRoot (baseUrl: string) : HttpHandler =
+    let rss = rssChannel markdownRoot baseUrl
+
+    fun next ctx ->
+        let xml = RenderView.AsString.xmlNode rss
+        ctx.SetContentType "application/rss+xml; charset=utf-8"
+        ctx.WriteStringAsync xml
+
 let nonHtmlRoutes webRoot =
-    [ route "/wedding/julias-game"
+    [ route "/rss" >=> rssHandler (getMarkdownRoot webRoot) "https://iainschmitt.com"
+      route "/wedding/julias-game"
       >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
       route "/wedding/iains-game"
       >=> redirectTo true "https://connectionsgame.org/game/?X5SMRJ" ]

@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
-    <Compile Include="Yaml.fs" />
     <Compile Include="Views.fs" />
+    <Compile Include="Posts.fs" />
     <Compile Include="AppHandlers.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
