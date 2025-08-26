@@ -86,6 +86,7 @@ jobs:
           sudo podman run -d \
             --name portfolio-application-1-test \
             --replace \
+            --restart unless-stopped \
             --network podman_bridge_rootfull \
             --ip 192.168.100.71 \
             --tls-verify=false \
@@ -110,6 +111,7 @@ jobs:
           sudo podman run -d \
             --name portfolio-application-1 \
             --replace \
+            --restart unless-stopped \
             --network podman_bridge_rootfull \
             --ip 192.168.100.41 \
             --tls-verify=false \
