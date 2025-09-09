@@ -48,7 +48,7 @@ let getPostYamlHeaders markdownRoot : PostYamlHeaderPair array =
     |> Array.sortBy (fun pair -> DateTime.Parse(pair.Header.Date))
 
 let postLinksFromYamlHeaders markdownRoot =
-    getPostYamlHeaders markdownRoot |> Array.map getHeaderHtml
+    getPostYamlHeaders markdownRoot |> Array.map getHeaderHtml |> Array.rev
 
 let rssChannel (markdownRoot: string) (baseUrl: string) =
     let posts = getPostYamlHeaders markdownRoot
