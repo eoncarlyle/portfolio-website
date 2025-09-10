@@ -1,6 +1,6 @@
 ---
 title: T-Mobile's Fiber Ambitions
-date: 2025.08.12
+date: 2025.09.12
 ---
 
 US Internet (USI) is a regional ISP based out of Minnetonka, a western suburb of Minneapolis, Minnesota. It's primary offering is fiber optic broadband, and its service area is about 2/3rds of Minneapolis and a smattering of her western suburbs. This is a service area of around half a million people, so the company isn't a household name anywhere outside of Minnesota. While few ISPs are well loved, anecodally USI has a good reputation in Minneapolis, the CEO is known to answer customer support questions in Reddit DMs. Regional fiber ISPs in the midwest don't often attract the attention of the EU's competition authority, but on June 13th the Competition Director-General Oliver Guersent approved the sale of US Internet to T-Mobile US (TMUS) and the Investment Bank KKR holdings. This is one of the fun things about the EU, where beacuse T-Mobile's parent company is based in Germany they have to let competition authorities know about the purchase of a small American ISP months before any of said ISP customers, who were informed in early August of 2025 that they would become T-Mobile customers pending American regulatory approval. USI isn't the only regional ISP coming under TMUS ownership this year - Metronet and Lumos were purchased earlier this year, T-Mobile isn't new to the broadband game given that they already have a fixed-wireless access (FWA) home internet offering, but the 'T-Mobile Fiber' that these ISPs are being rolled into is an entirely new service from T-Mobile.
