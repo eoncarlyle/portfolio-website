@@ -125,7 +125,8 @@ let nonHtmlRoutes webRoot =
       route "/wedding/julias-game"
       >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
       route "/wedding/iains-game"
-      >=> redirectTo true "https://connectionsgame.org/game/?X5SMRJ" ]
+      >=> redirectTo true "https://connectionsgame.org/game/?X5SMRJ"
+      route "/pdf/2025-tech-jam-talk" >=> pdfHandler webRoot "2025-TechJam-BearTerritory.pdf"]
 
 let appRoutes webRoot =
     (markdownRoutes webRoot) @ (nonHtmlRoutes webRoot)
