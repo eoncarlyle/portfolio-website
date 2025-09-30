@@ -10,11 +10,13 @@ working on this year. I didn't actually set to build out an exchange at first: t
 that I wanted more exposure to, but when I read about how [Patrick McKenzie did this](https://www.kalzumeus.com/2015/10/30/developing-in-stockfighter-with-no-trading-experience/) a few years back,
 I thought it would be fun to take a crack at.
 
-While there is a lot that I took away from the project, the language I wrote it in ended up being the most fun lesson I learned.
+One of the technologies I wanted to learn for the project was Kotlin, which was my server-side langauge of choice for
+the exchange project.
 
-## Kotlin: Better in every way
+## Kotlin: better in every way
 
-Kotlin is a JVM langague that was first released 16 years after Java. That is a lot of time to make something better, but Kotlin was worth the wait. The following are just a few reasons why it is a joy to work with:
+Kotlin is a JVM langague that was first released 16 years after Java. That is a lot of time to make improve a language,
+but Kotlin was worth the wait. The following are just a few reasons why it is a joy to work with:
 - Completely interoperable with Java: you don't need to leave behind three decades of dependable Java libraries
 - Nullable types: the compiler forces the author to check null-saftey; the safe call and Elvis operators (`?.` and `?:`)
 make nullable types ergonomic to work with
@@ -22,22 +24,24 @@ make nullable types ergonomic to work with
 - Flow control expressions: both `if` and `when` statements are expressions that can evaluate to a given value
 - Top-level funtions: very nice to have these, there is a reason they have been in C# for awhile now
 
-I almost hesitate to write this, but as compared to the Java I write every day at work, Kotlin is better in every way.
-My functional prrogramming bias certainly comes into play here, but any programming langauge of prominence that wasn't
-around in 2000 must offer something rather special to displace alternatives and Kotlin is no exception. What I was
-rather suprised by is how far you can take the Java interop. Using the 'Convert Java File to Kotlin File'
-command in IntelliJ I converted one of our controller classes to Kotlin in about two minutes during a demo of the
-language a few days back, so there isn't any issue runnign Java and Kotlin side-by-side within the same Maven module.
+I hesitate to write this, but as compared to the Java I write every day at work, Kotlin is better in every way.
+My functional prrogramming bias certainly comes into play here, but any programming langauge that is well-used today
+but didn't exist in the 90s must offer something rather special to displace alternatives and. Kotlin is no exception. What I was rather suprised by is how far you can take the Java interop. Using the 'Convert Java File to Kotlin File'
+command in IntelliJ I converted one of my team's classes to Kotlin in about two minutes during a demo of the
+language a few days back. I assumed you couldn't run Java and Kotlin side-by-side in the same Maven module, but there
+isn't any issue in doing so. There is a learning curve coming from Java because there is certainly _more_ Kotlin
+syntax than there is Java syntax. But it is worthwhile, because the additional syntax allows you to be more succinct.
 
-As much as I would love to have langauge-level support of `Either` and `Option` in Kotlin, I was impressed with the
-[Arrow](https://github.com/arrow-kt/arrow) functional programming library's implementation of these types. In the
-exchange simulation I used these extensively given how familiar I am working with them in F#, and there is even some
-syntax equivalent to computation expressions to work with these types. Assignments using `let!` within an F#
-[computation expression](https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/computation-expressions)
-are evaluated by calling the `bind` function of a monad, and Arrow has used Kotlin's [type-safe builders](https://kotlinlang.org/docs/type-safe-builders.html) to accomplish the same thing.
+While there are many functional programming features in Kotlin, there isn't langauge-level support of `Either`
+and `Option`. This isn't that much a surprise, but I was impressed with the
+[Arrow](https://github.com/arrow-kt/arrow) Kotlin functional library's implementation of these types. In the
+exchange simulation I used these extensively given how familiar I am working with them in F#, and the library has
+something equivalent to computation expressions to work with these types.
+[Computation expression](https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/computation-expressions)
+`let!` assignments are evaluated by calling the `bind` function of the builder's monad type, and Arrow has used Kotlin's [type-safe builders](https://kotlinlang.org/docs/type-safe-builders.html) to accomplish the same thing.
 
 In the snippet below, the `either` expression will short circut during the `val y` assignment because `maybeY` is
-a `Left` type representing a failure rather than an intended `Int` type. Otherwise if `y` was a `Right`, `a` would have been a `Right` type wrapping the sum of `x` and `y`.
+a `Left` type representing a failure rather than the intended `Int` type. Otherwise if `y` was a `Right`, `a` would have been a `Right` type wrapping the sum of `x` and `y`.
 
 ```kotlin
 fun arrowEitherDemonstration() {
@@ -55,11 +59,10 @@ fun arrowEitherDemonstration() {
 
 It isn't terribly clear to me exactly how the Arrow authors enable this short-circut behaviour; the library seems to
 be using every Kotlin trick in the book to make this syntax work. F#'s computation expression syntax isn't quite as
-elegant (especially for defining new computation expressions), but it is a lot more straightforward and every time you
-see `let!` you know what you are getting while the Kotlin `bind` method has no such gaurentees.
-
-But all-in all, I like working with Arrow and it brings a lot of what makes F# fun into Kotlin. But as far as Arrow
-can take you, there are still real langauge-level limitations.
+elegant (especially for defining new computation expressions), but it is a lot more straightforward. The
+restricitons that computation expression have to follow also mean you can immediately tell what the syntax means
+even without reading the computation expression, unlike for Kotlin type-safe builders. But all-in all, I like working with Arrow and it brings a lot of what makes F# fun into Kotlin. But as far as Arrow can take you, there are still real
+and frustrating langauge-level limitations.
 
 ## Hitting the Langauge Wall
 
@@ -70,10 +73,13 @@ rather than pure functions. To log or to carry out I/O the function will need to
 The Reddit [post](https://www.reddit.com/r/fsharp/comments/60ic2f/is_it_worth_using_the_io_monad_in_f/)) I think of whenever I try to crowbar this behaviour into another langague comes from r/fsharp, and is
 titled 'Is it worth using the IO monad in F#?'. The comment is the following:
 
+There's a post in the [r/fsharp](https://www.reddit.com/r/fsharp/comments/60ic2f/is_it_worth_using_the_io_monad_in_f/))
+subreddit
+
 > I'd strongly advise against trying to write Haskell in F#. It's not idiomatic, it's slow and people do not expect it.
 
-This is, unfortunately, quite defensible even as applied to Kotlin. I also refuse to accept it, the of bringing the
-best aspect of Haskell into other languages is too aluring.
+This is, unfortunately, quite defensible in F# and even more so in F#. I also refuse to accept it: bringing the best
+aspects of Haskell into other languages that I know and like is too appealing.
 
 ```kotlin
 sealed class IO<A> {
