@@ -1,3 +1,18 @@
+---
+title: A Rough Backend Developer Skill Tree
+date: 2025.10.06
+---
+
+# A Rough Backend Developer Skill Tree
+
+Last week an associate software engineer was asking me for advice on the types of side projects that would build
+relevant skills in his backend role. In the process I talked through some of the books that I found the most helpful in
+getting me to where I am now, and it forms something of a backend 'skill tree'.
+
+## Building Blocks
+
+CSCI 1133 is the first two computer science classes at the Unviersity of Minnesota. [^pedanticism] The first
+is an introductory Python class which assumes no prior programming knowledge.
 
 # Books and Skills
 - Algorithms and Data Structures/Big O
@@ -23,3 +38,5 @@
   aren't the most worthwhile to learn, a lot of line of buisness applications
 - git/cli/sql: https://vickiboykis.com/2022/01/09/git-sql-cli/
 - Patio11: https://www.kalzumeus.com/2011/10/28/dont-call-yourself-a-programmer/
+
+[^pedanticism]: CSCI 1113 taken in place but, well, technicalities
