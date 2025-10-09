@@ -1,27 +1,30 @@
 ## Experience
 
-**Software Engineer**<br>
-**SPS Commerce: May 2024 - Present**<br>
+### SPS Commerce
+
+**Senior Software Engineer: October 2025 - Present**<br>
+**Software Engineer: May 2024 - September 2025**<br>
 Software engineer on Items Capability team, primarily working in Java and React
 <br><br>
 
-**Site Reliability Engineer**<br>
-**RELEX Solutions: April 2022 - May 2024**<br>
+### RELEX Solutions
+
+**Senior Site Reliability Engineer Februrary 2022 - May 2024**<br>
+**Site Reliability Engineer April 2022 - Februrary 2024**<br>
 
 - Developed Java and Python programs managing state of distributed applications
 - Wrote, maintained application used in automated production environment migration
 - Improved observability for early incident detection with Fluent Bit, Prometheus, and Grafana
 - Wrote Ansible CI/CD pipelines for middleware infrastructure required by production applications
 - Resolved multiple incidents with customer impact as on-call engineer
-  <br><br>
+<br><br>
 
 **Technical Analyst**<br>
-**RELEX Solutions: April 2021 - April 2022**<br>
 
 - Wrote and troubleshooted integrations between customer file servers and RELEX ETL infrastructure
 - Worked directly with customers to resolve ETL and SSO configuration challenges
 - Carried out multiple support handovers while maintaining customer referenceability
-  <br><br>
+<br><br>
 
 **Complex Chemical Systems Group, University of Minnesota**<br>
 **Undergraduate Research Assistant: April 2018 - February 2021**<br>
@@ -29,7 +32,7 @@ Software engineer on Items Capability team, primarily working in Java and React
 - Wrote Python programs to analyze molecular geometric distributions across hundreds of thousands of simulation frames
 - Wrote programs for automated HPC simulation submission, control, and telemetry
 - Awarded paid research assistantship for progress shown in first two months
-  <br><br>
+<br><br>
 
 ## Technical Projects and Skills
 
@@ -46,12 +49,16 @@ Software engineer on Items Capability team, primarily working in Java and React
 - Implemented automated market maker algorithms to maintain market liquidity
 <br>
 
-**Programming Languages & Frameworks**: Java, Spring, JavaScript/TypeScript, React, Express, Preact, F#, Python, Flask
-<br><br>
-**DevOps Tools**: Ansible, Fluent Bit, Prometheus, Grafana, GitLab CI/CD
-<br><br>
-**Other Utilities**: Linux System Administration, Network Engineering, SQL Databases, Apache ZooKeeper, MongoDB
-<br>
+**Programming Languages & Frameworks**
+
+Java, Spring, JavaScript/TypeScript, React, Express, Preact, F#, Python, Flask
+
+**DevOps Tools**
+
+Ansible, Fluent Bit, Prometheus, Grafana, GitLab CI/CD
+
+**Other Utilities**
+Linux System Administration, Network Engineering, SQL Databases, Apache ZooKeeper, MongoDB
 
 ## Education
 
