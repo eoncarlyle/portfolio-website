@@ -14,7 +14,7 @@ env:
 
 jobs:
   build_and_push:
-    runs-on: [self-hosted, new-york-0]
+    runs-on: [self-hosted, los-angeles]
 
     permissions:
       contents: read
@@ -52,7 +52,7 @@ jobs:
         run: |
           cd ./portfolio-application
           # Make sure VERSION is not empty to avoid the parse error
-          VERSION="${VERSION:-$(date +'%Y.%m.%d').${{ github.run_number }}}"
+          VERSION="${{ steps.version.outputs.version }}"
 
           # Build with the version tag
           sudo podman build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION} .
