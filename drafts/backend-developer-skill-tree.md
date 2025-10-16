@@ -13,6 +13,8 @@ engineering that writes to some persistent data store. As Patrick McKenzie wrote
 an awful lot of software engineering jobs.
 
 ## Building Blocks
+section too long: do quick hits on language, data structures, Git/Bash/SQL
+
 
 CSCI 1133 is the first two computer science classes at my alma mater, the University of Minnesota. [^pedantic] The first
 is an introductory Python class which assumes no prior programming knowledge, and the second is a data structures and 
