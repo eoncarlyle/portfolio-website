@@ -23,17 +23,18 @@ With the possible exception of SQL this true pretty much across all of software 
 working on embedded systems maybe they'd go straight to C, but this is how I'd recommend anyone get their start in
 software engineering.
 
-[Web Development with Node and Express](https://learning.oreilly.com/library/view/web-development-with/9781492053507/)
-in JavaScript or [Flask Web Development](https://learning.oreilly.com/library/view/flask-web-development/9781491991725/)
-for Python. Both of these books teach how to build server side web applications that handle HTTP requests, template
-HTML, and write to a database. The Express and Flask frameworks are relatively simple, allowing the reader to focus on
-things that will be transferable to other systems. It can be much more intimidating to pickup something like Java's
-Spring framework right out of the gate even if you already know the language. Spring or .NET's ASP.NET core are very
-powerful and have a lot of features that make enterprise development easier, but they aren't the first server side
-framework one should learn. At the end of reading either book the reader should be able to standup a simple web
-application, be it a personal website or something that makes REST calls with a client for interactivity.
+[_Web Development with Node and Express_](https://learning.oreilly.com/library/view/web-development-with/9781492053507/)
+in JavaScript or
+[_Flask Web Development_](https://learning.oreilly.com/library/view/flask-web-development/9781491991725/) for Python.
+Both of these books teach how to build server side web applications that handle HTTP requests, template HTML, and write
+to a database. The Express and Flask frameworks are relatively simple, allowing the reader to focus on things that will
+be transferable to other systems. It can be much more intimidating to pickup something like Java's Spring framework
+right out of the gate even if you already know the language. Spring or .NET's ASP.NET core are very powerful and have a
+lot of features that make enterprise development easier, but they aren't the first server side framework one should
+learn. At the end of reading either book the reader should be able to standup a simple web application, be it a personal
+website or something that makes REST calls with a client for interactivity.
 
-[CompTIA Network+ Certification All-in-One Exam Guide](https://a.co/d/7ZiCa1J) chapters 1 and 6-12. While it may not
+[_CompTIA Network+ Certification All-in-One Exam Guide_](https://a.co/d/7ZiCa1J) chapters 1 and 6-12. While it may not
 come up every day, if you write server-side software you need to have a good mental model for exactly what happens when
 you type 'www.google.com' into a browser address bar. Otherwise, you will be at the mercy of what you do not understand.
 This is a book meant for the CompTIA Network+ certification exam, the likes of which are much more important in network
@@ -41,14 +42,16 @@ engineering as compared to software engineering. While more advanced cert exams 
 vendor equipment, this book is a great overview breaking down the OSI model, TCP/IP, routing, DNS, and other important
 network basics.
 
-[SQL Anti-patterns](https://pragprog.com/titles/bksqla/sql-antipatterns/). Not nearly enough books on computing walk
+[_SQL Anti-patterns_](https://pragprog.com/titles/bksqla/sql-antipatterns/). Not nearly enough books on computing walk
 through an example of an understandable mistake before explaining the right way to do things - but that is _all_ that
 this book does. This book has 25 short, pretty self-contained chapters. As it says on the tin, each of these works
 through a common relational database mistake. After getting one's feet wet with SQL in a project or two this could both
 correct some bad habits and help the reader recognise bad SQL when the see it down the line.
 
-[Domain Modeling Made Functional](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/). Domain 
-modeling is the process of 
+[_Domain Modeling Made Functional_](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/). Domain
+modeling is the process of turning the capabilities and requirements of a system into a tractable model (often something
+like a UML diagram), and then turning that tractable model into code. The example given in the book is for an e-commerce
+website that has to track orders, shipments, and returns. The domain model is meant to be understandable to
 
 - SQL Anti-patterns: https://pragprog.com/titles/bksqla/sql-antipatterns/
 - Data Intensive Applications: (Skip chapters 2-4) -
