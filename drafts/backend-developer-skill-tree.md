@@ -21,7 +21,7 @@ following.
 
 With the possible exception of SQL this true pretty much across all of software engineering; if someone is dead set on
 working on embedded systems maybe they'd go straight to C, but this is how I'd recommend anyone get their start in
-software engineering.
+software engineering. After taking care of these building blocks, these are the books that I would read
 
 [_Web Development with Node and Express_](https://learning.oreilly.com/library/view/web-development-with/9781492053507/)
 in JavaScript or
@@ -34,7 +34,7 @@ lot of features that make enterprise development easier, but they aren't the fir
 learn. At the end of reading either book the reader should be able to standup a simple web application, be it a personal
 website or something that makes REST calls with a client for interactivity.
 
-[_CompTIA Network+ Certification All-in-One Exam Guide_](https://a.co/d/7ZiCa1J) chapters 1 and 6-12. While it may not
+[_CompTIA Network+ Certification Exam Guide_](https://a.co/d/7ZiCa1J) chapters 1 and 6-12. While it may not
 come up every day, if you write server-side software you need to have a good mental model for exactly what happens when
 you type 'www.google.com' into a browser address bar. Otherwise, you will be at the mercy of what you do not understand.
 This is a book meant for the CompTIA Network+ certification exam, the likes of which are much more important in network
@@ -51,11 +51,18 @@ correct some bad habits and help the reader recognise bad SQL when the see it do
 [_Domain Modeling Made Functional_](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/). Domain
 modeling is the process of turning the capabilities and requirements of a system into a tractable model (often something
 like a UML diagram), and then turning that tractable model into code. The example given in the book is for an e-commerce
-website that has to track orders, shipments, and returns. The domain model is meant to be understandable to
+website that has to track orders, shipments, and returns; the domain model is meant to be understandable to domain
+experts such that someone working in order processing could say 'this looks right, but it's missing the part where
+business accounts have shipping discounts by volume'. As I wrote in a
+[review](https://iainschmitt.com/post/ddmf-review), the book isn't as detailed as other domain modelling books that I've
+read, but it makes up for it by being far more readable. The 'functional' in _Domain Modeling Made Functional_ makes
+this book somewhat unique, as the language used in the book is F#. But no prior knowledge of the language is used and
+much of the book transfers over well to other languages.
 
-- SQL Anti-patterns: https://pragprog.com/titles/bksqla/sql-antipatterns/
-- Data Intensive Applications: (Skip chapters 2-4) -
-  https://learning.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/
+[_Data Intensive
+Applications_](https://learning.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/), 
+chapters 1 and 4-12
+
 - Database Internals: https://learning.oreilly.com/library/view/database-internals/9781492040330/
 - Little Book of Semaphores: https://greenteapress.com/semaphores/LittleBookOfSemaphores.pdf
 - Operating Systems: https://pages.cs.wisc.edu/~remzi/OSTEP/
@@ -65,11 +72,12 @@ website that has to track orders, shipments, and returns. The domain model is me
 - Tough call between picking up Python and JavaScript first (TypeScript, packaging considerations)
 - Probably cannot get away from some frontend
 - Easy to learn too many languages and frameworks
-  - Learn one of Python or Type/JavaScript
-  - One statically typed garbage collected langauge is enough: if you pick up any of Java, C#, and Go then the others
-  - Learn on functional langauge (F# is my first recommendation)
-  - Learn a langauge that requires manual memory management (or Rust) aren't the most worthwhile to learn, a lot of line
-    of business applications
+    - Learn one of Python or Type/JavaScript
+    - One statically typed garbage collected langauge is enough: if you pick up any of Java, C#, and Go then the others
+    - Learn on functional langauge (F# is my first recommendation)
+    - Learn a langauge that requires manual memory management (or Rust) aren't the most worthwhile to learn, a lot of
+      line
+      of business applications
 - Patio11: https://www.kalzumeus.com/2011/10/28/dont-call-yourself-a-programmer/
 
 # Aside on languages
@@ -89,14 +97,15 @@ started with Python because my first big exposure to programming was scientific 
 and static types appeal to me more.
 
 [^pedantic]: CSCI 1113 taken in place but, well, technicalities
+
 [^parallel]:
-    This has parallels for other technologies: Different relational databases may have small syntactic differences
-    (`LIMIT` in PostgreSQL vs. `FETCH FIRST` in Oracle SQL) that aren't crazy meaningful, but SQLite doesn't have
-    dedicated schema in the same way. The
+This has parallels for other technologies: Different relational databases may have small syntactic differences
+(`LIMIT` in PostgreSQL vs. `FETCH FIRST` in Oracle SQL) that aren't crazy meaningful, but SQLite doesn't have
+dedicated schema in the same way. The
 
 [^boykis]:
-    This isn't an original observation; I got that trio from a
-    [Vicki Boykis](https://vickiboykis.com/2022/01/09/git-sql-cli/) blog post. As Boykis points out you don't need to
-    reach absolute expertise in all three, but they are crucially important in any backend job.
+This isn't an original observation; I got that trio from a
+[Vicki Boykis](https://vickiboykis.com/2022/01/09/git-sql-cli/) blog post. As Boykis points out you don't need to
+reach absolute expertise in all three, but they are crucially important in any backend job.
 
 [^langauge-choice]: Both Python and Type/JavaScript have their flaws
