@@ -8,7 +8,7 @@ date: 2025.10.19
 A few weeks back, an associate software engineer was asking me for advice on the types of side projects that would build
 relevant skills in his backend role. In the process I talked through some of the books that I found the most helpful in
 getting me to where I am now, and it forms something of a backend 'skill tree'. By 'backend' I mean server side software
-engineering that writes to some persistent data store, and as Patrick McKenzie wrote in his seminal essay
+that writes to some persistent data store, and as Patrick McKenzie wrote in his seminal essay
 ["Don't Call Yourself A Programmer, And Other Career Advice"](https://www.kalzumeus.com/2011/10/28/dont-call-yourself-a-programmer/),
 this constitutes an awful lot of software engineering jobs.
 
@@ -23,7 +23,8 @@ following.
 
 With the possible exception of SQL this is true pretty much across all of software engineering; if someone is dead set
 on working on embedded systems maybe they'd go straight to C, but this is how I'd recommend anyone get their start in
-software engineering. After taking care of these building blocks, these are the books that I would read.
+software engineering. After taking care of these building blocks, these are the books that I would read as part of the
+backend 'skill tree'.
 
 1. [_Web Development with Node and Express_](https://learning.oreilly.com/library/view/web-development-with/9781492053507/)
    in JavaScript or
@@ -33,7 +34,7 @@ software engineering. After taking care of these building blocks, these are the 
    that will be transferable to other systems. It can be much more intimidating to pick up something like Java's Spring
    framework right out of the gate even if you already know the language. Spring or .NET's ASP.NET core are very
    powerful and have a lot of features that make enterprise development easier, but they aren't the first server side
-   framework one should learn. At the end of reading either book the reader should be able to stand up a simple web
+   framework one should learn.[^asp.net] At the end of reading either book the reader should be able to stand up a simple web
    application, be it a personal website or something that makes REST calls with a client for interactivity.
 
 2. [_CompTIA Network+ Certification Exam Guide_](https://a.co/d/7ZiCa1J) chapters 1 and 6-12. While it may not come up
@@ -52,10 +53,10 @@ software engineering. After taking care of these building blocks, these are the 
 
 4. [_Domain Modeling Made Functional_](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/). Domain
    modeling is the process of turning the capabilities and requirements of a system into a tractable model, often
-   something like a UML diagram. The model is meant to be understandable to domain experts such that someone in
-   operations could look at a domain model for their company and say 'this looks right, but it's missing the part with
+   something like a UML diagram. The model is meant to be understandable to domain experts such that someone working in
+   e-commerce operations could look at a domain model for their company and say 'this looks right, but it's missing the part with
    volume-based shipping discounts'. As I wrote in a [review](https://iainschmitt.com/post/ddmf-review), the book isn't
-   as detailed as other domain modeling books that I've read, but it makes up for it by being far more readable. The
+   as detailed as other domain modeling books that I've read, but it makes up for it by being much more readable. The
    'functional' in _Domain Modeling Made Functional_ makes this book somewhat unique, as the language used in the book
    is F#. But no prior knowledge of the language is required and much of the book transfers over well to other
    languages.
@@ -80,36 +81,36 @@ software engineering. After taking care of these building blocks, these are the 
    important to understand how these problems are solved. The book is also generally fun to work through, which to be
    honest is the real reason I have it on this list. As I wrote in a
    [post](https://www.iainschmitt.com/post/first-thoughts-on-lbs-and-rust), the book probably works better in classroom
-   settings as it can sometimes be hard to tell if the reader's solutions to the problems are equivalent to the solution
+   settings as it can sometimes be hard to tell if the reader's solutions match those in the solution
    manual. But I've had good results with asking Claude 'I am trying to learn this in greater detail, please ask me
-   questions to probe my understanding rather than just telling me if my solution is equivalent'. More than any of these
-   other books, the reader has to do the exercises to get much out of this book.
+   questions to probe my understanding rather than just telling me if my solution is equivalent'. To get any value out 
+   of this book the reader really does need to work through the problems.
 
-8. [Operating Systems: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/). I only made it through about 1/3 of
+8. [Operating Systems: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/). I only made it through about 1/3rd of
    Tanenbaum's 'Modern Operating Systems' and while I got a lot out of it, _Three Easy Pieces_ is a more appropriate
    first book on operating systems. Modern cloud infrastructure does a lot to try to abstract away the responsibilities
    of the OS, but as implied by
    ['The Cloud Is Just Someone Else’s Computer'](https://blog.codinghorror.com/the-cloud-is-just-someone-elses-computer/),
    _some_ OS _somewhere_ is still doing roughly the same thing to serve your production applications as what takes place
-   when running the same application locally. As for network engineering, you don't want to be at the mercy of what you
+   when running locally. As for network engineering, you don't want to be at the mercy of what you
    don't understand about operating systems.
 
 ## Aside on Languages
 
 It is easy to learn too many languages and frameworks, which wastes valuable time re-learning how to do something you
-already know when you could have learned something new. I'm not 100% sure on this, but there is a case to be made that
+already know rather than learning something truly new. I'm not 100% sure on this, but there is a case to be made that
 you only need to pick up four languages:
 
-1. One of the aforementioned big interpreted languages: Python or Type/JavaScript.
+1. One of the aforementioned big interpreted languages: Python or Type/JavaScript
 2. A statically typed, garbage-collected language: Java, C#, or Go
-3. A language where you have to manually manage memory: Probably C. Maybe you can include Rust in this category, but Zig
+3. A language with manual memory management: Probably C. Maybe you can include Rust in this category, and Zig
    would be a decent choice after its 1.0 release
-4. A functional language. I am biased to F#. Haskell is a great language but comes with a steep learning curve, and
+4. A functional language: I am biased to F#. Haskell is a great language but comes with a steep learning curve, and
    Scala can sometimes face mixed OO/FP paradigm issues
 
 C# and Go are great languages, but they are ultimately too similar to Java to justify me learning them. Someone who
 learned C# first should say the equivalent. The wrinkle in this list is for the interpreted languages. Almost all web
-applications are in Type/JavaScript and the language can still be used server side, but JS has its quirks and Python's
+applications are in Type/JavaScript and the language works well server side, but JS has its quirks and Python's
 plotting, analytics, and ML libraries make the language worth learning. Maybe you just can't get away without learning
 both.
 
@@ -117,3 +118,6 @@ both.
     This isn't an original observation; I got that trio from a
     [Vicki Boykis](https://vickiboykis.com/2022/01/09/git-sql-cli/) blog post. As Boykis points out you don't need to
     reach absolute expertise in all three, but they are crucially important in any backend job.
+
+[^asp.net]:
+   I'm being a little hard on ASP.NET here, as compared to Spring it is easier to learn incrementally.
