@@ -70,13 +70,13 @@ backend 'skill tree'.
    distributed systems that I've ever read. It can be dense material, but I've never read better prose from a technical
    book.
 
-6. [Database Internals](https://learning.oreilly.com/library/view/database-internals/9781492040330/). The _Data
+6. [_Database Internals_](https://learning.oreilly.com/library/view/database-internals/9781492040330/). The _Data
    Intensive Applications_ book gave an introduction to database internals that left me more curious. I haven't made it
    all the way through the book, but it is a good read after working with relational databases for a couple of years
    especially because I never had the chance to take a database class at school. This was where I finally understood how
    write-ahead logs were used to make transactions more durable without sacrificing performance.
 
-7. [Little Book of Semaphores](https://greenteapress.com/semaphores/LittleBookOfSemaphores.pdf). Semaphores are a way to
+7. [_Little Book of Semaphores_](https://greenteapress.com/semaphores/LittleBookOfSemaphores.pdf). Semaphores are a way to
    coordinate concurrent threads or processes, and while concurrency isn't something that comes up every day it is
    important to understand how these problems are solved. The book is also generally fun to work through, which to be
    honest is the real reason I have it on this list. As I wrote in a
@@ -86,7 +86,7 @@ backend 'skill tree'.
    questions to probe my understanding rather than just telling me if my solution is equivalent'. To get any value out 
    of this book the reader really does need to work through the problems.
 
-8. [Operating Systems: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/). I only made it through about 1/3rd of
+8. [_Operating Systems: Three Easy Pieces_](https://pages.cs.wisc.edu/~remzi/OSTEP/). I only made it through about 1/3rd of
    Tanenbaum's 'Modern Operating Systems' and while I got a lot out of it, _Three Easy Pieces_ is a more appropriate
    first book on operating systems. Modern cloud infrastructure does a lot to try to abstract away the responsibilities
    of the OS, but as implied by
