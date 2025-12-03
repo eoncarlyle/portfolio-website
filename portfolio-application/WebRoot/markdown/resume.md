@@ -9,8 +9,9 @@ Software engineer on Items Capability team, primarily working in Java and React
 
 ### RELEX Solutions
 
-**Senior Site Reliability Engineer Februrary 2022 - May 2024**<br>
-**Site Reliability Engineer April 2022 - Februrary 2024**<br>
+**Senior Site Reliability Engineer: February 2024 - May 2024**<br>
+**Site Reliability Engineer: April 2022 - February 2024**<br>
+**Technical Analyst: April 2021 - April 2022**<br>
 
 - Developed Java and Python programs managing state of distributed applications
 - Wrote, maintained application used in automated production environment migration
@@ -19,14 +20,8 @@ Software engineer on Items Capability team, primarily working in Java and React
 - Resolved multiple incidents with customer impact as on-call engineer
 <br><br>
 
-**Technical Analyst**<br>
+### Siepmann Research Group, University of Minnesota
 
-- Wrote and troubleshooted integrations between customer file servers and RELEX ETL infrastructure
-- Worked directly with customers to resolve ETL and SSO configuration challenges
-- Carried out multiple support handovers while maintaining customer referenceability
-<br><br>
-
-**Complex Chemical Systems Group, University of Minnesota**<br>
 **Undergraduate Research Assistant: April 2018 - February 2021**<br>
 
 - Wrote Python programs to analyze molecular geometric distributions across hundreds of thousands of simulation frames
@@ -62,6 +57,5 @@ Linux System Administration, Network Engineering, SQL Databases, Apache ZooKeepe
 
 ## Education
 
-Bachelor of Chemical Engineering<br>
-University of Minnesota, May 2021<br>
+Bachelor of Chemical Engineering: University of Minnesota, May 2021
 <br><br>
