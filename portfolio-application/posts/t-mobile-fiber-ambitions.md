@@ -31,7 +31,7 @@ I will admit that the Twin Cities broadband market is in worse shape than I had 
 
 [Verizon. Form 10-Q, 2Q 2025. 25 July 2025.](https://quotes.quotemedia.com/data/downloadFiling?webmasterId=104600&ref=319320781&type=PDF&formType=10-Q&formDescription=General+form+for+quarterly+reports+under+Section+13+or+15%28d%29&dateFiled=2025-07-25&cik=0000732712)
 
-[^customer-note]: I must have been on the wronge email list, because I got the 'Exciting News! US Internet is now a part of the T-Mobile Fiber family' early this September.
+[^customer-note]: I must have been on the wrong email list, because I got the 'Exciting News! US Internet is now a part of the T-Mobile Fiber family' early this September.
 
 
 [^streaming-economics]: As Ben Thompson often notes, it is also usually cheaper to retain existing customers than pay marketing and sales costs to acquire new ones. I can only imagine that the same is true for large mobile network operators. While MVNOs may have a different customer acquisition profile because of their smaller size, the sheer scale of traditional MNO marketing spend makes this plausible.
