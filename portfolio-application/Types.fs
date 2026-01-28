@@ -38,8 +38,8 @@ module MarkdownPath =
 let markdownPipeline =
     MarkdownPipelineBuilder().UseAdvancedExtensions().UseYamlFrontMatter().Build()
 
-let markdownPaths markdownRoot =
-    Directory.GetFiles markdownRoot |> Array.choose MarkdownPath.create
+let getMarkdownPaths path =
+    Directory.GetFiles path |> Array.choose MarkdownPath.create
 
 let markdownFileName markdownPath =
     Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)

@@ -19,6 +19,9 @@ open Views
 let error404Msg = "The page that you are looking for does not exist!"
 let error500Msg = "Internal server error"
 
+type Roots =
+    { StaticMarkdownRoot: String
+      PostMarkdownRoot: String }
 
 type ViewData =
     { PageTitle: String
@@ -43,7 +46,7 @@ let viewHandler markdownViewName (viewData: ViewData) =
     >=> setHttpHeader "Content-Type" "text/html; charset=utf-8"
     >=> htmlView xml
 
-let markdownFileHandler markdownRoot markdownPath markdownViewName markdownHeader (maybeMetaPageTitle: string option) =
+let renderMarkdown postMarkdownRoot markdownPath =
     let htmlContentsFromFile =
         MarkdownPath.toString markdownPath
         |> File.ReadAllText
@@ -51,21 +54,43 @@ let markdownFileHandler markdownRoot markdownPath markdownViewName markdownHeade
         |> _.Replace("&#8617", "&#8617&#65038")
 
     let landingPostList =
-        String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders markdownRoot); [| "</ul>" |] ])
+        String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders postMarkdownRoot); [| "</ul>" |] ])
 
-    let htmlContents =
-        match markdownFileName markdownPath with
-        | "landing" -> [ htmlContentsFromFile; landingPostList ] |> String.concat "\n"
-        | _ -> htmlContentsFromFile
+    match markdownFileName markdownPath with
+    | "landing" -> [ htmlContentsFromFile; landingPostList ] |> String.concat "\n"
+    | _ -> htmlContentsFromFile
 
+let markdownFileHandler
+    isDynamic
+    postMarkdownRoot
+    markdownPath
+    markdownViewName
+    markdownHeader
+    (maybeMetaPageTitle: string option)
+    =
     let metaPageTitle = Option.defaultValue markdownHeader maybeMetaPageTitle
 
-    viewHandler
-        markdownViewName
-        { PageTitle = metaPageTitle
-          Header = markdownHeader
-          Body = htmlContents
-          ErrorCode = None }
+    if isDynamic then
+        fun next ctx ->
+            let htmlContents = renderMarkdown postMarkdownRoot markdownPath
+
+            (viewHandler
+                markdownViewName
+                { PageTitle = metaPageTitle
+                  Header = markdownHeader
+                  Body = htmlContents
+                  ErrorCode = None })
+                next
+                ctx
+    else
+        let htmlContents = renderMarkdown postMarkdownRoot markdownPath
+
+        viewHandler
+            markdownViewName
+            { PageTitle = metaPageTitle
+              Header = markdownHeader
+              Body = htmlContents
+              ErrorCode = None }
 
 let errorViewHandler errorCode body =
     viewHandler
@@ -85,9 +110,9 @@ let error404Handler: Handler =
 let error500Handler: Handler =
     clearResponse >=> setStatusCode 500 >=> errorViewHandler 500 error500Msg
 
-let markdownRouteHandler markdownRoot markdownPath : HttpHandler =
+let markdownRouteHandler isDynamic postMarkdownRoot markdownPath : HttpHandler =
     //Note: providing dependencies via functions works better due to partial application here
-    let render = markdownFileHandler markdownRoot markdownPath
+    let render = markdownFileHandler isDynamic postMarkdownRoot markdownPath
 
     match MarkdownPath.toString markdownPath |> Path.GetFileName with
     | "landing.md" ->
@@ -99,13 +124,25 @@ let markdownRouteHandler markdownRoot markdownPath : HttpHandler =
         route $"/post/{markdownFileName markdownPath}"
         >=> render PostMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
 
-let getMarkdownRoot webRoot = Path.Combine(webRoot, "markdown")
+let getWebRoot webRoot = Path.Combine(webRoot, "WebRoot")
 
-let markdownRoutes (webRoot: String) : list<HttpHandler> =
-    let markdownRoot = getMarkdownRoot webRoot
+let markdownRoutes isDynamic (baseDirectory: String) : list<HttpHandler> =
 
-    markdownPaths markdownRoot
-    |> Array.map (markdownRouteHandler markdownRoot)
+    let postMarkdownRoot =
+        if isDynamic then
+            Path.Combine(baseDirectory, "posts")
+        else
+            Path.Combine(baseDirectory, "WebRoot", "markdown")
+
+
+    let markdownPaths =
+        [| postMarkdownRoot; Path.Combine(baseDirectory, "WebRoot", "markdown") |]
+        |> Array.map getMarkdownPaths
+        |> Array.concat
+
+    markdownPaths
+    |> Array.map (markdownRouteHandler isDynamic postMarkdownRoot)
+    |> Array.map (fun handler -> if isDynamic then warbler (fun _ -> handler) else handler)
     |> Array.toList
 
 let pdfHandler webRoot pdfFileName : HttpHandler =
@@ -115,18 +152,19 @@ let pdfHandler webRoot pdfFileName : HttpHandler =
 let rssHandler markdownRoot (baseUrl: string) : HttpHandler =
     let rss = rssChannel markdownRoot baseUrl
 
-    fun next ctx ->
+    fun _ ctx ->
         let xml = RenderView.AsString.xmlNode rss
         ctx.SetContentType "application/rss+xml; charset=utf-8"
         ctx.WriteStringAsync xml
 
 let nonHtmlRoutes webRoot =
-    [ route "/rss" >=> rssHandler (getMarkdownRoot webRoot) "https://iainschmitt.com"
+    [ route "/rss" >=> rssHandler (getWebRoot webRoot) "https://iainschmitt.com"
       route "/wedding/julias-game"
       >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
       route "/wedding/iains-game"
       >=> redirectTo true "https://connectionsgame.org/game/?X5SMRJ"
-      route "/pdf/2025-tech-jam-talk" >=> pdfHandler webRoot "2025-TechJam-BearTerritory.pdf"]
+      route "/pdf/2025-tech-jam-talk"
+      >=> pdfHandler webRoot "2025-TechJam-BearTerritory.pdf" ]
 
-let appRoutes webRoot =
-    (markdownRoutes webRoot) @ (nonHtmlRoutes webRoot)
+let appRoutes baseDirectory isDynamic =
+    (markdownRoutes isDynamic baseDirectory) @ (nonHtmlRoutes baseDirectory)

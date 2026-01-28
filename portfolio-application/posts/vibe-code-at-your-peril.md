@@ -5,7 +5,8 @@ date: 2025.12.19
 
 # Vibe code at your peril
 
-At every software company that I have worked at, if something is going wrong the customer has a named person who is 
+fdsafsdafAt every software company that I have worked at, if something is going wrong the customer has a named person 
+who is 
 responsible for getting the problem fixed. If a piece of the company's software could be to blame, there is a living,
 breathing developer on-call 24 hours a day, seven days a week. This on-call developer is responsible for answering
 questions like 'why is this service not working?' and 'have you made any changes that would explain what we're seeing
