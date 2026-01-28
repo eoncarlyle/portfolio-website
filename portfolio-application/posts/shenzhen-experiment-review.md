@@ -14,7 +14,7 @@ this region in south China other than that it is responsible for a staggering am
 manufacturing output. This Christmas I received Juan Du's _The Shenzhen Experiment: The story of China's instant city_,
 while the book didn't explain as much as I had hoped about electronics manufacturing it is nonetheless excellent.
 
-## Nationwide reforms trialed in Shenzhen
+## A Twisting Road to Market Liberalisation
 
 In the late 1970s, Guangdong province officials wanted greater autonomy from the Chinese party-state to attract
 exporting industries and foreign direct investment. Their wish was granted on July 19th, 1979 when the party Central
@@ -64,6 +64,13 @@ reforms and investment in infrastructure, so by 1987 the city was meeting the am
 of the central government. Industrial production kept outpacing construction as an economic driver of the SEZ, leading
 to the 1988 conversion of state-owned enterprises into shareholding cooperatives and constitutional changes to recognise
 private enterprise.
+
+## Accidental and Contingent Success
+- Original justification: immigration & diaspora networks
+- Amount of emigration from Hong Kong, income disparity, porous bordere
+- Diaspora & HK large amount of success
+- Wildly underestimated population growth, looked the other way
+- Other SEZs not as succesful
 
 [^dikötter]:
 
