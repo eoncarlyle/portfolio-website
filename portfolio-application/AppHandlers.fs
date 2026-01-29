@@ -27,6 +27,7 @@ type ViewData =
     { PageTitle: String
       Header: String
       Body: String
+      IsCached: bool
       ErrorCode: int option }
 
 let viewHandler markdownViewName (viewData: ViewData) =
@@ -42,7 +43,13 @@ let viewHandler markdownViewName (viewData: ViewData) =
         | PostMarkdown -> postMarkdownView pageTitle header body
         | ErrorMarkdown -> Option.defaultValue 500 errorCode |> errorView pageTitle body
 
-    publicResponseCaching 60 None
+    let cacheHandler =
+        if viewData.IsCached then
+            publicResponseCaching 60 None
+        else
+            noResponseCaching
+
+    cacheHandler
     >=> setHttpHeader "Content-Type" "text/html; charset=utf-8"
     >=> htmlView xml
 
@@ -61,7 +68,7 @@ let renderMarkdown postMarkdownRoot markdownPath =
     | _ -> htmlContentsFromFile
 
 let markdownFileHandler
-    isDynamic
+    isStatic
     postMarkdownRoot
     markdownPath
     markdownViewName
@@ -70,27 +77,32 @@ let markdownFileHandler
     =
     let metaPageTitle = Option.defaultValue markdownHeader maybeMetaPageTitle
 
-    if isDynamic then
-        fun next ctx ->
-            let htmlContents = renderMarkdown postMarkdownRoot markdownPath
+    let htmlContents = renderMarkdown postMarkdownRoot markdownPath
 
-            (viewHandler
-                markdownViewName
-                { PageTitle = metaPageTitle
-                  Header = markdownHeader
-                  Body = htmlContents
-                  ErrorCode = None })
-                next
-                ctx
-    else
+
+    if isStatic then
         let htmlContents = renderMarkdown postMarkdownRoot markdownPath
 
-        viewHandler
-            markdownViewName
+        let viewData =
             { PageTitle = metaPageTitle
               Header = markdownHeader
               Body = htmlContents
+              IsCached = isStatic
               ErrorCode = None }
+
+        viewHandler markdownViewName viewData >=> noResponseCaching
+    else
+        warbler (fun _ ->
+            let htmlContents = renderMarkdown postMarkdownRoot markdownPath
+
+            let viewData =
+                { PageTitle = metaPageTitle
+                  Header = markdownHeader
+                  Body = htmlContents
+                  IsCached = isStatic
+                  ErrorCode = None }
+
+            viewHandler markdownViewName viewData >=> noResponseCaching)
 
 let errorViewHandler errorCode body =
     viewHandler
@@ -98,21 +110,20 @@ let errorViewHandler errorCode body =
         { PageTitle = "Error Page"
           Header = "Error Page"
           Body = body
+          IsCached = true
           ErrorCode = Some errorCode }
 
 let headHandler: Handler = setStatusCode 200
 
 let error404Handler: Handler =
-    setStatusCode 404
-    >=> publicResponseCaching 60 None
-    >=> errorViewHandler 404 error404Msg
+    setStatusCode 404 >=> errorViewHandler 404 error404Msg
 
 let error500Handler: Handler =
     clearResponse >=> setStatusCode 500 >=> errorViewHandler 500 error500Msg
 
-let markdownRouteHandler isDynamic postMarkdownRoot markdownPath : HttpHandler =
+let markdownRouteHandler isStatic postMarkdownRoot markdownPath : HttpHandler =
     //Note: providing dependencies via functions works better due to partial application here
-    let render = markdownFileHandler isDynamic postMarkdownRoot markdownPath
+    let render = markdownFileHandler isStatic postMarkdownRoot markdownPath
 
     match MarkdownPath.toString markdownPath |> Path.GetFileName with
     | "landing.md" ->
@@ -126,13 +137,13 @@ let markdownRouteHandler isDynamic postMarkdownRoot markdownPath : HttpHandler =
 
 let getWebRoot webRoot = Path.Combine(webRoot, "WebRoot")
 
-let markdownRoutes isDynamic (baseDirectory: String) : list<HttpHandler> =
+let markdownRoutes isStatic (baseDirectory: String) : list<HttpHandler> =
 
     let postMarkdownRoot =
-        if isDynamic then
-            Path.Combine(baseDirectory, "posts")
-        else
+        if isStatic then
             Path.Combine(baseDirectory, "WebRoot", "markdown")
+        else
+            Path.Combine(baseDirectory, "posts")
 
 
     let markdownPaths =
@@ -141,8 +152,7 @@ let markdownRoutes isDynamic (baseDirectory: String) : list<HttpHandler> =
         |> Array.concat
 
     markdownPaths
-    |> Array.map (markdownRouteHandler isDynamic postMarkdownRoot)
-    |> Array.map (fun handler -> if isDynamic then warbler (fun _ -> handler) else handler)
+    |> Array.map (markdownRouteHandler isStatic postMarkdownRoot)
     |> Array.toList
 
 let pdfHandler webRoot pdfFileName : HttpHandler =
@@ -166,5 +176,5 @@ let nonHtmlRoutes webRoot =
       route "/pdf/2025-tech-jam-talk"
       >=> pdfHandler webRoot "2025-TechJam-BearTerritory.pdf" ]
 
-let appRoutes baseDirectory isDynamic =
-    (markdownRoutes isDynamic baseDirectory) @ (nonHtmlRoutes baseDirectory)
+let appRoutes baseDirectory isStatic =
+    (markdownRoutes isStatic baseDirectory) @ (nonHtmlRoutes baseDirectory)

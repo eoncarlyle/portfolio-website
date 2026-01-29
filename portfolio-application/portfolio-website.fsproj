@@ -28,6 +28,10 @@
     <WebRootPath>$(OutputPath)WebRoot</WebRootPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RunSyntaxHighlighter Condition="'$(RunSyntaxHighlighter)' == ''">true</RunSyntaxHighlighter>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="web.config" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Views\*.cshtml;WebRoot\**\*">
@@ -44,17 +48,20 @@
     <SyntaxHighlighterOutputDir Condition="'$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/WebRoot/markdown</SyntaxHighlighterOutputDir>
   </PropertyGroup>
 
-  <Target Name="InstallNodePackages" BeforeTargets="PrepareForBuild">
+  <Target Name="InstallNodePackages" BeforeTargets="PrepareForBuild" Condition="'$(RunSyntaxHighlighter)' == 'true'">
     <Message Text="[MSBuild] Installing Syntax Highlighter Node Packages" Importance="high" />
     <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install" />
   </Target>
 
-  <Target Name="EnsureOutputDirectoryExists" BeforeTargets="RunSyntaxHighlighter">
+  <Target Name="EnsureOutputDirectoryExists" BeforeTargets="RunSyntaxHighlighter" Condition="'$(RunSyntaxHighlighter)' == 'true'">
     <MakeDir Directories="$(SyntaxHighlighterOutputDir)" />
     <Message Text="[MSBuild] Ensuring output directory exists: $(SyntaxHighlighterOutputDir)" Importance="high" />
   </Target>
 
-  <Target Name="RunSyntaxHighlighter" DependsOnTargets="InstallNodePackages;EnsureOutputDirectoryExists" BeforeTargets="PrepareForBuild">
+<Target Name="RunSyntaxHighlighter"
+        DependsOnTargets="InstallNodePackages;EnsureOutputDirectoryExists"
+        BeforeTargets="PrepareForBuild"
+        Condition="'$(RunSyntaxHighlighter)' == 'true'">
     <Message Text="[MSBuild] Running Syntax Highlighter, Migrating Posts" Importance="high" />
     <Exec Command="node $(ProjectDir)syntax-highlighting/index.js posts $(SyntaxHighlighterOutputDir)" />
   </Target>
