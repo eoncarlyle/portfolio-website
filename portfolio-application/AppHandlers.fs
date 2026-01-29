@@ -77,32 +77,20 @@ let markdownFileHandler
     =
     let metaPageTitle = Option.defaultValue markdownHeader maybeMetaPageTitle
 
-    let htmlContents = renderMarkdown postMarkdownRoot markdownPath
-
+    let viewData body =
+        { PageTitle = metaPageTitle
+          Header = markdownHeader
+          Body = body
+          IsCached = isStatic
+          ErrorCode = None }
 
     if isStatic then
         let htmlContents = renderMarkdown postMarkdownRoot markdownPath
-
-        let viewData =
-            { PageTitle = metaPageTitle
-              Header = markdownHeader
-              Body = htmlContents
-              IsCached = isStatic
-              ErrorCode = None }
-
-        viewHandler markdownViewName viewData >=> noResponseCaching
+        viewData htmlContents |> viewHandler markdownViewName >=> noResponseCaching
     else
         warbler (fun _ ->
             let htmlContents = renderMarkdown postMarkdownRoot markdownPath
-
-            let viewData =
-                { PageTitle = metaPageTitle
-                  Header = markdownHeader
-                  Body = htmlContents
-                  IsCached = isStatic
-                  ErrorCode = None }
-
-            viewHandler markdownViewName viewData >=> noResponseCaching)
+            viewData htmlContents |> viewHandler markdownViewName >=> noResponseCaching)
 
 let errorViewHandler errorCode body =
     viewHandler

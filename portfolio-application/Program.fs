@@ -9,7 +9,6 @@ open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
-open Microsoft.AspNetCore.Mvc.Razor
 open Microsoft.AspNetCore.StaticFiles
 
 let routes baseDirectory isDynamic =
@@ -66,12 +65,12 @@ let getAppArgs args =
     let argList = Array.toList args
 
     match argList with
-    | [hostAddress ; hostPort ; dynamicFlag ] ->
+    | [ hostAddress; hostPort; dynamicFlag ] ->
         Some
             { HostAddress = hostAddress
               HostPort = hostPort
-              IsStatic = not <| dynamicFlag.Equals "--dynamic"  }
-    | [ hostAddress ; hostPort ] ->
+              IsStatic = not <| dynamicFlag.Equals "--dynamic" }
+    | [ hostAddress; hostPort ] ->
         Some
             { HostAddress = hostAddress
               HostPort = hostPort
@@ -86,21 +85,19 @@ let main args =
     let hostPort = appArgs.HostPort
     let isStatic = appArgs.IsStatic
 
-
-
-
-    let host = Host
-                    .CreateDefaultBuilder(args)
-                    .ConfigureWebHostDefaults(fun webHostBuilder ->
-                        webHostBuilder
-                            .UseUrls($"http://{hostAddress}:{hostPort}")
-                            .UseWebRoot(Path.Combine(AppContext.BaseDirectory))
-                            .UseWebRoot(Path.Combine(AppContext.BaseDirectory, "WebRoot"))
-                            .Configure(Action<IApplicationBuilder>(configureApp isStatic))
-                            .ConfigureServices(configureServices)
-                            .ConfigureLogging(configureLogging)
-                        |> ignore)
-                    .Build()
+    let host =
+        Host
+            .CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(fun webHostBuilder ->
+                webHostBuilder
+                    .UseUrls($"http://{hostAddress}:{hostPort}")
+                    .UseWebRoot(Path.Combine(AppContext.BaseDirectory))
+                    .UseWebRoot(Path.Combine(AppContext.BaseDirectory, "WebRoot"))
+                    .Configure(Action<IApplicationBuilder>(configureApp isStatic))
+                    .ConfigureServices(configureServices)
+                    .ConfigureLogging(configureLogging)
+                |> ignore)
+            .Build()
 
     let logger = host.Services.GetRequiredService<ILogger<_>>()
     logger.LogInformation("Starting server at {Address}:{Port} (Static: {IsStatic})", hostAddress, hostPort, isStatic)
