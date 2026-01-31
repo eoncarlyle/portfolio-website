@@ -37,7 +37,7 @@ let getHeaderHtml (pair: PostYamlHeaderPair) =
     $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
 
 let getPostYamlHeaders markdownRoot : PostYamlHeaderPair array =
-    markdownPaths markdownRoot
+    getMarkdownPaths markdownRoot
     |> Array.map (fun markdownPath ->
         let maybeHeader = maybeYamlHeader markdownPath
 
