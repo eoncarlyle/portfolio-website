@@ -49,8 +49,6 @@ let configureApp isStatic (app: IApplicationBuilder) =
         .UseGiraffe(routes baseDirectory isStatic)
 
 let configureServices (services: IServiceCollection) =
-    let sp = services.BuildServiceProvider()
-    let env = sp.GetService<IWebHostEnvironment>()
     services.AddCors().AddResponseCaching().AddGiraffe() |> ignore
 
 let configureLogging (builder: ILoggingBuilder) =
@@ -91,7 +89,6 @@ let main args =
             .ConfigureWebHostDefaults(fun webHostBuilder ->
                 webHostBuilder
                     .UseUrls($"http://{hostAddress}:{hostPort}")
-                    .UseWebRoot(Path.Combine(AppContext.BaseDirectory))
                     .UseWebRoot(Path.Combine(AppContext.BaseDirectory, "WebRoot"))
                     .Configure(Action<IApplicationBuilder>(configureApp isStatic))
                     .ConfigureServices(configureServices)
