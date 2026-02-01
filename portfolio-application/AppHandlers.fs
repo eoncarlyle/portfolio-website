@@ -3,6 +3,7 @@ module AppHandlers
 open System
 open System.IO
 open System.Collections.Generic
+open System.Text.RegularExpressions
 open Giraffe
 open Markdig
 open Microsoft.AspNetCore.Http
@@ -31,7 +32,7 @@ type ViewData =
       ErrorCode: int option }
 
 let viewHandler markdownViewName (viewData: ViewData) =
-    let pageTitle = viewData.PageTitle
+    let pageTitle = Regex.Replace(viewData.PageTitle,  "<[^>]*>", "") // Remove HTML tags
     let header = viewData.Header
     let body = viewData.Body
     let errorCode = viewData.ErrorCode
