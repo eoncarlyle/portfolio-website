@@ -14,7 +14,7 @@ while the book didn't explain as much as I had hoped about electronics manufactu
 
 ## A Twisting Road to Market Liberalisation
 
-In the late 1970s, Guangdong province officials wanted greater autonomy from the Chinese party-state to attract
+In the late 1970s, Guangdong province officials wanted greater policy flexibility from the central government to attract
 exporting industries and foreign direct investment. Their wish was granted on July 19th, 1979 when the party Central
 Committee authorised what would become Shenzhen's special economic zone (SEZ); a mostly rural strip of land a little
 smaller than Philadelphia, home to about 358,000 people at the time. After Mao Zedong's death, many party leaders were
