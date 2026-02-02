@@ -50,7 +50,7 @@ let getPostYamlHeaders markdownRoot : PostYamlHeaderPair array =
 let postLinksFromYamlHeaders markdownRoot =
     getPostYamlHeaders markdownRoot |> Array.map getHeaderHtml |> Array.rev
 
-let rssChannel (markdownRoot: string) (baseUrl: string) =
+let rssChannel (baseUrl: string) (markdownRoot: string) =
     let posts = getPostYamlHeaders markdownRoot
 
     let items =

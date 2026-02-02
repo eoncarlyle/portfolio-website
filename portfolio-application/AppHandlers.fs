@@ -32,7 +32,7 @@ type ViewData =
       ErrorCode: int option }
 
 let viewHandler markdownViewName (viewData: ViewData) =
-    let pageTitle = Regex.Replace(viewData.PageTitle,  "<[^>]*>", "") // Remove HTML tags
+    let pageTitle = Regex.Replace(viewData.PageTitle, "<[^>]*>", "") // Remove HTML tags
     let header = viewData.Header
     let body = viewData.Body
     let errorCode = viewData.ErrorCode
@@ -126,14 +126,16 @@ let markdownRouteHandler isStatic postMarkdownRoot markdownPath : HttpHandler =
 
 let getWebRoot webRoot = Path.Combine(webRoot, "WebRoot")
 
+let getPostMarkdownRoot isStatic baseDirectory =
+    if isStatic then
+        Path.Combine(baseDirectory, "WebRoot", "markdown")
+    else
+        Path.Combine(baseDirectory, "posts")
+
+
 let markdownRoutes isStatic (baseDirectory: String) : list<HttpHandler> =
 
-    let postMarkdownRoot =
-        if isStatic then
-            Path.Combine(baseDirectory, "WebRoot", "markdown")
-        else
-            Path.Combine(baseDirectory, "posts")
-
+    let postMarkdownRoot = getPostMarkdownRoot isStatic baseDirectory
 
     let markdownPaths =
         [| postMarkdownRoot; Path.Combine(baseDirectory, "WebRoot", "markdown") |]
@@ -144,26 +146,27 @@ let markdownRoutes isStatic (baseDirectory: String) : list<HttpHandler> =
     |> Array.map (markdownRouteHandler isStatic postMarkdownRoot)
     |> Array.toList
 
-let pdfHandler webRoot pdfFileName : HttpHandler =
-    let pdfPath = Path.Combine(webRoot, "pdf", pdfFileName)
+let pdfHandler baseDirectory pdfFileName : HttpHandler =
+    let pdfPath = Path.Combine(baseDirectory, "pdf", pdfFileName)
     streamFile true pdfPath None None
 
-let rssHandler markdownRoot (baseUrl: string) : HttpHandler =
-    let rss = rssChannel markdownRoot baseUrl
+let rssHandler isStatic (baseDirectory: string) (baseUrl: string) : HttpHandler =
+    let postMarkdownRoot = getPostMarkdownRoot isStatic baseDirectory
+    let rss = rssChannel baseUrl postMarkdownRoot
 
     fun _ ctx ->
         let xml = RenderView.AsString.xmlNode rss
         ctx.SetContentType "application/rss+xml; charset=utf-8"
         ctx.WriteStringAsync xml
 
-let nonHtmlRoutes webRoot =
-    [ route "/rss" >=> rssHandler (getWebRoot webRoot) "https://iainschmitt.com"
+let nonHtmlRoutes isStatic baseDirectory =
+    [ route "/rss" >=> rssHandler isStatic baseDirectory "https://iainschmitt.com"
       route "/wedding/julias-game"
       >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
       route "/wedding/iains-game"
       >=> redirectTo true "https://connectionsgame.org/game/?X5SMRJ"
       route "/pdf/2025-tech-jam-talk"
-      >=> pdfHandler webRoot "2025-TechJam-BearTerritory.pdf" ]
+      >=> pdfHandler baseDirectory "2025-TechJam-BearTerritory.pdf" ]
 
 let appRoutes baseDirectory isStatic =
-    (markdownRoutes isStatic baseDirectory) @ (nonHtmlRoutes baseDirectory)
+    (markdownRoutes isStatic baseDirectory) @ (nonHtmlRoutes isStatic baseDirectory)
