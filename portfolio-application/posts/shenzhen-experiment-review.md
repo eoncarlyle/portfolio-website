@@ -51,7 +51,7 @@ but rather from other provinces and SOEs making one-time infrastructure investme
 Yao Yilin remarked "It is impossible for the SEZ's economic development to rely on the country's long-term 'blood
 transfusion'; now, the 'needle' must be unplugged decisively", and outside observers from Hong Kong started to notice
 that the majority of the SEZ's revenue came from infrastructure and speculative real estate development. Worse yet to
-the central government, importers were a substantial part of the non-construction economy[^sice]. It started to look
+the central government, importers were a substantial part of the non-construction economy.[^sice] It started to look
 like a convenient talking point to those who saw SEZ reforms as betraying the basic principles of the Party. The
 political blowback was swift, and led to the suspension of 804 infrastructure projects, hotel occupancy dropping 20%,
 and widespread unemployment in the construction sector in the mid-1980s.
@@ -85,9 +85,9 @@ drove so many to risk the crossing:
 
 Hong Kong's immigration policies varied in the 20th century, but between 1974 and 1980, Hong Kong had a 'Touch Base'
 policy, which allowed for any illegal immigrant to get a residency permit provided they both had relatives in the
-territory and could get to the city centre without being apprehended. Cross-border farming certificates were granted to
-Hong Kong residents with ancestral farmland in Guangdong, making the border rather porous in some areas and facilitating
-many escapes to the south.
+territory and could get to the city centre without being apprehended.[^border] Cross-border farming certificates were
+granted to Hong Kong residents with ancestral farmland in Guangdong, making the border rather porous in some areas and
+facilitating many escapes to the south.
 
 In 1980, city officials projected a population of 500,000 by the end of the millennium, showing that stopping the
 bleeding was their primary concern. But in 2000 the city had well more than 6 million people and became a metropolis of
@@ -123,7 +123,7 @@ been remotely as successful.
 ## Varying Village Trajectories
 
 While every one of Shenzhen's 300 urban villages was impacted by the explosion of growth, the post-1979 fortunes of
-these villages can range substantially. One village that rode the wave of prosperity was Huanggang.[^huangang] In 1979
+these villages can range substantially. One village that rode the wave of prosperity was Huanggang.[^huanggang] In 1979
 the local economy was dire enough that Shangwei nearly split off as a separate village, but the commune remained intact
 through the boom of the 1980s. The commune invested proceeds from land sales to the city into the Shapuwei Industrial
 Zone, and the villagers themselves converted their homes into residential towers to collect rents. In 1992 the villagers
@@ -170,7 +170,14 @@ recommend it to anyone remotely interested in economic development or urban plan
     20th century. In general Chinese cities seem to be larger geographic areas than in the West; today the city is
     around the size of Orange County, California. A map on page 58 makes the demarcation clearer.
 
-[^huangang]:
+[^border]:
+    I originally ended this paragraph with "Cross-border farming certificates were granted to Hong Kong residents with
+    ancestral farmland in Guangdong, making the border rather porous in some areas and facilitating many escapes to the
+    south.", but when [someone on Reddit](https://www.reddit.com/r/neoliberal/comments/1qt845s/comment/o329ngp/) raised
+    some questions I checked back in the text and realised that pages 210-211 described a border that Hong Kongers could
+    cross without much issue but that this didn't extend to Guangdong side of the border.
+
+[^huanggang]:
     Unlike most other Shenzhen villages, Huanggang villagers defied 17th-century imperial orders in the late 17th
     century to abandon the village lest their resources be seized by rebel forces.
 

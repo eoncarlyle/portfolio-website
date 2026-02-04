@@ -6,6 +6,7 @@ open Microsoft.AspNetCore.Http
 open Giraffe
 open Markdig
 open System.Collections.Generic
+open System.Text.RegularExpressions
 
 type MarkdownViewName =
     | DirectMarkdown
@@ -43,3 +44,5 @@ let getMarkdownPaths path =
 
 let markdownFileName markdownPath =
     Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)
+
+let withoutTags value = Regex.Replace(value, "<[^>]*>", "")

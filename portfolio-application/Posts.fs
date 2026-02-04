@@ -15,7 +15,11 @@ let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
         None
 
 let tryParsePostYamlHeader (lines: string array) =
-    let tryTitle = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "title:")
+    let tryTitle =
+        lines
+        |> Array.tryPick (tryExtractPostYamlHeaderValue "title:")
+        |> Option.map withoutTags
+
     let tryDate = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "date:")
 
     match tryTitle, tryDate with

@@ -32,7 +32,7 @@ type ViewData =
       ErrorCode: int option }
 
 let viewHandler markdownViewName (viewData: ViewData) =
-    let pageTitle = Regex.Replace(viewData.PageTitle, "<[^>]*>", "") // Remove HTML tags
+    let pageTitle = withoutTags viewData.PageTitle
     let header = viewData.Header
     let body = viewData.Body
     let errorCode = viewData.ErrorCode
