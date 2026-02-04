@@ -2,15 +2,8 @@ module AppHandlers
 
 open System
 open System.IO
-open System.Collections.Generic
-open System.Text.RegularExpressions
 open Giraffe
 open Markdig
-open Microsoft.AspNetCore.Http
-open Microsoft.AspNetCore.Mvc.ModelBinding
-open Microsoft.AspNetCore.Mvc.Razor
-open Microsoft.AspNetCore.Mvc.ViewFeatures
-open Microsoft.Extensions.DependencyInjection
 open Giraffe.ViewEngine
 
 open Types
@@ -54,19 +47,6 @@ let viewHandler markdownViewName (viewData: ViewData) =
     >=> setHttpHeader "Content-Type" "text/html; charset=utf-8"
     >=> htmlView xml
 
-let renderMarkdown postMarkdownRoot markdownPath =
-    let htmlContentsFromFile =
-        MarkdownPath.toString markdownPath
-        |> File.ReadAllText
-        |> fun markdownContents -> Markdown.ToHtml(markdownContents, markdownPipeline)
-        |> _.Replace("&#8617", "&#8617&#65038")
-
-    let landingPostList =
-        String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders postMarkdownRoot); [| "</ul>" |] ])
-
-    match markdownFileName markdownPath with
-    | "landing" -> [ htmlContentsFromFile; landingPostList ] |> String.concat "\n"
-    | _ -> htmlContentsFromFile
 
 let markdownFileHandler
     isStatic
@@ -74,9 +54,23 @@ let markdownFileHandler
     markdownPath
     markdownViewName
     markdownHeader
-    (maybeMetaPageTitle: string option)
+    (maybeMetaPageTitle: string option): HttpHandler
     =
     let metaPageTitle = Option.defaultValue markdownHeader maybeMetaPageTitle
+
+    let getHtmlContents () =
+        let htmlContentsFromFile =
+            MarkdownPath.toString markdownPath
+            |> File.ReadAllText
+            |> fun markdownContents -> Markdown.ToHtml(markdownContents, markdownPipeline)
+            |> _.Replace("&#8617", "&#8617&#65038")
+
+        let landingPostList =
+            String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders postMarkdownRoot); [| "</ul>" |] ])
+
+        match markdownFileName markdownPath with
+        | "landing" -> [ htmlContentsFromFile; landingPostList ] |> String.concat "\n"
+        | _ -> htmlContentsFromFile
 
     let viewData body =
         { PageTitle = metaPageTitle
@@ -86,14 +80,11 @@ let markdownFileHandler
           ErrorCode = None }
 
     if isStatic then
-        let htmlContents = renderMarkdown postMarkdownRoot markdownPath
-        viewData htmlContents |> viewHandler markdownViewName >=> noResponseCaching
+        getHtmlContents () |> viewData |> viewHandler markdownViewName
     else
-        warbler (fun _ ->
-            let htmlContents = renderMarkdown postMarkdownRoot markdownPath
-            viewData htmlContents |> viewHandler markdownViewName >=> noResponseCaching)
+        warbler (fun _ -> getHtmlContents () |> viewData |> viewHandler markdownViewName)
 
-let errorViewHandler errorCode body =
+let errorViewHandler errorCode body: HttpHandler =
     viewHandler
         ErrorMarkdown
         { PageTitle = "Error Page"
@@ -124,14 +115,11 @@ let markdownRouteHandler isStatic postMarkdownRoot markdownPath : HttpHandler =
         route $"/post/{markdownFileName markdownPath}"
         >=> render PostMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
 
-let getWebRoot webRoot = Path.Combine(webRoot, "WebRoot")
-
 let getPostMarkdownRoot isStatic baseDirectory =
     if isStatic then
         Path.Combine(baseDirectory, "WebRoot", "markdown")
     else
         Path.Combine(baseDirectory, "posts")
-
 
 let markdownRoutes isStatic (baseDirectory: String) : list<HttpHandler> =
 
@@ -153,7 +141,6 @@ let pdfHandler baseDirectory pdfFileName : HttpHandler =
 let rssHandler isStatic (baseDirectory: string) (baseUrl: string) : HttpHandler =
     let postMarkdownRoot = getPostMarkdownRoot isStatic baseDirectory
     let rss = rssChannel baseUrl postMarkdownRoot
-
     fun _ ctx ->
         let xml = RenderView.AsString.xmlNode rss
         ctx.SetContentType "application/rss+xml; charset=utf-8"
