@@ -13,7 +13,7 @@ A list of the hardware and software that I depend on in my daily work
   - Apple Watch SE 44mm
 
 ## Mouse and keyboard
-  - Office primary keyboard: Sinc Rev. 4 Split Staggered 75%/TKL Keyboard with Invokeys Daydreamer silent tactile switches and Keychron BoW PBY keycaps
+  - Office primary keyboard: Sinc Rev. 4 Split Staggered 75%/TKL Keyboard with Invokeys Daydreamer silent tactile switches and Keychron BoW PBT keycaps
   - Office secondary keyboard: KBDFans Tiger Lite TKL with Invokeys Matcha Reserve linear switches and PBTfans Mischief keycaps
   - Home daily driver: GMMK Pro 75% with Invokeys Blueberry Chiffon tactile switches and PBTfans BoW keycaps
   - Clicky home keyboard: GMMK 1 85% with Kalih Box Jade clicky switches and with PBTfans Retro 100 keycaps
