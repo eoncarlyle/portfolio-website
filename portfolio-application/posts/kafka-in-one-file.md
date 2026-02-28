@@ -47,7 +47,9 @@ Kafka's daemon allows for it to address obsolete event deletion, topic compactio
 
 1) Kafka uses periodic heartbeats from consumers to determine if they are still alive. While offset commits prove consumer health when there are new events to be consumed, but otherwise how can consumer liveness be proven?
 2) Can obsolete record deletion be carried out without locking all other producers and consumers? It looks like that POSIX OSes may handle interleaved file appends, but that should be simpler than the deletes themselves
-3) Kafka works by separate index and store files. While events are stored in the store file, the index file maps event offsets to their location in the store file. The index file is memory mapped, and is this
+3) Kafka works by separate index and store files. While events are stored in the store file, the index file maps 
+   event offsets to their location in the store file. The index file is memory mapped, and is this something that 
+   can even be supported?
 
 Just as most uses of SQLite call the C libraries through FFI, it would seem appropriate to do the same here with a similarly capable system programming language, and it seems like this would introduce more than a few interesting concurrency challenges.
 
