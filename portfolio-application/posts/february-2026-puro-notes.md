@@ -67,6 +67,5 @@ the length of `src` at the outset. That one really threw me for a loop.
    (3rd ed.). Addison-Wesley Professional, Upper Saddle River, NJ, USA.
 3. [Software Unscripted Episode #78](https://shows.acast.com/software-unscripted/episodes/664fde448c77cc0013b33390)
 4. [TigerStyle: TigerBeetle Style Guide](https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md)
-   team).
 5. William R. Stevens and Stephen A. Rago. 2013. Advanced I/O. In Advanced Programming in the UNIX Environment (3rd
    ed.). Addison-Wesley Professional, Upper Saddle River, NJ, USA.
