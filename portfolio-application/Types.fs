@@ -40,7 +40,7 @@ let markdownPipeline =
     MarkdownPipelineBuilder().UseAdvancedExtensions().UseYamlFrontMatter().Build()
 
 let getMarkdownPaths path =
-    Directory.GetFiles path |> Array.choose MarkdownPath.create
+    Directory.GetFiles(path, "*", SearchOption.AllDirectories) |> Array.choose MarkdownPath.create
 
 let markdownFileName markdownPath =
     Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)

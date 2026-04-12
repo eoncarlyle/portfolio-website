@@ -58,7 +58,6 @@ move on to other labor-intensive desires.
 1. Bradford DeLong. 2022. Slouching Towards Utopia: An Economic History of the Twentieth Century. Basic Books, New York,
    NY.
 2. [The Book of Common Prayer 1662: Statutory Services.](http://justus.anglican.org/resources/bcp/1662/Statutory.pdf)
-3. [U.S. Department of Agriculture, Economic Research Service. Ag and Food Statistics: Charting the Essentials - Ag
-   and Food Sectors and the Economy.](https://www.ers.usda.gov/data-products/ag-and-food-statistics-charting-the-essentials/ag-and-food-sectors-and-the-economy)
+3. [U.S. Department of Agriculture, Economic Research Service. Ag and Food Statistics: Charting the Essentials - Ag and Food Sectors and the Economy.](https://www.ers.usda.gov/data-products/ag-and-food-statistics-charting-the-essentials/ag-and-food-sectors-and-the-economy)
 4. [U.S. Department of Agriculture, National Agricultural Statistics Service. History of Agricultural Statistics.](https://www.nass.usda.gov/About_NASS/History_of_Ag_Statistics/index.php)
 5. [U.S. Bureau of Labor Statistics. Employment by Major Industry Sector.](https://www.bls.gov/emp/tables/employment-by-major-industry-sector.htm)

@@ -1,6 +1,6 @@
 import { codeToHtml } from "shiki";
 import process from "node:process";
-import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, mkdirSync, statSync } from "node:fs";
 
 async function highlightFileAndMigrate(inputFile, outputFile) {
   const currentFileContents = readFileSync(inputFile, "utf8");
@@ -54,8 +54,17 @@ try {
   const markdownDirectory = process.argv[3];
   console.log(`[Syntax Highlighting]: postsDirectory ${postsDirectory}`);
   console.log(`[Syntax Highlighting]: markdownDirectory ${markdownDirectory}`);
-  readdirSync(postsDirectory).forEach(async (filename) => {
-    await highlightFileAndMigrate(`${postsDirectory}/${filename}`, `${markdownDirectory}/${filename}`);
+
+  readdirSync(postsDirectory).forEach(async (yearDir) => {
+    const yearPath = `${postsDirectory}/${yearDir}`;
+    if (!statSync(yearPath).isDirectory()) return;
+
+    const outputYearPath = `${markdownDirectory}/${yearDir}`;
+    mkdirSync(outputYearPath, { recursive: true });
+
+    readdirSync(yearPath).forEach(async (filename) => {
+      await highlightFileAndMigrate(`${yearPath}/${filename}`, `${outputYearPath}/${filename}`);
+    });
   });
 } catch (err) {
   console.error(err);

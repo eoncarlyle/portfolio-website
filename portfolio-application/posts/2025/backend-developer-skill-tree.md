@@ -34,8 +34,8 @@ backend 'skill tree'.
    that will be transferable to other systems. It can be much more intimidating to pick up something like Java's Spring
    framework right out of the gate even if you already know the language. Spring or .NET's ASP.NET core are very
    powerful and have a lot of features that make enterprise development easier, but they aren't the first server side
-   framework one should learn.[^asp.net] At the end of reading either book the reader should be able to stand up a simple web
-   application, be it a personal website or something that makes REST calls with a client for interactivity.
+   framework one should learn.[^asp.net] At the end of reading either book the reader should be able to stand up a
+   simple web application, be it a personal website or something that makes REST calls with a client for interactivity.
 
 2. [_CompTIA Network+ Certification Exam Guide_](https://a.co/d/7ZiCa1J) chapters 1 and 6-12. While it may not come up
    every day, if you write server-side software you need to have a good mental model for exactly what happens when you
@@ -54,12 +54,12 @@ backend 'skill tree'.
 4. [_Domain Modeling Made Functional_](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/). Domain
    modeling is the process of turning the capabilities and requirements of a system into a tractable model, often
    something like a UML diagram. The model is meant to be understandable to domain experts such that someone working in
-   e-commerce operations could look at a domain model for their company and say 'this looks right, but it's missing the part with
-   volume-based shipping discounts'. As I wrote in a [review](https://iainschmitt.com/post/ddmf-review), the book isn't
-   as detailed as other domain modeling books that I've read, but it makes up for it by being much more readable. The
-   'functional' in _Domain Modeling Made Functional_ makes this book somewhat unique, as the language used in the book
-   is F#. But no prior knowledge of the language is required and much of the book transfers over well to other
-   languages.
+   e-commerce operations could look at a domain model for their company and say 'this looks right, but it's missing the
+   part with volume-based shipping discounts'. As I wrote in a [review](https://iainschmitt.com/post/ddmf-review), the
+   book isn't as detailed as other domain modeling books that I've read, but it makes up for it by being much more
+   readable. The 'functional' in _Domain Modeling Made Functional_ makes this book somewhat unique, as the language used
+   in the book is F#. But no prior knowledge of the language is required and much of the book transfers over well to
+   other languages.
 
 5. [_Data Intensive Applications_](https://learning.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/).
    This book is about the general problems that you face in applications where I/O is a more meaningful bottleneck than
@@ -76,24 +76,24 @@ backend 'skill tree'.
    especially because I never had the chance to take a database class at school. This was where I finally understood how
    write-ahead logs were used to make transactions more durable without sacrificing performance.
 
-7. [_Little Book of Semaphores_](https://greenteapress.com/semaphores/LittleBookOfSemaphores.pdf). Semaphores are a way to
-   coordinate concurrent threads or processes, and while concurrency isn't something that comes up every day it is
+7. [_Little Book of Semaphores_](https://greenteapress.com/semaphores/LittleBookOfSemaphores.pdf). Semaphores are a way
+   to coordinate concurrent threads or processes, and while concurrency isn't something that comes up every day it is
    important to understand how these problems are solved. The book is also generally fun to work through, which to be
    honest is the real reason I have it on this list. As I wrote in a
    [post](https://www.iainschmitt.com/post/first-thoughts-on-lbs-and-rust), the book probably works better in classroom
-   settings as it can sometimes be hard to tell if the reader's solutions match those in the solution
-   manual. But I've had good results with asking Claude 'I am trying to learn this in greater detail, please ask me
-   questions to probe my understanding rather than just telling me if my solution is equivalent'. To get any value out 
-   of this book the reader really does need to work through the problems.
+   settings as it can sometimes be hard to tell if the reader's solutions match those in the solution manual. But I've
+   had good results with asking Claude 'I am trying to learn this in greater detail, please ask me questions to probe my
+   understanding rather than just telling me if my solution is equivalent'. To get any value out of this book the reader
+   really does need to work through the problems.
 
-8. [_Operating Systems: Three Easy Pieces_](https://pages.cs.wisc.edu/~remzi/OSTEP/). I only made it through about 1/3rd of
-   Tanenbaum's 'Modern Operating Systems' and while I got a lot out of it, _Three Easy Pieces_ is a more appropriate
+8. [_Operating Systems: Three Easy Pieces_](https://pages.cs.wisc.edu/~remzi/OSTEP/). I only made it through about 1/3rd
+   of Tanenbaum's 'Modern Operating Systems' and while I got a lot out of it, _Three Easy Pieces_ is a more appropriate
    first book on operating systems. Modern cloud infrastructure does a lot to try to abstract away the responsibilities
    of the OS, but as implied by
    ['The Cloud Is Just Someone Else’s Computer'](https://blog.codinghorror.com/the-cloud-is-just-someone-elses-computer/),
    _some_ OS _somewhere_ is still doing roughly the same thing to serve your production applications as what takes place
-   when running locally. As for network engineering, you don't want to be at the mercy of what you
-   don't understand about operating systems.
+   when running locally. As for network engineering, you don't want to be at the mercy of what you don't understand
+   about operating systems.
 
 ## Aside on Languages
 
@@ -103,8 +103,8 @@ you only need to pick up four languages:
 
 1. One of the aforementioned big interpreted languages: Python or Type/JavaScript
 2. A statically typed, garbage-collected language: Java, C#, or Go
-3. A language with manual memory management: Probably C. Maybe you can include Rust in this category, and Zig
-   would be a decent choice after its 1.0 release
+3. A language with manual memory management: Probably C. Maybe you can include Rust in this category, and Zig would be a
+   decent choice after its 1.0 release
 4. A functional language: I am biased to F#. Haskell is a great language but comes with a steep learning curve, and
    Scala can sometimes face mixed OO/FP paradigm issues
 
@@ -120,4 +120,5 @@ both.
     reach absolute expertise in all three, but they are crucially important in any backend job.
 
 [^asp.net]:
-   I'm being a little hard on ASP.NET here, as compared to Spring it is easier to learn incrementally.
+
+I'm being a little hard on ASP.NET here, as compared to Spring it is easier to learn incrementally.
