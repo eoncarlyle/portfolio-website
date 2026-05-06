@@ -5,15 +5,62 @@ date: 2026.05.05
 
 # RSS Scraper Development Notes
 
-I wasn't old enough to mourn the loss of Google Reader, but a few months back I started self-hosting an instance of
-FreshRSS on my VPC because iCloud RSS sync wasn't very reliable. The only issue I can think of with FreshRSS is that the
-browser UI is a little clunky, and it wasn't until I found
-[this GitHub issue](https://github.com/Ranchero-Software/NetNewsWire/issues/3731) that I could get it working with my
-reader. But those are incredibly small issues, because the synchronisation has worked without any issue whatsoever. I
-use NetNewsWire as an RSS reader application, and based off of the language line count in its
-[repository](https://github.com/Ranchero-Software/NetNewsWire), it is clearly a native Swift application. Right now it
-is using 238 MB of RAM on my machine and while it really should be possible to use less I have very little room to
-complain because Visual Studio Code uses over 1500 MB when only a single file is open.[^1] RAM aside, the application
-works well and I see no reason to use anything else on iOS or macOS.
+Artemis.bm is a strange website and I really wish that more industries had a counterpart: the website tracks the
+insurance-linked security (ILS) and catastrophe bond industries. ILSs are an alternative to traditional reinsurance,
+which is the insurance that insurance companies themselves purchase to protect against tail risks. One bad hurricane
+could result in a lot of claims to State Farm or Allstate, so reinsurance is what protects retailer insurers from this
+type of risk. There are only so many reinsurers to go around, and not all catastrophic risk is something that reinsurers
+can confidently assess, so insurance-linked securities in general or catastrophy bonds in particular help to fill in the
+gap. Catastrophe bonds pay above the risk-free rate, but if the insured event occurs, it comes out of the principal. For
+example, the Louisiana Citizens Property Insurance Corporation is issuing
+[$150m in named storm catastrophe bonds](https://www.artemis.bm/news/louisiana-citizens-seeks-150m-named-storm-reinsurance-with-bayou-re-2026-1-cat-bond/),
+where coverage to the insurer and losses to the investor only take place if there is more than $540M in losses to
+Louisiana Citizens due to a tropical storm or hurricane that is given a name by NOAA.
 
-[^1]: This is not the only reason I don't use VS Code, but even by itself this would be reason enough to not use it.
+Artemis has an RSS feed with full articles in feed updates, the content is well written, and the website is updated 
+frequently. I don't really understand why this isn't all paywalled, because most people for whom this content is 
+relevant work for a small handful of firms who likely wouldn't mind paying $50/month for the service.
+
+However, as hard as this is to imagine, content about Insurance Linked Securities and the Reinsurance 
+market can be a little bit dry especially for someone who works in a completely unrelated field. Back when I 
+subscribed to their RSS feed, I didn't read it often enough to stay subscribed. 
+
+```fsharp
+type FetchSource = logger: ILogger -> url: string -> Task<RssItem array>
+```
+
+```fsharp
+type DerivedItem =
+    { Guid: String
+      Included: Boolean
+      Item: RssItem
+      Result: String option }
+
+type DerivedBatch =
+    { Id: String
+      ProcessingStatus: ProcessingStatus
+      BatchItems: DerivedItem array }
+
+type DerivedFeed =
+    { SourceUrl: String
+      Batches: DerivedBatch array } 
+```
+
+
+```fsharp
+type SinkFeed =
+    { Title: string
+      Link: string
+      PubDate: String
+      Description: string
+      Items: SinkItem array }
+
+and SinkItem =
+    { Item: RssItem
+      DerivedItemReferences: DerivedItemReference array }
+
+and DerivedItemReference =
+    { Title: String
+      Guid: String option
+      Link: String option }
+```
