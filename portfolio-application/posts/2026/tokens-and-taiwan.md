@@ -22,10 +22,10 @@ But there are many outcomes short of a Chinese invasion that the industry needs 
 Putting this all together the technology industry has placed an incredibly large and difficult to hedge bet that A) the political status quo will be maintained in Taiwan and B) generative AI models will be a load-bearing part of the economy in the near future. While ordinary software engineers have little say in semiconductor manufacturing or geopolitics, there are <a href="/post/vibe-code-at-your-peril">things the profession can do</a> to be less exposed to the great token wager.
 
 ## References
-1. Nellis, S. and Cherney, M. 2026. TSMC plans to open chip packaging plant in Arizona by 2029, executive says. Reuters. (April 22, 2026). Retrieved May 17, 2026 from https://www.reuters.com/world/asia-pacific/tsmc-plans-open-chip-packaging-plant-arizona-by-2029-executive-says-2026-04-22
-2. Nadella, S., Patel, D., and Patel, D. 2025. Satya Nadella — How Microsoft is preparing for AGI. Dwarkesh Podcast (Nov. 12, 2025). Retrieved May 17, 2026 from https://www.dwarkesh.com/p/satya-nadella-2
-3. Polymarket. 2026. Will China invade Taiwan by December 31, 2027? Polymarket. (March 17, 2026). Retrieved May 17, 2026 from https://polymarket.com/event/will-china-invade-taiwan-by-december-31-2027
-4. The Economist. 2026. Big tech is sacrificing its cashflows to prop up the AI boom. The Economist (May 13, 2026). Retrieved May 17, 2026 from https://www.economist.com/business/2026/05/13/big-tech-is-sacrificing-its-cashflows-to-prop-up-the-ai-boom
-5. TSMC. n.d. TSMC Arizona. TSMC. Retrieved May 17, 2026 from https://www.tsmc.com/static/abouttsmcaz/index.htm
+1. [Nellis, S. and Cherney, M. 2026. TSMC plans to open chip packaging plant in Arizona by 2029, executive says. Reuters. (April 22, 2026)](https://www.reuters.com/world/asia-pacific/tsmc-plans-open-chip-packaging-plant-arizona-by-2029-executive-says-2026-04-22)
+2. [Nadella, S., Patel, D., and Patel, D. 2025. Satya Nadella — How Microsoft is preparing for AGI. Dwarkesh Podcast](https://www.dwarkesh.com/p/satya-nadella-2)
+3. [Polymarket. 2026. Will China invade Taiwan by December 31, 2027? Polymarket.](https://polymarket.com/event/will-china-invade-taiwan-by-december-31-2027)
+4. [The Economist. 2026. Big tech is sacrificing its cashflows to prop up the AI boom. The Economist](https://www.economist.com/business/2026/05/13/big-tech-is-sacrificing-its-cashflows-to-prop-up-the-ai-boom)
+5. [TSMC. n.d. TSMC Arizona. TSMC.](https://www.tsmc.com/static/abouttsmcaz/index.htm)
 
 [^1]: Small editorial note: this post assumes less prior knowledge and explains more details than most others; I wanted this to be understandable to people who do not read Stratechery everday
