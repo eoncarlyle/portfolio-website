@@ -92,7 +92,8 @@ h4,
 h5,
 h6,
 p,
-li {
+li,
+figcaption {
     color: var(--color5);
 }
 
@@ -167,6 +168,11 @@ blockquote p {
 table {
     min-width: 75%;
     margin: auto;
+}
+
+figure figcaption {
+    padding: var(--default-padding);
+    text-align: center;
 }
 
 @media print {
