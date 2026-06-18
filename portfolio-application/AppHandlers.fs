@@ -119,7 +119,7 @@ let getPostMarkdownRoot isStatic baseDirectory =
     if isStatic then
         Path.Combine(baseDirectory, "WebRoot", "markdown")
     else
-        Path.Combine(baseDirectory, "posts")
+        Path.Combine(baseDirectory, "posts", "source")
 
 let markdownRoutes isStatic (baseDirectory: String) : list<HttpHandler> =
 
