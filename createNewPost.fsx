@@ -1,31 +1,31 @@
 open System
 open System.IO
 
-let colored (color: ConsoleColor) text =
+let colorPrint (color: ConsoleColor) text =
     Console.ForegroundColor <- color
     printf "%s" text
     Console.ResetColor()
 
-let prompt label =
-    colored ConsoleColor.Blue $"{label}: "
+let inputPrompt label =
+    colorPrint ConsoleColor.Blue $"{label}: "
     Console.ReadLine()
 
-let promptWithDefault label defaultVal =
-    colored ConsoleColor.Blue $"{label} ("
-    colored ConsoleColor.Yellow defaultVal
-    colored ConsoleColor.Blue "): "
+let inputPromptWithDefault label defaultVal =
+    colorPrint ConsoleColor.Blue $"{label} ("
+    colorPrint ConsoleColor.Yellow defaultVal
+    colorPrint ConsoleColor.Blue "): "
     Console.ReadLine()
 
-colored ConsoleColor.Cyan "Create New Post\n"
+colorPrint ConsoleColor.Cyan "Create New Post\n"
 
 let postsPath = "portfolio-application/posts"
 let sourcePath = $"{postsPath}/source"
 
-let title = prompt "Title"
+let title = inputPrompt "Title"
 
 let currentDate = DateTime.Now.ToString("yyyy.MM.dd")
 let date =
-    match promptWithDefault "Date" currentDate with
+    match inputPromptWithDefault "Date" currentDate with
     | s when String.IsNullOrWhiteSpace(s) -> currentDate
     | s -> s
 
@@ -37,12 +37,12 @@ let existingSlugs =
     |> Array.map Path.GetFileNameWithoutExtension
 
 let slug =
-    match promptWithDefault "Slug" defaultSlug with
+    match inputPromptWithDefault "Slug" defaultSlug with
     | s when String.IsNullOrWhiteSpace(s) -> defaultSlug
     | s -> s
 
 if existingSlugs |> Array.contains slug then
-    colored ConsoleColor.Red $"Error: '{slug}' already exists. Aborting.\n"
+    colorPrint ConsoleColor.Red $"Error: '{slug}' already exists. Aborting.\n"
     Environment.Exit(1)
 
 let sourceFile = $"{sourcePath}/{slug}.md"
@@ -61,5 +61,5 @@ Directory.CreateDirectory(yearDir) |> ignore
 File.WriteAllText(sourceFile, frontmatter)
 File.CreateSymbolicLink(symlinkPath, $"../source/{slug}.md") |> ignore
 
-colored ConsoleColor.Green $"Created:  {sourceFile}\n"
-colored ConsoleColor.Green $"Symlink:  {symlinkPath} -> ../source/{slug}.md\n"
+colorPrint ConsoleColor.Green $"Created:  {sourceFile}\n"
+colorPrint ConsoleColor.Green $"Symlink:  {symlinkPath} -> ../source/{slug}.md\n"
