@@ -120,5 +120,4 @@ both.
     reach absolute expertise in all three, but they are crucially important in any backend job.
 
 [^asp.net]:
-
-I'm being a little hard on ASP.NET here, as compared to Spring it is easier to learn incrementally.
+    I'm being a little hard on ASP.NET here, as compared to Spring it is easier to learn incrementally.
