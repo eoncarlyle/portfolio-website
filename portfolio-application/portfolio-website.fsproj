@@ -48,22 +48,17 @@
     <SyntaxHighlighterOutputDir Condition="'$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/WebRoot/markdown</SyntaxHighlighterOutputDir>
   </PropertyGroup>
 
-  <Target Name="InstallNodePackages" BeforeTargets="PrepareForBuild" Condition="'$(RunSyntaxHighlighter)' == 'true'">
-    <Message Text="[MSBuild] Installing Syntax Highlighter Node Packages" Importance="high" />
-    <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install" />
-  </Target>
-
   <Target Name="EnsureOutputDirectoryExists" BeforeTargets="RunSyntaxHighlighter" Condition="'$(RunSyntaxHighlighter)' == 'true'">
     <MakeDir Directories="$(SyntaxHighlighterOutputDir)" />
     <Message Text="[MSBuild] Ensuring output directory exists: $(SyntaxHighlighterOutputDir)" Importance="high" />
   </Target>
 
-<Target Name="RunSyntaxHighlighter"
-        DependsOnTargets="InstallNodePackages;EnsureOutputDirectoryExists"
-        BeforeTargets="PrepareForBuild"
-        Condition="'$(RunSyntaxHighlighter)' == 'true'">
+  <Target Name="RunSyntaxHighlighter"
+          DependsOnTargets="EnsureOutputDirectoryExists"
+          BeforeTargets="PrepareForBuild"
+          Condition="'$(RunSyntaxHighlighter)' == 'true'">
     <Message Text="[MSBuild] Running Syntax Highlighter, Migrating Posts" Importance="high" />
-    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js posts $(SyntaxHighlighterOutputDir)" />
+    <Exec Command="dotnet run --project $(ProjectDir)syntax-highlighting-fsharp -- $(ProjectDir)posts $(SyntaxHighlighterOutputDir)" />
   </Target>
 
 </Project>
