@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="shiki-fsharp/shiki-fsharp.fsproj" />
+    <ProjectReference Include="../shiki-fsharp/shiki-fsharp.fsproj" />
   </ItemGroup>
 
   <ItemGroup>
