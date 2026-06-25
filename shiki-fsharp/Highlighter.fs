@@ -127,6 +127,13 @@ type Highlighter(themePath: string, ?grammarsDir: string) =
         let rawTheme = ThemeReader.ReadThemeSync(reader)
         registry.SetTheme(rawTheme)
 
+    // Pre-load extra grammars before any CodeToHtml call so they take precedence
+    // over any bundled grammar with the same scope (Registry caches the first one it sees).
+    do
+        for kvp in extras do
+            try registry.LoadGrammarFromPathSync(kvp.Value, 0, Dictionary<string, int>()) |> ignore
+            with _ -> ()
+
     let colorMap = registry.GetColorMap() |> Seq.toArray
 
     let plainTokens (code: string) : ThemedToken[][] =
