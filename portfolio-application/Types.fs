@@ -37,7 +37,9 @@ module MarkdownPath =
     let toString (MarkdownPath path) = path
 
 let markdownPipeline =
-    MarkdownPipelineBuilder().UseAdvancedExtensions().UseYamlFrontMatter().Build()
+    let builder = MarkdownPipelineBuilder().UseAdvancedExtensions().UseYamlFrontMatter()
+    builder.Extensions.Add(ShikiMarkdig.ShikiExtension(ShikiMarkdig.shikiHighlighter))
+    builder.Build()
 
 let getMarkdownPaths path =
     Directory.GetFiles(path, "*", SearchOption.AllDirectories) |> Array.choose MarkdownPath.create
