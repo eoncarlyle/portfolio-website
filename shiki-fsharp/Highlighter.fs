@@ -176,7 +176,6 @@ type Highlighter(themePath: string, maybeGrammarsDir: string option) =
     let themeJson = File.ReadAllText(themePath)
     let fg, bg, themeName = loadThemeColors themeJson
     let normalizedJson = normalizeThemeJson themeJson
-
     let baseOptions = RegistryOptions(ThemeName.DarkPlus)
     let extras = getGrammarsDir maybeGrammarsDir
 
@@ -198,20 +197,21 @@ type Highlighter(themePath: string, maybeGrammarsDir: string option) =
                  FontStyle = 0 } |])
         
     member _.CodeToHtml(code: string, lang: string) : string =
+        let render' = HtmlRenderer.tokensToHtml fg bg themeName
         match resolveScope baseOptions lang with
-        | None -> HtmlRenderer.tokensToHtml (plainTokens code) fg bg themeName
-
+        | None -> plainTokens code |> render'
         | Some scope ->
-            let grammar = registry.LoadGrammar(scope)
-
-            if isNull grammar then
+            let maybeGrammar = registry.LoadGrammar(scope)
+                            |> Option.ofObj
+            
+            match maybeGrammar with
+            | None ->
                 eprintfn
                     $"[shiki-fsharp] warning: no grammar for lang='{lang}' (scope='{scope}'), rendering as plain text"
 
-                HtmlRenderer.tokensToHtml (plainTokens code) fg bg themeName
-            else
-                let tokens = Tokenizer.tokenizeWithTheme code grammar colorMap
-                HtmlRenderer.tokensToHtml tokens fg bg themeName
+                plainTokens code |> render'
+            | Some grammar ->
+                Tokenizer.tokenizeWithTheme code grammar colorMap |> render'
 
 let codeToHtml (code: string) (lang: string) (themePath: string) : string =
     Highlighter(themePath, None).CodeToHtml(code, lang)

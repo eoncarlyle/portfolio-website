@@ -59,7 +59,7 @@ let private htmlEscape (s: string) =
         .Replace(">", "&gt;")
         .Replace("\"", "&quot;")
 
-let tokensToHtml (tokens: ThemedToken[][]) (fg: string) (bg: string) (themeName: string) : string =
+let tokensToHtml (fg: string) (bg: string) (themeName: string) (tokens: ThemedToken[][])  : string =
 
     let tokens = mergeWhitespaceTokens tokens
     let sb = StringBuilder()
