@@ -37,4 +37,4 @@ type ShikiExtension(highlighter: Highlighter) =
 let shikiHighlighter =
     Highlighter(
         Path.Combine(AppContext.BaseDirectory, "themes", "catppuccin-mocha.json"),
-        Path.Combine(AppContext.BaseDirectory, "grammars"))
+        Path.Combine(AppContext.BaseDirectory, "grammars") |> Some)
