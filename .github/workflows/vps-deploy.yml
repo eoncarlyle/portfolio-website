@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "portfolio-application/**"
+      - "shiki-fsharp/**"
       - ".github/workflows/**"
 
 env:
@@ -50,7 +51,6 @@ jobs:
 
       - name: Build and push container image
         run: |
-          cd ./portfolio-application
           # Make sure VERSION is not empty to avoid the parse error
           VERSION="${{ steps.version.outputs.version }}"
 

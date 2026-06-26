@@ -32,7 +32,7 @@ jobs:
           echo "Changed files:"
           cat changes.txt
 
-          if grep -q "portfolio-application/" changes.txt; then
+          if grep -qE "portfolio-application/|shiki-fsharp/" changes.txt; then
             echo "portfolio_changed=true" >> $GITHUB_OUTPUT
           else
             echo "portfolio_changed=false" >> $GITHUB_OUTPUT
@@ -58,8 +58,6 @@ jobs:
 
       - name: Build Portfolio Application
         run: |
-          cd portfolio-application
-          dotnet publish -c Release
           sudo podman build -t localhost/portfolio-application:latest .
 
   setup_network:
