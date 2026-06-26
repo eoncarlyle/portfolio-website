@@ -29,7 +29,7 @@ let html = h.CodeToHtml(code, "fsharp")
 | `mergeWhitespaceTokens` | `HtmlRenderer.mergeWhitespaceTokens` |
 | `getTokenStyleObject` + `stringifyTokenStyle` | `TokenStyles.fs` |
 
-The HAST layer is skipped — since there are no transformers, going directly from tokens to an HTML string produces identical output without the intermediate AST.
+The HAST layer is skipped because there are no transformers. `codeToHtml` is the only thing that I used 
 
 ## File structure
 

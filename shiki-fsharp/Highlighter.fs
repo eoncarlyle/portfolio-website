@@ -15,6 +15,7 @@ open Types
 
 let private normalizeThemeJson (json: string) : string =
     let obj = JObject.Parse(json)
+    // VS Code themes use "tokenColors", TextMateSharp expects "settings"
     if not (isNull (obj.["tokenColors"])) && isNull (obj.["settings"]) then
         obj.["settings"] <- obj.["tokenColors"]
         obj.Remove("tokenColors") |> ignore

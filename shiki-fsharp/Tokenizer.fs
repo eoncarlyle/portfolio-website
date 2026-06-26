@@ -46,9 +46,10 @@ let tokenizeWithTheme
                     let foreground = EncodedTokenAttributes.GetForeground(metadata)
                     let fontStyle  = int (EncodedTokenAttributes.GetFontStyle(metadata))
 
+                    // TextMateSharp returns 1-indexed foreground values, but colorMap is 0-indexed
                     let color =
-                        if foreground > 0 && foreground < colorMap.Length then
-                            let c = colorMap[foreground]
+                        if foreground > 0 && foreground <= colorMap.Length then
+                            let c = colorMap[foreground - 1]
                             if String.IsNullOrEmpty(c) then None else Some c
                         else
                             None
