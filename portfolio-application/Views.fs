@@ -10,7 +10,7 @@ let layout (pageTitle: string) (content: XmlNode list) =
         [ head
               []
               [ meta [ _charset "UTF-8" ]
-                link [ _rel "stylesheet"; _href "/css/index-1.css" ]
+                link [ _rel "stylesheet"; _href "/css/index-2.css" ]
                 link [ _rel "stylesheet"; _href "/css/normalise.css" ]
                 link [ _rel "preconnect"; _href "https://fonts.googleapis.com" ]
                 link

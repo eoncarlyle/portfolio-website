@@ -50,14 +50,15 @@ Engineer on Security Needs Management team, primarily working in Scala and Kotli
 
 **Programming Languages & Frameworks**
 
-Java, Spring, JavaScript/TypeScript, React, Express, Preact, F#, Python, Flask
+Java, Spring, Kotlin, F#, JavaScript/TypeScript, React, Python
 
-**DevOps Tools**
+**Data Technologies**
 
-Ansible, Fluent Bit, Prometheus, Grafana, GitLab CI/CD
+PostgreSQL, Apache Kafka, Amazon DynamoDB ActiveMQ, Amazon SQS, SQLite, Apache ZooKeeper
 
 **Other Utilities**
-Linux System Administration, Network Engineering, SQL Databases, Apache ZooKeeper, MongoDB
+
+Ansible, Fluent Bit, Prometheus, Grafana, Azure DevOps CI/CD
 
 ## Education
 
