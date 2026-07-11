@@ -42,7 +42,7 @@ let markdownPipeline =
     builder.Build()
 
 let getMarkdownPaths path =
-    Directory.GetFiles(path, "*", SearchOption.AllDirectories) |> Array.choose MarkdownPath.create
+    Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly) |> Array.choose MarkdownPath.create
 
 let markdownFileName markdownPath =
     Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)

@@ -115,8 +115,11 @@ let markdownRouteHandler isStatic postMarkdownRoot markdownPath : HttpHandler =
         route $"/post/{markdownFileName markdownPath}"
         >=> render PostMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
 
-let getPostMarkdownRoot baseDirectory =
-    Path.Combine(baseDirectory, "posts")
+let getPostMarkdownRoot isStatic baseDirectory =
+    if isStatic then
+        Path.Combine(baseDirectory, "WebRoot", "markdown")
+    else
+        Path.Combine(baseDirectory, "posts", "source")
 
 let markdownRoutes isStatic (baseDirectory: String) : list<HttpHandler> =
 
