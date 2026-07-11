@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/portfolio-application/">
+    <Project Path="portfolio-application/portfolio-website.fsproj" />
+  </Folder>
+  <Folder Name="/shiki-fsharp/">
+    <Project Path="shiki-fsharp/shiki-fsharp.fsproj" />
+  </Folder>
+</Solution>

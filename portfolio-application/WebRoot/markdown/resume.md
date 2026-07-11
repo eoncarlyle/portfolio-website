@@ -1,18 +1,23 @@
 ## Experience
 
-### SPS Commerce
-
-**Senior Software Engineer: October 2025 - Present**<br>
-**Software Engineer: May 2024 - September 2025**<br>
-Software engineer on Items Capability team, primarily working in Java and React
+**SmartThings**<br>
+**Senior Software Engineer: June 2026 - Present**<br>
+Engineer on Security Needs Management team, primarily working in Scala and Kotlin
 <br><br>
 
-### RELEX Solutions
+**SPS Commerce**<br>
+**Senior Software Engineer: October 2025 - June 2026**<br>
+**Software Engineer: May 2024 - September 2025**<br>
+- Refactored legacy AWS Lambda application to continuously running containerized Spring service for 10x reduction in p99 UI responsiveness time 
+- Led queue migrations from ActiveMQ to SQS and Kafka, coordinating across multiple teams 
+- Planned and managed project for two interns, serving as primary technical resource
+- Flexed to frontend team for program increment to unblock release deadline 
+<br><br>
 
+**RELEX Solutions**<br>
 **Senior Site Reliability Engineer: February 2024 - May 2024**<br>
 **Site Reliability Engineer: April 2022 - February 2024**<br>
 **Technical Analyst: April 2021 - April 2022**<br>
-
 - Developed Java and Python programs managing state of distributed applications
 - Wrote, maintained application used in automated production environment migration
 - Improved observability for early incident detection with Fluent Bit, Prometheus, and Grafana
@@ -20,8 +25,7 @@ Software engineer on Items Capability team, primarily working in Java and React
 - Resolved multiple incidents with customer impact as on-call engineer
 <br><br>
 
-### Siepmann Research Group, University of Minnesota
-
+**Siepmann Research Group, University of Minnesota**<br>
 **Undergraduate Research Assistant: April 2018 - February 2021**<br>
 
 - Wrote Python programs to analyze molecular geometric distributions across hundreds of thousands of simulation frames
@@ -46,14 +50,15 @@ Software engineer on Items Capability team, primarily working in Java and React
 
 **Programming Languages & Frameworks**
 
-Java, Spring, JavaScript/TypeScript, React, Express, Preact, F#, Python, Flask
+Java, Spring, Kotlin, F#, JavaScript/TypeScript, React, Python
 
-**DevOps Tools**
+**Data Technologies**
 
-Ansible, Fluent Bit, Prometheus, Grafana, GitLab CI/CD
+PostgreSQL, Apache Kafka, Amazon DynamoDB ActiveMQ, Amazon SQS, SQLite, Apache ZooKeeper
 
 **Other Utilities**
-Linux System Administration, Network Engineering, SQL Databases, Apache ZooKeeper, MongoDB
+
+Ansible, Fluent Bit, Prometheus, Grafana, Azure DevOps CI/CD
 
 ## Education
 

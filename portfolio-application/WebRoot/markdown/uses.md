@@ -8,7 +8,7 @@ A list of the hardware and software that I depend on in my daily work
   - Steelcase Think Chair
 
 ## Everyday carry
-  - iPhone 13 with 128 GB
+  - iPhone 17 Pro, 256 GB
   - Apple AirPods Pro
   - Apple Watch SE 44mm
 
@@ -31,11 +31,11 @@ A list of the hardware and software that I depend on in my daily work
 ## Software
   - MacOS workstation OS
   - Fedora server OS
-  - Kitty terminal emulator
+  - Ghostty terminal emulator
   - TMUX terminal multiplexer
   - Vim and Zed plain-text editors
   - Obsidian markdown editor
   - IntelliJ and JetBrains Rider IDEs
   - Rectangle Pro window manager
   - Bitwarden password manager
-  - Reeder RSS reader
+  - NetNewsWire RSS reader

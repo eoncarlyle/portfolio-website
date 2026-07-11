@@ -123,7 +123,7 @@ let getPostMarkdownRoot isStatic baseDirectory =
 
 let markdownRoutes isStatic (baseDirectory: String) : list<HttpHandler> =
 
-    let postMarkdownRoot = getPostMarkdownRoot isStatic baseDirectory
+    let postMarkdownRoot = getPostMarkdownRoot baseDirectory
 
     let markdownPaths =
         [| postMarkdownRoot; Path.Combine(baseDirectory, "WebRoot", "markdown") |]
@@ -139,7 +139,7 @@ let pdfHandler baseDirectory pdfFileName : HttpHandler =
     streamFile true pdfPath None None
 
 let rssHandler isStatic (baseDirectory: string) (baseUrl: string) : HttpHandler =
-    let postMarkdownRoot = getPostMarkdownRoot isStatic baseDirectory
+    let postMarkdownRoot = getPostMarkdownRoot baseDirectory
     let rss = rssChannel baseUrl postMarkdownRoot
     fun _ ctx ->
         let xml = RenderView.AsString.xmlNode rss

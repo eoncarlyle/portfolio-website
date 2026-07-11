@@ -13,10 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../shiki-fsharp/shiki-fsharp.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Watch Include="**\*.cshtml" Exclude="bin\**\*" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Shiki.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Views.fs" />
     <Compile Include="Posts.fs" />
@@ -28,13 +33,18 @@
     <WebRootPath>$(OutputPath)WebRoot</WebRootPath>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <RunSyntaxHighlighter Condition="'$(RunSyntaxHighlighter)' == ''">true</RunSyntaxHighlighter>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Include="web.config" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Views\*.cshtml;WebRoot\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="themes\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="grammars\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="posts\**\*.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -42,28 +52,5 @@
   <ItemGroup>
     <Folder Include="WebRoot\pdf\" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <SyntaxHighlighterOutputDir Condition="'$(Configuration)' == 'Release'">out/WebRoot/markdown</SyntaxHighlighterOutputDir>
-    <SyntaxHighlighterOutputDir Condition="'$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/WebRoot/markdown</SyntaxHighlighterOutputDir>
-  </PropertyGroup>
-
-  <Target Name="InstallNodePackages" BeforeTargets="PrepareForBuild" Condition="'$(RunSyntaxHighlighter)' == 'true'">
-    <Message Text="[MSBuild] Installing Syntax Highlighter Node Packages" Importance="high" />
-    <Exec Command="npm --prefix $(ProjectDir)syntax-highlighting install" />
-  </Target>
-
-  <Target Name="EnsureOutputDirectoryExists" BeforeTargets="RunSyntaxHighlighter" Condition="'$(RunSyntaxHighlighter)' == 'true'">
-    <MakeDir Directories="$(SyntaxHighlighterOutputDir)" />
-    <Message Text="[MSBuild] Ensuring output directory exists: $(SyntaxHighlighterOutputDir)" Importance="high" />
-  </Target>
-
-<Target Name="RunSyntaxHighlighter"
-        DependsOnTargets="InstallNodePackages;EnsureOutputDirectoryExists"
-        BeforeTargets="PrepareForBuild"
-        Condition="'$(RunSyntaxHighlighter)' == 'true'">
-    <Message Text="[MSBuild] Running Syntax Highlighter, Migrating Posts" Importance="high" />
-    <Exec Command="node $(ProjectDir)syntax-highlighting/index.js posts $(SyntaxHighlighterOutputDir)" />
-  </Target>
 
 </Project>
