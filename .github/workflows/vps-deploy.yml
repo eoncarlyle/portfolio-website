@@ -15,7 +15,7 @@ env:
 
 jobs:
   build_and_push:
-    runs-on: [self-hosted, los-angeles]
+    runs-on: [santa-cruz]
 
     permissions:
       contents: read
@@ -29,7 +29,7 @@ jobs:
         run: sudo podman image prune -af
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Generate version info
         id: version
@@ -62,7 +62,7 @@ jobs:
 
   deploy_test:
     needs: build_and_push
-    runs-on: [self-hosted, new-york-0]
+    runs-on: [santa-cruz]
 
     steps:
       - name: Log in to GitHub Container Registry
@@ -103,7 +103,7 @@ jobs:
 
   deploy_prod:
     needs: [deploy_test, build_and_push]
-    runs-on: [self-hosted, new-york-0]
+    runs-on: [santa-cruz]
 
     steps:
       - name: Deploy to production environment
