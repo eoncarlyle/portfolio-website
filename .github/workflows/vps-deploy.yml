@@ -103,7 +103,7 @@ jobs:
 
   deploy_prod:
     needs: [deploy_test, build_and_push]
-    runs-on: [santa-cruz]
+    runs-on: [new-york-0]
 
     steps:
       - name: Deploy to production environment
