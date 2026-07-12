@@ -115,15 +115,12 @@ let markdownRouteHandler isStatic postMarkdownRoot markdownPath : HttpHandler =
         route $"/post/{markdownFileName markdownPath}"
         >=> render PostMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
 
-let getPostMarkdownRoot isStatic baseDirectory =
-    if isStatic then
-        Path.Combine(baseDirectory, "WebRoot", "markdown")
-    else
-        Path.Combine(baseDirectory, "posts", "source")
+let getPostMarkdownRoot baseDirectory =
+    Path.Combine(baseDirectory, "posts", "source")
 
 let markdownRoutes isStatic (baseDirectory: String) : list<HttpHandler> =
 
-    let postMarkdownRoot = getPostMarkdownRoot isStatic baseDirectory
+    let postMarkdownRoot = getPostMarkdownRoot baseDirectory
 
     let markdownPaths =
         [| postMarkdownRoot; Path.Combine(baseDirectory, "WebRoot", "markdown") |]
@@ -138,16 +135,16 @@ let pdfHandler baseDirectory pdfFileName : HttpHandler =
     let pdfPath = Path.Combine(baseDirectory, "pdf", pdfFileName)
     streamFile true pdfPath None None
 
-let rssHandler isStatic (baseDirectory: string) (baseUrl: string) : HttpHandler =
-    let postMarkdownRoot = getPostMarkdownRoot isStatic baseDirectory
+let rssHandler (baseDirectory: string) (baseUrl: string) : HttpHandler =
+    let postMarkdownRoot = getPostMarkdownRoot baseDirectory
     let rss = rssChannel baseUrl postMarkdownRoot
     fun _ ctx ->
         let xml = RenderView.AsString.xmlNode rss
         ctx.SetContentType "application/rss+xml; charset=utf-8"
         ctx.WriteStringAsync xml
 
-let nonHtmlRoutes isStatic baseDirectory =
-    [ route "/rss" >=> rssHandler isStatic baseDirectory "https://iainschmitt.com"
+let nonHtmlRoutes baseDirectory =
+    [ route "/rss" >=> rssHandler baseDirectory "https://iainschmitt.com"
       route "/wedding/julias-game"
       >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
       route "/wedding/iains-game"
@@ -156,4 +153,4 @@ let nonHtmlRoutes isStatic baseDirectory =
       >=> pdfHandler baseDirectory "2025-TechJam-BearTerritory.pdf" ]
 
 let appRoutes baseDirectory isStatic =
-    (markdownRoutes isStatic baseDirectory) @ (nonHtmlRoutes isStatic baseDirectory)
+    (markdownRoutes isStatic baseDirectory) @ (nonHtmlRoutes baseDirectory)
