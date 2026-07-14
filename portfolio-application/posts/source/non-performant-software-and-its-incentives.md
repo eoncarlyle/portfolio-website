@@ -1,0 +1,31 @@
+---
+title: Non-performant software and its incentives
+date: 2026.07.13
+---
+
+# Non-performant software and its incentives
+
+I end up re-listening to [Episode #78](https://shows.acast.com/software-unscripted/episodes/664fde448c77cc0013b33390) of _Software Unscripted_ at least once a year. As I've <a href="/post/november-2024-grab-bag">previously written</a>, this podcast is hosted by Richard Feldman, a high-profile Elm programmer and the creator of the Roc functional programming language. Episode #78 is Feldman's conversation with game developer Casey Muratori. Feldman correctly decries how unseriously web programmers take performance as compared to engineers pushing the limits of what hardware is capable of, and he brought Muratori to teach the audience what lessons can be learned from a game programming world that takes performance more seriously.
+
+Muratori says a lot of insightful things in the episode, but there's a section where his reasoning is off:
+
+> People intuitively understand great performance when you give it to them. There's a tremendous market opportunity for anyone who wants to make a move into a space and deliver a truly great experience, of which performance is usually critical. I think that's something that could also help change the culture, because once you have strong competitors who are really strong on performance, they're very hard to unseat, because you have to come out with a very well performing product to do so.
+
+Muratori continues, emphasis mine:
+
+> There's nothing magic about games. What happens with games is ***players won't play something that runs at 10 frames a second***. It's a market force. They've already played games at 60 FPS. They won't go back... if you are the kind of person who wanted to get some people together and write some performant software, I feel like the world is kind of your oyster because literally anywhere you look, the software is garbage. About the only place you couldn't assail that way is games. Games and maybe like backend search at Google might be really super tightly optimized... Just don't go after those. Everybody else, ***they have no ability to compete with you. You could just absolutely dominate.***
+
+To be clear, he's completely correct that modern software performance is woeful. Discord uses at least 400 MB of RAM on my 2024 MacBook Pro when _idle_. This is more RAM than what most consumer desktops had installed in 2000, and that's without actually making voice or video calls with the application. There are many reasons why Discord wastes a pathological amount of memory, but one factor is that much of modern software is built atop a tower of dependencies that often aren't written in a performance-aware way. Each dependency is a layer of scar tissue slowing the program down, and engineers have repeatedly sacrificed performance for what they perceived to be an easier developer experience.
+
+But Muratori is wrong about these competitive forces in enterprise software, and he is wrong for a depressing reason. While individual games may be differentiated by gameplay, narrative, or artistic style, the relevant axis of competition is not 'multi-player real-time strategy games set in space' but rather 'interactive entertainment in general', so a game with unplayably bad performance can be replaced by something else in the player's library because both titles can scratch a similar itch.
+
+But for much of enterprise software, competitors aren't a click away. Most enterprise software deals are to solve all problems of a certain type for a customer, so you are usually stuck with the vendor that you have for the lifetime of the deal: if you're an employee at Wells Fargo and Workday's HR software isn't working well you can't just start using Lattice on a random Monday afternoon. The required integrations to make the software usable wouldn't be in place, and it would defeat the purpose of having a single source of truth.
+
+Even when software contracts are up for renewal and companies have the opportunity to pick a new vendor, the distance between managers making software buying decisions and the everyday users of said software muddles performance incentives. A small handful of managers choose a company's expense management software even if a large fraction of the company may end up using it. These managers will likely use the software far less than the employees that report up through them: it isn't that the CFO will never need to expense anything, but the accountants that report up to them will work in it as part of their everyday responsibilities. Because of this, an enterprise software vendor who takes great pains to make their product incredibly performant for end users will almost certainly lose out to a less performant competitor who demos better and has stronger sales and marketing.
+
+It is certainly possible for an enterprise software product to have bad enough performance that it can't meaningfully do the job that customers are paying for it to do, but the "nobody got fired for IBM" effect presents another hurdle for would-be enterprise software competitors. This is best demonstrated by enterprise resource planning software, which is a company's source of truth for the state of their sales, finances, and supply chain. Microsoft Dynamics 365, Oracle NetSuite, and SAP S/4HANA have an outsized market share, and once a company is built around one ERP, transitioning to another can be a painful 'build the plane while flying it' experience even if things go well.[^1] At sufficiently large companies, taking a flyer on an unproven ERP vendor has a lot of downside risk: if things go wrong you'll almost certainly lose your job. You'll get credit if things work out, but 'having a well functioning, performant ERP system' isn't most investors' idea of a critical company differentiator.
+
+This is not a reason to disregard performance as either someone else's problem or impossible to improve. Ambivalence about performance is a cultural failing of the industry, but turning the tide is much harder than 'build something performant and they will come'.
+
+
+[^1]: 'The Stickiest Software' is how Byrne Hobart titled a [2022 post about ERPs](https://www.thediff.co/archive/the-stickiest-software/), and not without reason.
