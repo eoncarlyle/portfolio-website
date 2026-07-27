@@ -18,7 +18,7 @@ let tryParsePostYamlHeader (lines: string array) =
     let tryTitle =
         lines
         |> Array.tryPick (tryExtractPostYamlHeaderValue "title:")
-        |> Option.map withoutTags
+        //|> Option.map withoutTags
 
     let tryDate = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "date:")
 
