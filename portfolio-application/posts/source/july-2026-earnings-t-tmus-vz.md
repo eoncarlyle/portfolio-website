@@ -35,13 +35,13 @@ Verizon was more involved, winning 82 licences of AWS-3 in [FCC auction 113](htt
 
 The reason that I bring this up is that you'd expect Verizon One to increase demand for FWA, but unlike T-Mobile, Verizon wasn't asked in the Q&A about relevant capacity limits. Perhaps the analysts on the call took Auction 113 as a signal that Verizon was serious about acquiring the spectrum they need for higher FWA demand, but this is something that would play out over future 5G spectrum auctions.
 
-## AI Traffic
+## AI & Networks
 
 T-Mobile and AT&T have substantially different outlooks on how AI workloads will impact network traffic. From AT&T's prepared remarks:
 
 > Today, industry research shows AI agents generate up to 450% more total traffic per task than a human performing the same work. Agentic adoption is projected to drive approximately 9x growth in enterprise traffic and approximately 7x growth in consumer traffic by 2035...We believe AT&T is the only provider building and investing in this infrastructure at the scale necessary today to support the demands a decade from now.
 
-This might come from a Cisco report titled ["AI Impact on Wide Area Networks"](https://www.cisco.com/c/dam/en/us/solutions/collateral/artificial-intelligence/mass-scale-infrastructure/ai-network-traffic-report.pdf). This would be more believable if there was a breakdown of where this increase was coming from. Is this WAN traffic between the model user and the model vendor's network, traffic between cloud regions of a vendor's network, or traffic within said regions?[^cisco-citation] If much of the increased network traffic is within a model vendor's network then it doesn't change the capacity outlook for carriers very much. A lot of customer network requests to a server that ultimately writes something to a database will be replaced with network requests that ultimately call an LLM, I'm very sceptical that AI will increase MNO traffic growth six-fold. 
+This might come from a Cisco report titled ["AI Impact on Wide Area Networks"](https://www.cisco.com/c/dam/en/us/solutions/collateral/artificial-intelligence/mass-scale-infrastructure/ai-network-traffic-report.pdf). This would be more believable if there was a breakdown of where this increase was coming from. Is this WAN traffic between the model user and the model vendor's network, traffic between cloud regions of a vendor's network, or traffic within said regions?[^cisco-citation] If much of the increased network traffic is within a model vendor's network then it doesn't change the capacity outlook for carriers very much. A lot of customer network requests to a server that ultimately writes something to a database will be replaced with network requests that ultimately call an LLM. I could see traffic increasing, but I'm very sceptical that AI will increase MNO traffic growth six-fold. 
 
 Luckily when T-Mobile was asked if they expected a similar increase in traffic due to AI workloads, CTO John Saw was similarly skeptical:
 
@@ -50,7 +50,18 @@ material strain on mobile networks**. So we have not seen any surge in mobile tr
 
 Both AT&T and T-Mobile are talking their books:[^talking-book] AT&T is arguing that higher-capacity fiber will pay off, and T-Mobile is arguing that serving AI traffic won't require unusual spectrum investments to accomodate.
 
+The most interesting AI announcements came from Verizon. The first was that they signed a $1 billion agreement for Google to use their dark fiber, and they hinted that similar dark fiber deals worth "multiple billions of dollars in revenue" were in the works. The second is more interesting: at a time when permits and access to electricity is throwing sand into the gears of the AI buildout, Verizon has many facilities ripe for retrofitting:
+
+> We have thousands of central offices, many of which we're taking copper out of, and we are retrofitting them to be remote data centers that are power-ready, permitted, fully redundant infrastructure. We did a small trial on that and sold out capacity in 24 hours... The demand for these fiber routes that we currently have and are building is ultimately limited, and that capacity and pricing is something we're going to have to think carefully about. We're clearly an attractive player with differentiated assets that are in high demand. We've been building carrier-grade fiber routes for decades. **We know how to get it done, we understand permitting, we do our own construction, and we have a solid balance sheet and service reputation that the AI ecosystem needs and counts on. The revenues we're talking about are meaningful — margins equal to or greater than our existing margin structures — and they will begin to impact our revenues and margins beginning next year and grow substantially over the next five to ten years**
+
+This physical plant is almost certainly completely depreciated at this point, making this much less risky than new data centre projects with a shorter timeline to serving workloads.
+
 ## Where the Carriers Agree
+
+There is plenty that the carriers see eye-to-eye on. All three spoke to how important it is to grow the share of moible customers who bundle their home internet, fiber or otherwise. And device prices have driven down churn - while carriers subsidize device prices, higher RAM prices are still passed onto consumers. These higher prices have persuaded many to stick with the phones they already have, taking away a reason to switch carriers.
+
+All three carriers were emphatic that their terrestrial infrastructure could compete with satellite networks. AT&T only sees value in satellite communications for the ~2% of traffic remote enough that it can't be well served by other means, with both T-Mobile and Verizon arguing that the large beam sizes of modern satellites make it impossible for satellite network providers to compete with FWA in suburban or urban markets. While satellite networking is a much harder, MNO leadership seems to take it as a given that the sattelite state-of-the-art can't be improved upon much more, and I'm sure people made similar arguments that early cellular technology wasn't going to get much better than 'slightly worse than a landline'
+
 
 ### TMUS
 
