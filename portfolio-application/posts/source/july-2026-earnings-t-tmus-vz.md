@@ -1,15 +1,11 @@
 ---
 title: July 2026 Earnings for AT&T, T-Mobile, and Verizon
-date: 2026.07.27
+date: 2026.07.28
 ---
 
 # July 2026 Earnings for AT&T, T-Mobile, and Verizon
 
-In the week of July 20th, the big three American mobile network operators (MNOs) announced their 2Q earnings. The
-
-## Overview
-
-It was a pretty decent quarter for each of the carriers, and each beat Wall Street's estimates as shown below. Leadership was upbeat and triumphant on all three of the calls, but T-Mobile was the only carrier to open lower after the news. That price change seems high to me given that they beat estimates by a healthy margin; the S&P 500 was only down about one point on the week, so it isn't that T-Mobile got caught up in a larger drawdown.
+In the week of July 20th, the big three American mobile network operators (MNOs) announced earnings for the second quarter of 2026. It was a pretty decent quarter for each of the carriers, and each beat Wall Street's estimates as shown below. T-Mobile was the only carrier to open lower after the news. In part this was because of 13% fewer new accounts created last quarter as compared to 2Q 2025, but that drop seems high to me given that they beat estimates by a healthy margin. And the S&P 500 was only down about one point on the week, so it isn't that T-Mobile got caught up in a larger drawdown.
 
 | Company  | EPS Relative to Estimate | YoY Service Revenue Growth | Share Price Change After Earnings |
 |----------|--------------------------|----------------------------|-----------------------------------|
@@ -17,13 +13,13 @@ It was a pretty decent quarter for each of the carriers, and each beat Wall Stre
 | T-Mobile | +15.0%                   | 8.9%                       | -6.9%                             |
 | Verizon  | +2.3%                    | 3.5%                       | +2.7%                             |
 
-!TransitionPhrase
+While all three are pretty direct competitors, this quarter's earnings calls showed interesting differences in company strategy and outlook on the future of the industry.
 
 ## Wireline vs. FWA Broadband
 
 During his prepared remarks, the T-Mobile CEO commented that the company wanted to maintain a "capital envelope that is considerate of upcoming spectrum opportunities in both 2027 and 2028, including C-Band 2.0 and 2.7 gigahertz". As I've <a href="/post/t-mobile-fiber-ambitions">written before</a> T-Mobile is certainly active in wireline broadband, but when asked about capacity constraints in fixed-wireless access (FWA) broadband, T-Mobile's CEO commented that:
 
-> ...given the rapid evolution in wireless technology, *especially in comparison with other forms of tech that are being used for broadband*, we believe this is a time to double down on wireless tech and really build out our network superiority, not just in 5G, but also 6G.
+> ...given the rapid evolution in wireless technology, **especially in comparison with other forms of tech that are being used for broadband**, we believe this is a time to double down on wireless tech and really build out our network superiority, not just in 5G, but also 6G.
 
 This is very different from AT&T's thesis on wireline and spectrum. AT&T CEO John Stankey commented "As I've said in the past, where we have fiber, we win with fiber and wireless" during his prepared remarks, continuing later in the Q&A with "I don't consider it [FWA] to be the optimal technology to serve fixed traffic over the long haul, and I have been pretty clear that, that's why we invest in fiber because that is the optimal technology to use."
 
@@ -35,7 +31,26 @@ Last quarter was relatively quiet on the spectrum front for AT&T. Last year the 
 
 > I don't think that the notion of having to get these really dense national swatches of spectrum and painting it with a paint brush across the US is the game anymore. I think the game is using your infrastructure to penetrate where you need more density and then being very selective at where you go and get that broad paint brush of additional spectrum to add in.
 
-Verizon was more involved, winning 82 licences of AWS-3 in [FCC auction 113](https://docs.fcc.gov/public/attachments/DA-26-633A2.pdf)[^tmus-auction-113], and based off of _italices_
+Verizon was more involved, winning 82 licences of AWS-3 in [FCC auction 113](https://docs.fcc.gov/public/attachments/DA-26-633A2.pdf) at a cost of $3.2 billion.[^tmus-auction-113] They also announced a nationwide 'Verizon One' offering for bundled mobile and home broadband for $70. In the Q&A they explained that FWA will be used where Verizon doesn't already offer fiber, and this isn't always easy for the carrier to plan for: FWA takes advantage of underutilised spectrum in a location to serve broadband to a stationary location, but you need to have the cell-site capacity to serve the customer. Everything I've seen implies that not every 4G or 5G cell site has the capacity to serve FWA broadband. 
+
+The reason that I bring this up is that you'd expect Verizon One to increase demand for FWA, but unlike T-Mobile, Verizon wasn't asked in the Q&A about relevant capacity limits. Perhaps the analysts on the call took Auction 113 as a signal that Verizon was serious about acquiring the spectrum they need for higher FWA demand, but this is something that would play out over future 5G spectrum auctions.
+
+## AI Traffic
+
+T-Mobile and AT&T have substantially different outlooks on how AI workloads will impact network traffic. From AT&T's prepared remarks:
+
+> Today, industry research shows AI agents generate up to 450% more total traffic per task than a human performing the same work. Agentic adoption is projected to drive approximately 9x growth in enterprise traffic and approximately 7x growth in consumer traffic by 2035...We believe AT&T is the only provider building and investing in this infrastructure at the scale necessary today to support the demands a decade from now.
+
+This might come from a Cisco report titled ["AI Impact on Wide Area Networks"](https://www.cisco.com/c/dam/en/us/solutions/collateral/artificial-intelligence/mass-scale-infrastructure/ai-network-traffic-report.pdf). This would be more believable if there was a breakdown of where this increase was coming from. Is this WAN traffic between the model user and the model vendor's network, traffic between cloud regions of a vendor's network, or traffic within said regions?[^cisco-citation] If much of the increased network traffic is within a model vendor's network then it doesn't change the capacity outlook for carriers very much. A lot of customer network requests to a server that ultimately writes something to a database will be replaced with network requests that ultimately call an LLM, I'm very sceptical that AI will increase MNO traffic growth six-fold. 
+
+Luckily when T-Mobile was asked if they expected a similar increase in traffic due to AI workloads, CTO John Saw was similarly skeptical:
+
+> With regards to AI traffic, I think it's important to understand where these AI workloads actually live. The current growth in AI is focused on model training, large-scale agentic automations and heavy back-end automations. A lot of them actually are confined to wireline transport networks and massive data centers. So this type of compute, **we have not seen putting a
+material strain on mobile networks**. So we have not seen any surge in mobile traffic due to AI, even though every year, we see mobile traffic going up, regardless of AI or not...
+
+Both AT&T and T-Mobile are talking their books:[^talking-book] AT&T is arguing that higher-capacity fiber will pay off, and T-Mobile is arguing that serving AI traffic won't require unusual spectrum investments to accomodate.
+
+## Where the Carriers Agree
 
 ### TMUS
 
@@ -189,6 +204,9 @@ material strain on mobile networks**. So we have not seen any surge in mobile
 - What the carriers share
     - Importance of converged customers
     - Sattelite
+    - Device costs being good for them mostly
 
 [^boost-mobile]: It wasn't until I read more about this spectrum transaction and the commentary around it that I realised that Boost Mobile was A) owned by EchoStar and B) [was not an MVNO and operated its own network](https://www.lightreading.com/open-ran/boost-mobile-isn-t-a-going-concern-but-it-s-not-going-anywhere) until, as you could image, EchoStar sold the spectrum it was operating on. Steal of a deal to get to buy out an entire network's worth of spectrum in one fell swoop.
 [^tmus-auction-113]: T-Mobile was also active in auction 113, but spend less than $300 million
+[^cisco-citation]: It also isn't confidence inspiring that the citation is 'Cisco model'. If I was a buy side analyst I would not take this at face value.
+[^talking-book]: As is thier wont, it is an earnings call after all.

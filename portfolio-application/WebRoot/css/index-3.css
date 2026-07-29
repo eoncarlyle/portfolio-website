@@ -100,10 +100,6 @@ td
     color: var(--color5);
 }
 
-em {
-    font-weight: bold;
-}
-
 hr {
     background: var(--color12);
     height: var(--rule-height);

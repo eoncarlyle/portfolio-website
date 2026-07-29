@@ -64,6 +64,8 @@ let markdownFileHandler
             |> File.ReadAllText
             |> fun markdownContents -> Markdown.ToHtml(markdownContents, markdownPipeline)
             |> _.Replace("&#8617", "&#8617&#65038")
+            |> _.Replace("<em>", "<i>")
+            |> _.Replace("</em>", "</i>")
 
         let landingPostList =
             String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders postMarkdownRoot); [| "</ul>" |] ])
