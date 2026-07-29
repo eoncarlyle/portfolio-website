@@ -1,0 +1,1 @@
+../source/july-2026-earnings-t-tmus-vz.md

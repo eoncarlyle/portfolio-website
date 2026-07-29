@@ -34,6 +34,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="posts\2026\img.png" />
     <None Include="web.config" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Views\*.cshtml;WebRoot\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

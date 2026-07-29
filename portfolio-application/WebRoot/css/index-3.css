@@ -93,7 +93,10 @@ h5,
 h6,
 p,
 li,
-figcaption {
+figcaption,
+th,
+td
+{
     color: var(--color5);
 }
 
@@ -166,8 +169,24 @@ blockquote p {
 }
 
 table {
-    min-width: 75%;
+    min-width: 50%;
     margin: auto;
+    border-collapse: collapse;
+}
+
+/*table thead {
+    background-color: var(--color2);
+}*/
+
+table th {
+    font-weight: bold;
+}
+
+table th,
+table td {
+    border: 2px solid var(--color2);
+    padding: 0.5em;
+    text-align: center;
 }
 
 figure figcaption {

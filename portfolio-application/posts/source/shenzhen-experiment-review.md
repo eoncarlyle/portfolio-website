@@ -1,5 +1,5 @@
 ---
-title: Review of <it>The Shenzhen Experiment</it>
+title: Review of <em>The Shenzhen Experiment</em>
 date: 2026.01.31
 ---
 
