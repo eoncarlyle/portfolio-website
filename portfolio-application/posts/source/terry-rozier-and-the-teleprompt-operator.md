@@ -13,9 +13,13 @@ Sports commentator Bill Simmons, whose podcast is sponsored by the FanDuel sport
 With his guest, Joe House, adding:
 > “But we've always had the gambling stuff. I wonder, do you think all of these things still happen if gambling hadn't been more legalized across the states in the last 10 years? I would argue the illegal poker games, we've been hearing about those for 30 years.”
 
-Most of the public debate about vice issues goes something like this: those who want more permissive rules argue that keeping vice in the shadows harms everyone involved more: when someone is wronged as part of an illicit activity, most will think twice before going to the criminal justice system. Better to have things over-the-table where the state can police abuse, enforce minimal standards of quality, and catch bad actors like Terry Rozier, right? But those who want to constrain vice point out that prohibition doesn't need to be perfect to be effective: when a vice is legalised, it lowers the barrier of entry to start a self-destructive drug or gambling problem. This can end in both sides talking passed each other, because those who want a more permissive regime argue in terms of harm per transaction while restrictionists talk about the number of transactions.
+Most of the public debate about vice issues goes something like this: those who want more permissive rules argue that keeping vice in the shadows harms everyone involved more: when someone is wronged as part of an illicit activity, most will think twice before going to the criminal justice system. Better to have things over-the-table where the state can police abuse and enforce minimal standards of quality. But those who want to constrain vice point out that prohibition doesn't need to be perfect to be effective: when a vice is legalised, it lowers the barrier of entry to start a self-destructive drug or gambling problem. This can end in both sides talking passed each other, because those who want a more permissive regime argue in terms of harm per transaction while restrictionists talk about the number of transactions.
 
-Simmons may well be correct that suspicious gambling activity is easier to detect now that sports gambling can be done over-the-table in much of the country. But before 2018 it would have been nigh on impossible to place $200,000 on bets for an individual player's statistics in a single game.
+What makes sports gambling different from other vices is the way that legalisation makes match fixing and insider betting much more profitable. [^murphy-v-ncaa]
+
+Simmons is probably correct that it is easier to detect suspicious gambling activity now that sportsbooks are legal in most of the country.
+
+that suspicious gambling activity is easier to detect now that sports gambling can be done over-the-table in much of the country. But before 2018 it would have been nigh on impossible to place $200,000 on bets for an individual player's statistics in a single game.
 
 ## References 
 https://www.justice.gov/usao-edny/pr/current-and-former-national-basketball-association-players-and-four-other-individuals
@@ -37,6 +41,6 @@ This is like, yeah, if gambling is going to be more and more prevalent, we're pr
 
 "...all established books can detect irregularities very rapidly. I mean, even the Rozier game, didn't they shut that down?"
 
-terry-rozier-and-the-teleprompt-operator
 
-Terry Rozier and the Teleprompt Operator
+[^murphy-v-ncaa]: _Murphy v. National Collegiate Athletic Association_ struck down federal laws banning sports gambling in most states as unconstitutional
+
