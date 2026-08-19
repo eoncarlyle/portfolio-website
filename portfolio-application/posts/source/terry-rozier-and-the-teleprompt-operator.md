@@ -1,6 +1,6 @@
 ---
 title: Terry Rozier and the Teleprompt Operator
-date: 2026.08.11
+date: 2026.08.18
 ---
 
 # Terry Rozier and the Teleprompt Operator
