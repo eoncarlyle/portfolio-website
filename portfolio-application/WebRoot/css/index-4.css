@@ -169,9 +169,12 @@ blockquote p {
 }
 
 table {
+    display: block;
     min-width: 50%;
+    max-width: 100%;
     margin: auto;
     border-collapse: collapse;
+    overflow-x: auto;
 }
 
 /*table thead {
