@@ -39,7 +39,7 @@ Engineer on Security Needs Management team, primarily working in Scala and Kotli
 
 - Playable at [gdple.iainschmitt.com](https://gdple.iainschmitt.com)
 - U.S. state economy guessing game updated daily
-- Frontend written in TypeScript/Preact, backend in F#/ASP.NET, with an SQLite database
+- Frontend written in TypeScript/React, backend in F#/ASP.NET, with an SQLite database
 
 **HumbleMarket**
 
