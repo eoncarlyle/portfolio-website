@@ -24,33 +24,17 @@
 @font-face {
     font-family: "Familjen Grotesk";
     font-style: normal;
-    font-weight: 400;
+    font-weight: 400 700;
     font-display: swap;
-    src: url(../font/FamiljenGrotesk-Regular.otf) format("opentype");
+    src: url(../font/FamiljenGrotesk-VariableFont_wght.ttf) format("truetype");
 }
 
 @font-face {
     font-family: "Familjen Grotesk";
     font-style: italic;
-    font-weight: 400;
+    font-weight: 400 700;
     font-display: swap;
-    src: url(../font/FamiljenGrotesk-Italic.otf) format("opentype");
-}
-
-@font-face {
-    font-family: "Familjen Grotesk";
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url(../font/FamiljenGrotesk-Bold.otf) format("opentype");
-}
-
-@font-face {
-    font-family: "Familjen Grotesk";
-    font-style: italic;
-    font-weight: 700;
-    font-display: swap;
-    src: url(../font/FamiljenGrotesk-BoldItalic.otf) format("opentype");
+    src: url(../font/FamiljenGrotesk-Italic-VariableFont_wght.ttf) format("truetype");
 }
 
 @font-face {
