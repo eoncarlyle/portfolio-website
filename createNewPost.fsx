@@ -23,7 +23,7 @@ let sourcePath = $"{postsPath}/source"
 
 let title = inputPrompt "Title"
 
-let currentDate = DateTime.Now.ToString("yyyy.MM.dd")
+let currentDate = DateTime.Now.ToString "yyyy.MM.dd"
 let date =
     match inputPromptWithDefault "Date" currentDate with
     | s when String.IsNullOrWhiteSpace(s) -> currentDate
@@ -38,7 +38,7 @@ let existingSlugs =
 
 let slug =
     match inputPromptWithDefault "Slug" defaultSlug with
-    | s when String.IsNullOrWhiteSpace(s) -> defaultSlug
+    | s when String.IsNullOrWhiteSpace s -> defaultSlug
     | s -> s
 
 if existingSlugs |> Array.contains slug then
@@ -57,7 +57,7 @@ date: {date}
 # {title}
 """
 
-Directory.CreateDirectory(yearDir) |> ignore
+Directory.CreateDirectory yearDir |> ignore
 File.WriteAllText(sourceFile, frontmatter)
 File.CreateSymbolicLink(symlinkPath, $"../source/{slug}.md") |> ignore
 
