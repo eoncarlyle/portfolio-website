@@ -189,10 +189,9 @@ li {
     text-decoration: none;
 }
 
-.page-title {
+h1 {
     font-weight: 500;
     font-size: 1.75em;
-    text-align: left;
     margin-top: 1rem;
 }
 

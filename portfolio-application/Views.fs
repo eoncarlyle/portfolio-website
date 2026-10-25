@@ -22,7 +22,7 @@ let private layout (path: string) (pageTitle: string) (content: XmlNode list) =
               []
               [ meta [ _charset "UTF-8" ]
                 link [ _rel "stylesheet"; _href "/css/normalise.css" ]
-                link [ _rel "stylesheet"; _href "/css/index-ddcd1b32.css" ]
+                link [ _rel "stylesheet"; _href "/css/index-cfb170c7.css" ]
                 link [ _rel "preconnect"; _href "https://fonts.googleapis.com" ]
                 link
                     [ _rel "preconnect"
@@ -65,20 +65,11 @@ let errorView (title: string) (body: string) (errorCode: int) =
                 p [] [ encodedText body ]
                 a [ _href "/" ] [ encodedText "Back to home" ] ] ]
 
-let leftHeaderMarkdownView (path: string) title header body = 
-    layout
-        path
-        title
-        [
-          if header <> "Iain Schmitt" then
-              h1 [ _class "page-title" ] [ rawText header ]
-          rawText body ]
-
 let postMarkdownView (path: string) title header body =
     layout
         path
         title
-        [ h1 [ _class "page-title" ] [ rawText header ]
+        [ h1 [] [ rawText header ]
           rawText body
           div [ _class "center" ] [ a [ _href "/" ] [ encodedText "Back to home" ] ] ]
 

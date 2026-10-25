@@ -33,7 +33,6 @@ let viewHandler markdownViewName viewData : HttpHandler =
         let xml =
             match markdownViewName with
             | DirectMarkdown -> directMarkdownView path pageTitle body
-            | LeftHeaderMarkdown -> leftHeaderMarkdownView path pageTitle header body
             | PostMarkdown -> postMarkdownView path pageTitle header body
             | ErrorMarkdown -> Option.defaultValue 500 errorCode |> errorView pageTitle body
 
@@ -41,6 +40,14 @@ let viewHandler markdownViewName viewData : HttpHandler =
         >=> setHttpHeader "Content-Type" "text/html; charset=utf-8"
         >=> htmlView xml
         <|| (next, ctx)
+
+let private postListHtml postMarkdownRoot maybeLimit =
+    let postLinkList =
+        match maybeLimit with
+        | Some(limit) -> postLinksFromYamlHeaders postMarkdownRoot |> Array.take limit
+        | _ -> postLinksFromYamlHeaders postMarkdownRoot
+
+    String.Join("\n", Array.concat [ [| "<ul>" |]; postLinkList; [| "</ul>" |] ])
 
 let private markdownFileHandler
     isStatic
@@ -61,18 +68,8 @@ let private markdownFileHandler
             |> _.Replace("<em>", "<i>")
             |> _.Replace("</em>", "</i>")
 
-        let postList maybeLimit =
-            let postLinkList =
-                match maybeLimit with
-                | Some(limit) -> postLinksFromYamlHeaders postMarkdownRoot |> Array.take limit
-                | _ -> postLinksFromYamlHeaders postMarkdownRoot
-
-            String.Join("\n", Array.concat [ [| "<ul>" |]; postLinkList; [| "</ul>" |] ])
-
-
         match markdownFileName markdownPath with
-        | "landing" -> [ htmlContentsFromFile; postList <| Some 5 ] |> String.concat "\n"
-        | "posts" -> [ htmlContentsFromFile; postList None ] |> String.concat "\n"
+        | "landing" -> [ htmlContentsFromFile; postListHtml postMarkdownRoot (Some 5) ] |> String.concat "\n"
         | _ -> htmlContentsFromFile
 
     let viewData body =
@@ -106,16 +103,31 @@ let private markdownRoutes isStatic (baseDirectory: String) : HttpHandler list =
         match MarkdownPath.toString markdownPath |> Path.GetFileName with
         | "landing.md" ->
             route "/"
-            >=> render LeftHeaderMarkdown "Iain Schmitt" (Some "Iain Schmitt's Personal Website")
+            >=> render DirectMarkdown "Iain Schmitt" (Some "Iain Schmitt's Personal Website")
         | "uses.md" -> route "/uses" >=> render PostMarkdown "Iain Schmitt's Uses Page" None
-        | "resume.md" -> route "/resume" >=> render LeftHeaderMarkdown "Iain Schmitt's Resume" None
+        | "resume.md" -> route "/resume" >=> render DirectMarkdown "Iain Schmitt's Resume" None
         | _ ->
             route $"/post/{markdownFileName markdownPath}"
             >=> render PostMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
 
-    markdownPaths
-    |> Array.map (markdownRouteHandler isStatic postMarkdownRoot)
-    |> Array.toList
+    // /posts is generated, there isn't a good 
+    let postsRoute: HttpHandler =
+        let render () =
+            viewHandler
+                DirectMarkdown
+                { PageTitle = "Iain Schmitt's Posts"
+                  Header = "Posts"
+                  Body = $"<h1>Posts</h1>\n{postListHtml postMarkdownRoot None}"
+                  IsCached = isStatic
+                  ErrorCode = None }
+
+        route "/posts"
+        >=> if isStatic then render () else warbler (fun _ -> render ())
+
+    postsRoute
+    :: (markdownPaths
+        |> Array.map (markdownRouteHandler isStatic postMarkdownRoot)
+        |> Array.toList)
 
 
 let private nonHtmlRoutes baseDirectory =

@@ -10,7 +10,6 @@ open System.Text.RegularExpressions
 
 type MarkdownViewName =
     | DirectMarkdown
-    | LeftHeaderMarkdown
     | PostMarkdown
     | ErrorMarkdown
 
