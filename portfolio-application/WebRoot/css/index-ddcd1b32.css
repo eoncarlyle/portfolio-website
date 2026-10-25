@@ -69,6 +69,8 @@ html {
     max-width: var(--max-width);
     margin: auto;
     padding: var(--default-padding);
+    /* Room to scroll the last line clear of the iPhone toolbar and home indicator */
+    padding-bottom: 3rem;
 }
 
 .sidebar {

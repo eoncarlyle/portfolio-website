@@ -22,7 +22,7 @@ let private layout (path: string) (pageTitle: string) (content: XmlNode list) =
               []
               [ meta [ _charset "UTF-8" ]
                 link [ _rel "stylesheet"; _href "/css/normalise.css" ]
-                link [ _rel "stylesheet"; _href "/css/index-2a6d498a.css" ]
+                link [ _rel "stylesheet"; _href "/css/index-ddcd1b32.css" ]
                 link [ _rel "preconnect"; _href "https://fonts.googleapis.com" ]
                 link
                     [ _rel "preconnect"
