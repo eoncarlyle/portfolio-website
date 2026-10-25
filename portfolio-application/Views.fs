@@ -4,14 +4,25 @@ open Giraffe.ViewEngine
 open System
 open Types
 
-let layout (pageTitle: string) (content: XmlNode list) =
+let private isPostsPath (path: string) = path = "/" || path.StartsWith "/post/"
+
+let private navLink (isCurrent: bool) (href: string) (label: string) =
+    let attrs =
+        if isCurrent then
+            [ _href href; attr "aria-current" "page" ]
+        else
+            [ _href href ]
+
+    a attrs [ encodedText label ]
+
+let private layout (currentPath: string) (pageTitle: string) (content: XmlNode list) =
     html
         [ _lang "en" ]
         [ head
               []
               [ meta [ _charset "UTF-8" ]
                 link [ _rel "stylesheet"; _href "/css/normalise.css" ]
-                link [ _rel "stylesheet"; _href "/css/index-6.css" ]
+                link [ _rel "stylesheet"; _href "/css/index-2a6d498a.css" ]
                 link [ _rel "preconnect"; _href "https://fonts.googleapis.com" ]
                 link
                     [ _rel "preconnect"
@@ -34,16 +45,19 @@ let layout (pageTitle: string) (content: XmlNode list) =
                           [ a [ _href "/"; _class "brand" ] [ encodedText "Iain Schmitt" ]
                             nav
                                 []
-                                [ a [ _href "/#posts" ] [ encodedText "Posts" ]
-                                  a [ _href "/resume" ] [ encodedText "Resume" ]
-                                  a [ _href "/rss" ] [ encodedText "RSS" ]
-                                  a [ _href "https://github.com/eoncarlyle" ] [ encodedText "GitHub" ] ] ]
+                                [ navLink (isPostsPath currentPath) "/#posts" "Posts"
+                                  navLink (currentPath = "/resume") "/resume" "Resume"
+                                  navLink (currentPath = "Uses") "/uses" "Uses"
+                                  navLink false "/rss" "RSS"
+                                  ] ]
                       main [ _class "md-content" ] content ] ] ]
 
-let directMarkdownView (title: string) (body: string) = layout title [ rawText body ]
+let directMarkdownView (currentPath: string) (title: string) (body: string) =
+    layout currentPath title [ rawText body ]
 
 let errorView (title: string) (body: string) (errorCode: int) =
     layout
+        ""
         title
         [ div
               [ _class "center" ]
@@ -51,16 +65,18 @@ let errorView (title: string) (body: string) (errorCode: int) =
                 p [] [ encodedText body ]
                 a [ _href "/" ] [ encodedText "Back to home" ] ] ]
 
-let leftHeaderMarkdownView (title: string) (header: string) (body: string) =
+let leftHeaderMarkdownView (currentPath: string) (title: string) (header: string) (body: string) =
     layout
+        currentPath
         title
         [
           if header <> "Iain Schmitt" then
               h1 [ _class "page-title" ] [ rawText header ]
           rawText body ]
 
-let postMarkdownView (title: string) (header: string) (body: string) =
+let postMarkdownView (currentPath: string) (title: string) (header: string) (body: string) =
     layout
+        currentPath
         title
         [ h1 [ _class "page-title" ] [ rawText header ]
           rawText body

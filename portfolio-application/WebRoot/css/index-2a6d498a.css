@@ -93,6 +93,12 @@ html {
     gap: 0 1.25rem;
 }
 
+.sidebar nav a[aria-current="page"] {
+    color: var(--color6);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25em;
+}
+
 .md-content {
     min-width: 0;
 }

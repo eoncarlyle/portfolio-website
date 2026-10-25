@@ -20,6 +20,13 @@ type Handler = HttpFunc -> HttpContext -> HttpFuncResult
 
 type PostYamlHeader = { Title: string; Date: String }
 
+type ViewData =
+    { PageTitle: String
+      Header: String
+      Body: String
+      IsCached: bool
+      ErrorCode: int option }
+
 type PostYamlHeaderPair =
     { Path: MarkdownPath
       Header: PostYamlHeader }
@@ -42,9 +49,16 @@ let markdownPipeline =
     builder.Build()
 
 let getMarkdownPaths path =
-    Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly) |> Array.choose MarkdownPath.create
+    Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly)
+    |> Array.choose MarkdownPath.create
 
 let markdownFileName markdownPath =
     Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)
 
 let withoutTags value = Regex.Replace(value, "<[^>]*>", "")
+
+
+type AppArgs =
+    { HostAddress: string
+      HostPort: string
+      IsStatic: bool }
