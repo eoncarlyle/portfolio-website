@@ -3,10 +3,10 @@ I'm a Senior Software Engineer at SmartThings based out of Minneapolis, Minnesot
 
 
 ## Highlighted Posts
-- 2026.08.18: <a href="/post/terry-rozier-and-the-teleprompt-operator">Terry Rozier and the Teleprompt Operator</a></li>
-- 2026.05.16: <a href="/post/tokens-and-taiwan">The Great Token Wager</a></li>
-- 2025.06.19: <a href="/post/english-civil-wars">The English Civil Wars and the Republic That Failed</a></li>
-- 2025.04.12: <a href="/post/prism-proxy-bug">Prism Proxy Bug</a></li>
-- 2024.11.10: <a href="/post/mnos-and-capex-tradeoffs">Mobile Network Operators and Capex Tradeoffs</a></li>
+- 2026.08.18: <a href="/post/terry-rozier-and-the-teleprompt-operator">Terry Rozier and the Teleprompt Operator</a>
+- 2026.05.16: <a href="/post/tokens-and-taiwan">The Great Token Wager</a>
+- 2025.06.19: <a href="/post/english-civil-wars">The English Civil Wars and the Republic That Failed</a>
+- 2025.04.12: <a href="/post/prism-proxy-bug">Prism Proxy Bug</a>
+- 2024.11.10: <a href="/post/mnos-and-capex-tradeoffs">Mobile Network Operators and Capex Tradeoffs</a>
 
 ## Recent Posts

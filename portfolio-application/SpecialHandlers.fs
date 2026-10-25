@@ -4,7 +4,7 @@ open Giraffe
 open System.IO
 open Giraffe.ViewEngine
 
-open StandardHandlers
+open MarkdownHandlers
 open Types
 open Yaml
 
@@ -42,7 +42,7 @@ let nonHtmlRoutes baseDirectory =
             ctx.SetContentType "application/rss+xml; charset=utf-8"
             ctx.WriteStringAsync xml
 
-    [ route "/rss" >=> rssHandler baseDirectory "https://iainschmitt.com"
+    [ route "/rss" >=> rssHandler baseDirectory siteUrl
       route "/wedding/julias-game"
       >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
       route "/wedding/iains-game"

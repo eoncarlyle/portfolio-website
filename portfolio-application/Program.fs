@@ -11,7 +11,7 @@ open Giraffe
 open Microsoft.AspNetCore.StaticFiles
 
 open SpecialHandlers
-open StandardHandlers
+open MarkdownHandlers
 open Types
 
 let appHandler baseDirectory isStatic =

@@ -16,11 +16,9 @@ let private navLink (isCurrent: bool) (href: string) (label: string) =
 
     a attrs [ encodedText label ]
 
-let private siteUrl = "https://iainschmitt.com"
-
 let private siteDescription pageTitle =
     if pageTitle <> personalWebsiteLabel then
-        $"${personalWebsiteLabel}: {pageTitle}"
+        $"{personalWebsiteLabel}: {pageTitle}"
     else
         pageTitle
 
@@ -74,14 +72,6 @@ let errorView (title: string) (body: string) (errorCode: int) =
               [ h1 [] [ encodedText "Error "; encodedText (string errorCode) ]
                 p [] [ encodedText body ]
                 a [ _href "/" ] [ encodedText "Back to home" ] ] ]
-
-let postMarkdownView (path: string) title header body =
-    layout
-        path
-        title
-        [ h1 [] [ rawText header ]
-          rawText body
-          div [ _class "center" ] [ a [ _href "/" ] [ encodedText "Back to home" ] ] ]
 
 let rssItem (pair: PostYamlHeaderPair) (content: string) (baseUrl: string) =
     tag

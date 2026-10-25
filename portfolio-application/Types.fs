@@ -61,3 +61,4 @@ type AppArgs =
       IsStatic: bool }
 
 let personalWebsiteLabel = "Iain Schmitt's Personal Website"
+let siteUrl = "https://iainschmitt.com"

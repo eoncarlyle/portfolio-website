@@ -1,10 +1,9 @@
-module StandardHandlers
+module MarkdownHandlers
 
 open System
 open System.IO
 open Giraffe
 open Markdig
-open Giraffe.ViewEngine
 
 open Types
 open Yaml
@@ -56,7 +55,7 @@ let private markdownFileHandler
     let postListHtml postMarkdownRoot maybeLimit =
         let postLinkList =
             match maybeLimit with
-            | Some(limit) -> postLinksFromYamlHeaders postMarkdownRoot |> Array.take limit
+            | Some(limit) -> postLinksFromYamlHeaders postMarkdownRoot |> Array.truncate limit
             | _ -> postLinksFromYamlHeaders postMarkdownRoot
 
         String.Join("\n", Array.concat [ [| "<ul>" |]; postLinkList; [| "</ul>" |] ])
@@ -109,7 +108,7 @@ let markdownRoutes isStatic (baseDirectory: String) : HttpHandler list =
 
         match MarkdownPath.toString markdownPath |> Path.GetFileName with
         | "landing.md" -> route "/" >=> render personalWebsiteLabel (LimitedPostLinks 5)
-        | "posts.md" -> route "/posts" >=> render "Iain Schmitt's Resume" AllPostLinks
+        | "posts.md" -> route "/posts" >=> render "Iain Schmitt's Blog Posts" AllPostLinks
         | "uses.md" -> route "/uses" >=> render "Iain Schmitt's Uses Page" NoPostLinks
         | "resume.md" -> route "/resume" >=> render "Iain Schmitt's Resume" NoPostLinks
         | _ ->
