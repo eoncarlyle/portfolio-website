@@ -60,12 +60,67 @@ body {
     }
 }
 
-.md-content {
-    padding: var(--default-padding);
+/* Replaces the padding-left: calc(100vw - 100%) scrollbar hack */
+html {
+    scrollbar-gutter: stable;
+}
+
+.page {
     max-width: var(--max-width);
     margin: auto;
-    @media (min-width: 925px) {
-        padding-left: calc(100vw - 100%);
+    padding: var(--default-padding);
+}
+
+.sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: var(--rule-height) solid var(--color12);
+    font-size: 14pt;
+}
+
+.brand {
+    font-size: 1.4em;
+    font-weight: 500;
+    margin-right: auto;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+}
+
+.md-content {
+    min-width: 0;
+}
+
+@media (min-width: 1140px) {
+    .page {
+        max-width: calc(160px + 3rem + var(--max-width));
+        display: grid;
+        grid-template-columns: 160px minmax(0, var(--max-width));
+        column-gap: 3rem;
+        align-items: start;
+    }
+
+    .sidebar {
+        position: sticky;
+        top: var(--default-padding);
+        flex-direction: column;
+        align-items: flex-start;
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .brand {
+        margin-right: 0;
+    }
+
+    .sidebar nav {
+        flex-direction: column;
     }
 }
 
@@ -126,13 +181,11 @@ li {
     text-decoration: none;
 }
 
-.post-header-link {
-    h1 {
-        font-weight: 500;
-        font-size: 1.75em;
-    }
-    text-decoration: none;
+.page-title {
+    font-weight: 500;
+    font-size: 1.75em;
     text-align: left;
+    margin-top: 1rem;
 }
 
 :not(pre) > code {

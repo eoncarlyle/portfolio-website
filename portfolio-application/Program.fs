@@ -14,7 +14,7 @@ open Microsoft.AspNetCore.StaticFiles
 let routes baseDirectory isDynamic =
     choose
         [ GET >=> choose (appRoutes baseDirectory isDynamic)
-          HEAD >=> headHandler
+          HEAD >=> route "/" >=> headHandler
           error404Handler ]
 
 let internalErrorHandler =

@@ -10,8 +10,8 @@ let layout (pageTitle: string) (content: XmlNode list) =
         [ head
               []
               [ meta [ _charset "UTF-8" ]
-                link [ _rel "stylesheet"; _href "/css/index-5.css" ]
                 link [ _rel "stylesheet"; _href "/css/normalise.css" ]
+                link [ _rel "stylesheet"; _href "/css/index-6.css" ]
                 link [ _rel "preconnect"; _href "https://fonts.googleapis.com" ]
                 link
                     [ _rel "preconnect"
@@ -25,7 +25,20 @@ let layout (pageTitle: string) (content: XmlNode list) =
                 meta [ _name "og:image"; _content "/images/metaV1.png" ]
                 meta [ _name "og:type"; _content "website" ]
                 meta [ _name "author"; _content "Iain Schmitt" ] ]
-          body [] [ div [ _class "md-content" ] content ] ]
+          body
+              []
+              [ div
+                    [ _class "page" ]
+                    [ header
+                          [ _class "sidebar" ]
+                          [ a [ _href "/"; _class "brand" ] [ encodedText "Iain Schmitt" ]
+                            nav
+                                []
+                                [ a [ _href "/#posts" ] [ encodedText "Posts" ]
+                                  a [ _href "/resume" ] [ encodedText "Resume" ]
+                                  a [ _href "/rss" ] [ encodedText "RSS" ]
+                                  a [ _href "https://github.com/eoncarlyle" ] [ encodedText "GitHub" ] ] ]
+                      main [ _class "md-content" ] content ] ] ]
 
 let directMarkdownView (title: string) (body: string) = layout title [ rawText body ]
 
@@ -41,15 +54,15 @@ let errorView (title: string) (body: string) (errorCode: int) =
 let leftHeaderMarkdownView (title: string) (header: string) (body: string) =
     layout
         title
-        [ a [ _href "/"; _class "post-header-link" ] [ h1 [] [ rawText header ] ]
-          hr []
+        [
+          if header <> "Iain Schmitt" then
+              h1 [ _class "page-title" ] [ rawText header ]
           rawText body ]
 
 let postMarkdownView (title: string) (header: string) (body: string) =
     layout
         title
-        [ a [ _href "/"; _class "post-header-link" ] [ h1 [] [ rawText header ] ]
-          hr []
+        [ h1 [ _class "page-title" ] [ rawText header ]
           rawText body
           div [ _class "center" ] [ a [ _href "/" ] [ encodedText "Back to home" ] ] ]
 
