@@ -4,7 +4,7 @@ open Giraffe.ViewEngine
 open System
 open Types
 
-let private isPostsPath (path: string) = path = "/" || path.StartsWith "/post/"
+let private isPostsPath (path: string) = path = "/posts" || path.StartsWith "/post/"
 
 let private navLink (isCurrent: bool) (href: string) (label: string) =
     let attrs =
@@ -15,7 +15,7 @@ let private navLink (isCurrent: bool) (href: string) (label: string) =
 
     a attrs [ encodedText label ]
 
-let private layout (currentPath: string) (pageTitle: string) (content: XmlNode list) =
+let private layout (path: string) (pageTitle: string) (content: XmlNode list) =
     html
         [ _lang "en" ]
         [ head
@@ -45,15 +45,15 @@ let private layout (currentPath: string) (pageTitle: string) (content: XmlNode l
                           [ a [ _href "/"; _class "brand" ] [ encodedText "Iain Schmitt" ]
                             nav
                                 []
-                                [ navLink (isPostsPath currentPath) "/#posts" "Posts"
-                                  navLink (currentPath = "/resume") "/resume" "Resume"
-                                  navLink (currentPath = "Uses") "/uses" "Uses"
+                                [ navLink (isPostsPath path) "/posts" "Posts"
+                                  navLink (path = "/resume") "/resume" "Resume"
+                                  navLink (path = "Uses") "/uses" "Uses"
                                   navLink false "/rss" "RSS"
                                   ] ]
                       main [ _class "md-content" ] content ] ] ]
 
-let directMarkdownView (currentPath: string) (title: string) (body: string) =
-    layout currentPath title [ rawText body ]
+let directMarkdownView (path: string) (title: string) (body: string) =
+    layout path title [ rawText body ]
 
 let errorView (title: string) (body: string) (errorCode: int) =
     layout
@@ -65,18 +65,18 @@ let errorView (title: string) (body: string) (errorCode: int) =
                 p [] [ encodedText body ]
                 a [ _href "/" ] [ encodedText "Back to home" ] ] ]
 
-let leftHeaderMarkdownView (currentPath: string) (title: string) (header: string) (body: string) =
+let leftHeaderMarkdownView (path: string) title header body = 
     layout
-        currentPath
+        path
         title
         [
           if header <> "Iain Schmitt" then
               h1 [ _class "page-title" ] [ rawText header ]
           rawText body ]
 
-let postMarkdownView (currentPath: string) (title: string) (header: string) (body: string) =
+let postMarkdownView (path: string) title header body =
     layout
-        currentPath
+        path
         title
         [ h1 [ _class "page-title" ] [ rawText header ]
           rawText body

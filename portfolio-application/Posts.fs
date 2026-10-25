@@ -8,7 +8,7 @@ open Markdig.Syntax
 open System
 open Views
 
-let private maybeYamlHeader (markdownPath: MarkdownPath) =
+let maybeYamlHeader (markdownPath: MarkdownPath) =
     let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
         if line.StartsWith(prefix) then
             Some(line.Substring(prefix.Length).Trim())

@@ -14,7 +14,7 @@ type private Roots =
     { StaticMarkdownRoot: String
       PostMarkdownRoot: String }
 
-let viewHandler markdownViewName (viewData: ViewData) : HttpHandler =
+let viewHandler markdownViewName viewData : HttpHandler =
     let pageTitle = withoutTags viewData.PageTitle
     let header = viewData.Header
     let body = viewData.Body
@@ -28,13 +28,13 @@ let viewHandler markdownViewName (viewData: ViewData) : HttpHandler =
 
     // Decides which nav link is marked current
     fun next ctx ->
-        let currentPath = ctx.Request.Path.Value
+        let path = ctx.Request.Path.Value
 
         let xml =
             match markdownViewName with
-            | DirectMarkdown -> directMarkdownView currentPath pageTitle body
-            | LeftHeaderMarkdown -> leftHeaderMarkdownView currentPath pageTitle header body
-            | PostMarkdown -> postMarkdownView currentPath pageTitle header body
+            | DirectMarkdown -> directMarkdownView path pageTitle body
+            | LeftHeaderMarkdown -> leftHeaderMarkdownView path pageTitle header body
+            | PostMarkdown -> postMarkdownView path pageTitle header body
             | ErrorMarkdown -> Option.defaultValue 500 errorCode |> errorView pageTitle body
 
         cacheHandler
@@ -61,11 +61,18 @@ let private markdownFileHandler
             |> _.Replace("<em>", "<i>")
             |> _.Replace("</em>", "</i>")
 
-        let landingPostList =
-            String.Join("\n", Array.concat [ [| "<ul>" |]; (postLinksFromYamlHeaders postMarkdownRoot); [| "</ul>" |] ])
+        let postList maybeLimit =
+            let postLinkList =
+                match maybeLimit with
+                | Some(limit) -> postLinksFromYamlHeaders postMarkdownRoot |> Array.take limit
+                | _ -> postLinksFromYamlHeaders postMarkdownRoot
+
+            String.Join("\n", Array.concat [ [| "<ul>" |]; postLinkList; [| "</ul>" |] ])
+
 
         match markdownFileName markdownPath with
-        | "landing" -> [ htmlContentsFromFile; landingPostList ] |> String.concat "\n"
+        | "landing" -> [ htmlContentsFromFile; postList <| Some 5 ] |> String.concat "\n"
+        | "posts" -> [ htmlContentsFromFile; postList None ] |> String.concat "\n"
         | _ -> htmlContentsFromFile
 
     let viewData body =
