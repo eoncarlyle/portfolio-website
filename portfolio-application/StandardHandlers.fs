@@ -115,7 +115,7 @@ let private markdownRoutes isStatic (baseDirectory: String) : HttpHandler list =
         | "posts.md" -> route "/posts" >=> render DirectMarkdown "Iain Schmitt's Resume" None
         | _ ->
             route $"/post/{markdownFileName markdownPath}"
-            >=> render PostMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
+            >=> render DirectMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
 
     markdownPaths
     |> Array.map (markdownRouteHandler isStatic postMarkdownRoot)
