@@ -4,7 +4,8 @@ open Giraffe.ViewEngine
 open System
 open Types
 
-let private isPostsPath (path: string) = path = "/posts" || path.StartsWith "/post/"
+let private isPostsPath (path: string) =
+    path = "/posts" || path.StartsWith "/post/"
 
 let private navLink (isCurrent: bool) (href: string) (label: string) =
     let attrs =
@@ -14,6 +15,14 @@ let private navLink (isCurrent: bool) (href: string) (label: string) =
             [ _href href ]
 
     a attrs [ encodedText label ]
+
+let private siteUrl = "https://iainschmitt.com"
+
+let private siteDescription pageTitle =
+    if pageTitle <> personalWebsiteLabel then
+        $"${personalWebsiteLabel}: {pageTitle}"
+    else
+        pageTitle
 
 let private layout (path: string) (pageTitle: string) (content: XmlNode list) =
     html
@@ -32,9 +41,12 @@ let private layout (path: string) (pageTitle: string) (content: XmlNode list) =
                 meta [ _name "viewport"; _content "width=device-width, initial-scale=1.0" ]
                 link [ _rel "icon"; _type "image/x-icon"; _href "/images/icon.svg" ]
                 title [] [ encodedText pageTitle ]
-                meta [ _name "og:title"; _content pageTitle ]
-                meta [ _name "og:image"; _content "/images/metaV1.png" ]
-                meta [ _name "og:type"; _content "website" ]
+                meta [ _name "description"; _content <| siteDescription pageTitle ]
+                meta [ attr "property" "og:title"; _content pageTitle ]
+                meta [ attr "property" "og:description"; _content <| siteDescription pageTitle ]
+                meta [ attr "property" "og:image"; _content $"{siteUrl}/images/metaV1.png" ]
+                meta [ attr "property" "og:url"; _content $"{siteUrl}{path}" ]
+                meta [ attr "property" "og:type"; _content "website" ]
                 meta [ _name "author"; _content "Iain Schmitt" ] ]
           body
               []
@@ -48,12 +60,10 @@ let private layout (path: string) (pageTitle: string) (content: XmlNode list) =
                                 [ navLink (isPostsPath path) "/posts" "Posts"
                                   navLink (path = "/resume") "/resume" "Resume"
                                   navLink (path = "/uses") "/uses" "Uses"
-                                  navLink false "/rss" "RSS"
-                                  ] ]
+                                  navLink false "/rss" "RSS" ] ]
                       main [ _class "md-content" ] content ] ] ]
 
-let directMarkdownView (path: string) (title: string) (body: string) =
-    layout path title [ rawText body ]
+let directMarkdownView (path: string) (title: string) (body: string) = layout path title [ rawText body ]
 
 let errorView (title: string) (body: string) (errorCode: int) =
     layout

@@ -59,3 +59,5 @@ type AppArgs =
     { HostAddress: string
       HostPort: string
       IsStatic: bool }
+
+let personalWebsiteLabel = "Iain Schmitt's Personal Website"
