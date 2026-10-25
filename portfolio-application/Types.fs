@@ -20,7 +20,6 @@ type PostYamlHeader = { Title: string; Date: String }
 
 type ViewData =
     { PageTitle: String
-      Header: String
       Body: String
       IsCached: bool
       ErrorCode: int option }

@@ -16,7 +16,6 @@ type private Roots =
 
 let viewHandler markdownViewName viewData : HttpHandler =
     let pageTitle = withoutTags viewData.PageTitle
-    let header = viewData.Header
     let body = viewData.Body
     let errorCode = viewData.ErrorCode
 
@@ -40,16 +39,19 @@ let viewHandler markdownViewName viewData : HttpHandler =
         >=> htmlView xml
         <|| (next, ctx)
 
+type private IncludedPostLinks =
+    | NoPostLinks
+    | AllPostLinks
+    | LimitedPostLinks of int
 
 let private markdownFileHandler
     isStatic
     postMarkdownRoot
     markdownPath
     markdownViewName
-    markdownHeader
-    (maybeMetaPageTitle: string option)
+    metaPageTitle
+    includedPostLinks
     : HttpHandler =
-    let metaPageTitle = Option.defaultValue markdownHeader maybeMetaPageTitle
 
     let postListHtml postMarkdownRoot maybeLimit =
         let postLinkList =
@@ -68,18 +70,17 @@ let private markdownFileHandler
             |> _.Replace("<em>", "<i>")
             |> _.Replace("</em>", "</i>")
 
-        match markdownFileName markdownPath with
-        | "landing" ->
-            [ htmlContentsFromFile; postListHtml postMarkdownRoot <| Some 5 ]
+        match includedPostLinks with
+        | NoPostLinks -> htmlContentsFromFile
+        | LimitedPostLinks(count) ->
+            [ htmlContentsFromFile; postListHtml postMarkdownRoot <| Some count ]
             |> String.concat "\n"
-        | "posts" ->
+        | AllPostLinks ->
             [ htmlContentsFromFile; postListHtml postMarkdownRoot None ]
             |> String.concat "\n"
-        | _ -> htmlContentsFromFile
 
     let viewData body =
         { PageTitle = metaPageTitle
-          Header = markdownHeader
           Body = body
           IsCached = isStatic
           ErrorCode = None }
@@ -89,10 +90,10 @@ let private markdownFileHandler
     else
         warbler (fun _ -> getHtmlContents () |> viewData |> viewHandler markdownViewName)
 
-let private getPostMarkdownRoot baseDirectory =
+let getPostMarkdownRoot baseDirectory =
     Path.Combine(baseDirectory, "posts", "source")
 
-let private markdownRoutes isStatic (baseDirectory: String) : HttpHandler list =
+let markdownRoutes isStatic (baseDirectory: String) : HttpHandler list =
 
     let postMarkdownRoot = getPostMarkdownRoot baseDirectory
 
@@ -103,45 +104,22 @@ let private markdownRoutes isStatic (baseDirectory: String) : HttpHandler list =
 
     let markdownRouteHandler isStatic postMarkdownRoot markdownPath : HttpHandler =
         //Note: providing dependencies via functions works better due to partial application here
-        let render = markdownFileHandler isStatic postMarkdownRoot markdownPath
+        let render =
+            markdownFileHandler isStatic postMarkdownRoot markdownPath DirectMarkdown
 
         match MarkdownPath.toString markdownPath |> Path.GetFileName with
-        | "landing.md" ->
-            route "/"
-            >=> render DirectMarkdown "Iain Schmitt" (Some "Iain Schmitt's Personal Website")
-        | "uses.md" -> route "/uses" >=> render DirectMarkdown "Iain Schmitt's Uses Page" None
-        | "resume.md" -> route "/resume" >=> render DirectMarkdown "Iain Schmitt's Resume" None
-        | "posts.md" -> route "/posts" >=> render DirectMarkdown "Iain Schmitt's Resume" None
+        | "landing.md" -> route "/" >=> render "Iain Schmitt's Personal Website" (LimitedPostLinks 5)
+        | "posts.md" -> route "/posts" >=> render "Iain Schmitt's Resume" AllPostLinks
+        | "uses.md" -> route "/uses" >=> render "Iain Schmitt's Uses Page" NoPostLinks
+        | "resume.md" -> route "/resume" >=> render "Iain Schmitt's Resume" NoPostLinks
         | _ ->
             route $"/post/{markdownFileName markdownPath}"
-            >=> render DirectMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
+            >=> render
+                    (maybeYamlHeader markdownPath
+                     |> Option.map _.Title
+                     |> Option.defaultValue "Iain Schmitt's Personal Website")
+                    NoPostLinks
 
     markdownPaths
     |> Array.map (markdownRouteHandler isStatic postMarkdownRoot)
     |> Array.toList
-
-
-let private nonHtmlRoutes baseDirectory =
-    let pdfHandler baseDirectory pdfFileName : HttpHandler =
-        let pdfPath = Path.Combine(baseDirectory, "pdf", pdfFileName)
-        streamFile true pdfPath None None
-
-    let rssHandler (baseDirectory: string) (baseUrl: string) : HttpHandler =
-        let postMarkdownRoot = getPostMarkdownRoot baseDirectory
-        let rss = rssChannel baseUrl postMarkdownRoot
-
-        fun _ ctx ->
-            let xml = RenderView.AsString.xmlNode rss
-            ctx.SetContentType "application/rss+xml; charset=utf-8"
-            ctx.WriteStringAsync xml
-
-    [ route "/rss" >=> rssHandler baseDirectory "https://iainschmitt.com"
-      route "/wedding/julias-game"
-      >=> redirectTo true "https://connectionsgame.org/game/?661NPZ"
-      route "/wedding/iains-game"
-      >=> redirectTo true "https://connectionsgame.org/game/?X5SMRJ"
-      route "/pdf/2025-tech-jam-talk"
-      >=> pdfHandler baseDirectory "2025-TechJam-BearTerritory.pdf" ]
-
-let appRoutes baseDirectory isStatic =
-    (markdownRoutes isStatic baseDirectory) @ (nonHtmlRoutes baseDirectory)

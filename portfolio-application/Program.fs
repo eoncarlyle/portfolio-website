@@ -14,11 +14,12 @@ open SpecialHandlers
 open StandardHandlers
 open Types
 
-let routes baseDirectory isDynamic =
-    let appHandlers = appRoutes baseDirectory isDynamic
+let appHandler baseDirectory isStatic =
+    let getMethodHandlers = (markdownRoutes isStatic baseDirectory) @ (nonHtmlRoutes baseDirectory)
+    
     choose
-        [ HEAD >=> route "/" >=> headHandler
-          GET >=> choose appHandlers
+        [ HEAD >=> route "/" >=> headMethodHandler
+          GET >=> choose getMethodHandlers
           error404Handler ]
 
 let internalErrorHandler =
@@ -50,7 +51,7 @@ let configureApp isStatic (app: IApplicationBuilder) =
         .UseHttpsRedirection()
         .UseStaticFiles(staticFileOptions)
         .UseResponseCaching()
-        .UseGiraffe(routes baseDirectory isStatic)
+        .UseGiraffe(appHandler baseDirectory isStatic)
 
 let configureServices (services: IServiceCollection) =
     services.AddCors().AddResponseCaching().AddGiraffe() |> ignore
