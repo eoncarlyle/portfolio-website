@@ -41,13 +41,6 @@ let viewHandler markdownViewName viewData : HttpHandler =
         >=> htmlView xml
         <|| (next, ctx)
 
-let private postListHtml postMarkdownRoot maybeLimit =
-    let postLinkList =
-        match maybeLimit with
-        | Some(limit) -> postLinksFromYamlHeaders postMarkdownRoot |> Array.take limit
-        | _ -> postLinksFromYamlHeaders postMarkdownRoot
-
-    String.Join("\n", Array.concat [ [| "<ul>" |]; postLinkList; [| "</ul>" |] ])
 
 let private markdownFileHandler
     isStatic
@@ -59,6 +52,14 @@ let private markdownFileHandler
     : HttpHandler =
     let metaPageTitle = Option.defaultValue markdownHeader maybeMetaPageTitle
 
+    let postListHtml postMarkdownRoot maybeLimit =
+        let postLinkList =
+            match maybeLimit with
+            | Some(limit) -> postLinksFromYamlHeaders postMarkdownRoot |> Array.take limit
+            | _ -> postLinksFromYamlHeaders postMarkdownRoot
+
+        String.Join("\n", Array.concat [ [| "<ul>" |]; postLinkList; [| "</ul>" |] ])
+
     let getHtmlContents () =
         let htmlContentsFromFile =
             MarkdownPath.toString markdownPath
@@ -69,7 +70,12 @@ let private markdownFileHandler
             |> _.Replace("</em>", "</i>")
 
         match markdownFileName markdownPath with
-        | "landing" -> [ htmlContentsFromFile; postListHtml postMarkdownRoot (Some 5) ] |> String.concat "\n"
+        | "landing" ->
+            [ htmlContentsFromFile; postListHtml postMarkdownRoot <| Some 5 ]
+            |> String.concat "\n"
+        | "posts" ->
+            [ htmlContentsFromFile; postListHtml postMarkdownRoot None ]
+            |> String.concat "\n"
         | _ -> htmlContentsFromFile
 
     let viewData body =
@@ -106,28 +112,14 @@ let private markdownRoutes isStatic (baseDirectory: String) : HttpHandler list =
             >=> render DirectMarkdown "Iain Schmitt" (Some "Iain Schmitt's Personal Website")
         | "uses.md" -> route "/uses" >=> render PostMarkdown "Iain Schmitt's Uses Page" None
         | "resume.md" -> route "/resume" >=> render DirectMarkdown "Iain Schmitt's Resume" None
+        | "posts.md" -> route "/posts" >=> render DirectMarkdown "Iain Schmitt's Resume" None
         | _ ->
             route $"/post/{markdownFileName markdownPath}"
             >=> render PostMarkdown "Iain Schmitt" (maybeYamlHeader markdownPath |> Option.map _.Title)
 
-    // /posts is generated, there isn't a good 
-    let postsRoute: HttpHandler =
-        let render () =
-            viewHandler
-                DirectMarkdown
-                { PageTitle = "Iain Schmitt's Posts"
-                  Header = "Posts"
-                  Body = $"<h1>Posts</h1>\n{postListHtml postMarkdownRoot None}"
-                  IsCached = isStatic
-                  ErrorCode = None }
-
-        route "/posts"
-        >=> if isStatic then render () else warbler (fun _ -> render ())
-
-    postsRoute
-    :: (markdownPaths
-        |> Array.map (markdownRouteHandler isStatic postMarkdownRoot)
-        |> Array.toList)
+    markdownPaths
+    |> Array.map (markdownRouteHandler isStatic postMarkdownRoot)
+    |> Array.toList
 
 
 let private nonHtmlRoutes baseDirectory =
