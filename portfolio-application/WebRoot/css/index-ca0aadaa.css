@@ -84,7 +84,8 @@ html {
 }
 
 .brand {
-    font-size: 1.4em;
+    /* 1.5 x the sidebar's 14pt matches the h1's 1.75 x 16px */
+    font-size: 1.5em;
     font-weight: 500;
     margin-right: auto;
 }
@@ -192,7 +193,8 @@ li {
 h1 {
     font-weight: 500;
     font-size: 1.75em;
-    margin-top: 1rem;
+    /* Lines up with .brand in the sidebar */
+    margin-top: 0;
 }
 
 :not(pre) > code {

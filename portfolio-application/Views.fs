@@ -22,7 +22,7 @@ let private layout (path: string) (pageTitle: string) (content: XmlNode list) =
               []
               [ meta [ _charset "UTF-8" ]
                 link [ _rel "stylesheet"; _href "/css/normalise.css" ]
-                link [ _rel "stylesheet"; _href "/css/index-cfb170c7.css" ]
+                link [ _rel "stylesheet"; _href "/css/index-ca0aadaa.css" ]
                 link [ _rel "preconnect"; _href "https://fonts.googleapis.com" ]
                 link
                     [ _rel "preconnect"
@@ -47,7 +47,7 @@ let private layout (path: string) (pageTitle: string) (content: XmlNode list) =
                                 []
                                 [ navLink (isPostsPath path) "/posts" "Posts"
                                   navLink (path = "/resume") "/resume" "Resume"
-                                  navLink (path = "Uses") "/uses" "Uses"
+                                  navLink (path = "/uses") "/uses" "Uses"
                                   navLink false "/rss" "RSS"
                                   ] ]
                       main [ _class "md-content" ] content ] ] ]

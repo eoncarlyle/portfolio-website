@@ -33,7 +33,6 @@ let viewHandler markdownViewName viewData : HttpHandler =
         let xml =
             match markdownViewName with
             | DirectMarkdown -> directMarkdownView path pageTitle body
-            | PostMarkdown -> postMarkdownView path pageTitle header body
             | ErrorMarkdown -> Option.defaultValue 500 errorCode |> errorView pageTitle body
 
         cacheHandler
@@ -110,7 +109,7 @@ let private markdownRoutes isStatic (baseDirectory: String) : HttpHandler list =
         | "landing.md" ->
             route "/"
             >=> render DirectMarkdown "Iain Schmitt" (Some "Iain Schmitt's Personal Website")
-        | "uses.md" -> route "/uses" >=> render PostMarkdown "Iain Schmitt's Uses Page" None
+        | "uses.md" -> route "/uses" >=> render DirectMarkdown "Iain Schmitt's Uses Page" None
         | "resume.md" -> route "/resume" >=> render DirectMarkdown "Iain Schmitt's Resume" None
         | "posts.md" -> route "/posts" >=> render DirectMarkdown "Iain Schmitt's Resume" None
         | _ ->

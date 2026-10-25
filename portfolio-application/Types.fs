@@ -10,7 +10,6 @@ open System.Text.RegularExpressions
 
 type MarkdownViewName =
     | DirectMarkdown
-    | PostMarkdown
     | ErrorMarkdown
 
 type MarkdownPath = private MarkdownPath of string
