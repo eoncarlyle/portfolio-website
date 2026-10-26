@@ -2,7 +2,6 @@ module Portfolio.App
 
 open System
 open System.IO
-open AppHandlers
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Hosting
@@ -11,10 +10,16 @@ open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Microsoft.AspNetCore.StaticFiles
 
-let routes baseDirectory isDynamic =
+open SpecialHandlers
+open MarkdownHandlers
+open Types
+
+let appHandler baseDirectory isStatic =
+    let getMethodHandlers = (markdownRoutes isStatic baseDirectory) @ (nonHtmlRoutes baseDirectory)
+    
     choose
-        [ GET >=> choose (appRoutes baseDirectory isDynamic)
-          HEAD >=> headHandler
+        [ HEAD >=> route "/" >=> headMethodHandler
+          GET >=> choose getMethodHandlers
           error404Handler ]
 
 let internalErrorHandler =
@@ -46,19 +51,14 @@ let configureApp isStatic (app: IApplicationBuilder) =
         .UseHttpsRedirection()
         .UseStaticFiles(staticFileOptions)
         .UseResponseCaching()
-        .UseGiraffe(routes baseDirectory isStatic)
+        .UseGiraffe(appHandler baseDirectory isStatic)
 
 let configureServices (services: IServiceCollection) =
     services.AddCors().AddResponseCaching().AddGiraffe() |> ignore
 
 let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
-
-type AppArgs =
-    { HostAddress: string
-      HostPort: string
-      IsStatic: bool }
-
+    
 let getAppArgs args =
     let argList = Array.toList args
 

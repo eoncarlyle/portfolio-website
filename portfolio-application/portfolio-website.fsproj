@@ -24,8 +24,9 @@
     <Compile Include="Shiki.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Views.fs" />
-    <Compile Include="Posts.fs" />
-    <Compile Include="AppHandlers.fs" />
+    <Compile Include="Yaml.fs" />
+    <Compile Include="MarkdownHandlers.fs" />
+    <Compile Include="SpecialHandlers.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
