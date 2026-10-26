@@ -15,7 +15,7 @@ env:
 
 jobs:
   build_and_push:
-    runs-on: [santa-cruz]
+    runs-on: [new-york-0]
 
     permissions:
       contents: read
