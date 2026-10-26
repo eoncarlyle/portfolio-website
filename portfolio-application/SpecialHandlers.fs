@@ -30,7 +30,7 @@ let error500Handler: Handler =
 
 let nonHtmlRoutes baseDirectory =
     let pdfHandler baseDirectory pdfFileName : HttpHandler =
-        let pdfPath = Path.Combine(baseDirectory, "pdf", pdfFileName)
+        let pdfPath = Path.Combine(baseDirectory, "WebRoot", "pdf", pdfFileName)
         streamFile true pdfPath None None
 
     let rssHandler (baseDirectory: string) (baseUrl: string) : HttpHandler =
