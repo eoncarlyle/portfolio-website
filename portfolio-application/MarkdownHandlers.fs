@@ -107,7 +107,7 @@ let markdownRoutes isStatic (baseDirectory: String) : HttpHandler list =
             markdownFileHandler isStatic postMarkdownRoot markdownPath DirectMarkdown
 
         match MarkdownPath.toString markdownPath |> Path.GetFileName with
-        | "landing.md" -> route "/" >=> render personalWebsiteLabel (LimitedPostLinks 5)
+        | "landing.md" -> route "/" >=> render personalWebsiteLabel (LimitedPostLinks 7)
         | "posts.md" -> route "/posts" >=> render "Iain Schmitt's Blog Posts" AllPostLinks
         | "uses.md" -> route "/uses" >=> render "Iain Schmitt's Uses Page" NoPostLinks
         | "resume.md" -> route "/resume" >=> render "Iain Schmitt's Resume" NoPostLinks
