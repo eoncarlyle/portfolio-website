@@ -10,8 +10,6 @@ open System.Text.RegularExpressions
 
 type MarkdownViewName =
     | DirectMarkdown
-    | LeftHeaderMarkdown
-    | PostMarkdown
     | ErrorMarkdown
 
 type MarkdownPath = private MarkdownPath of string
@@ -19,6 +17,12 @@ type MarkdownPath = private MarkdownPath of string
 type Handler = HttpFunc -> HttpContext -> HttpFuncResult
 
 type PostYamlHeader = { Title: string; Date: String }
+
+type ViewData =
+    { PageTitle: String
+      Body: String
+      IsCached: bool
+      ErrorCode: int option }
 
 type PostYamlHeaderPair =
     { Path: MarkdownPath
@@ -42,9 +46,19 @@ let markdownPipeline =
     builder.Build()
 
 let getMarkdownPaths path =
-    Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly) |> Array.choose MarkdownPath.create
+    Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly)
+    |> Array.choose MarkdownPath.create
 
 let markdownFileName markdownPath =
     Path.GetFileNameWithoutExtension(MarkdownPath.toString markdownPath)
 
 let withoutTags value = Regex.Replace(value, "<[^>]*>", "")
+
+
+type AppArgs =
+    { HostAddress: string
+      HostPort: string
+      IsStatic: bool }
+
+let personalWebsiteLabel = "Iain Schmitt's Personal Website"
+let siteUrl = "https://iainschmitt.com"

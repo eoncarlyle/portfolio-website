@@ -60,12 +60,78 @@ body {
     }
 }
 
-.md-content {
-    padding: var(--default-padding);
+/* Replaces the padding-left: calc(100vw - 100%) scrollbar hack */
+html {
+    scrollbar-gutter: stable;
+}
+
+.page {
     max-width: var(--max-width);
     margin: auto;
-    @media (min-width: 925px) {
-        padding-left: calc(100vw - 100%);
+    padding: var(--default-padding);
+    /* Room to scroll the last line clear of the iPhone toolbar and home indicator */
+    padding-bottom: 3rem;
+}
+
+.sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: var(--rule-height) solid var(--color12);
+    font-size: 14pt;
+}
+
+.brand {
+    /* Smaller than the h1 in the stacked top bar so it reads as a site label */
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-right: auto;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+}
+
+.sidebar nav a[aria-current="page"] {
+    color: var(--color6);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25em;
+}
+
+.md-content {
+    min-width: 0;
+}
+
+@media (min-width: 1140px) {
+    .page {
+        max-width: calc(160px + 3rem + var(--max-width));
+        display: grid;
+        grid-template-columns: 160px minmax(0, var(--max-width));
+        column-gap: 3rem;
+        align-items: start;
+    }
+
+    .sidebar {
+        position: sticky;
+        top: var(--default-padding);
+        flex-direction: column;
+        align-items: flex-start;
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .brand {
+        /* 1.5 x the sidebar's 14pt matches the h1's 1.75 x 16px, so they share a line */
+        font-size: 1.5em;
+        margin-right: 0;
+    }
+
+    .sidebar nav {
+        flex-direction: column;
     }
 }
 
@@ -126,13 +192,11 @@ li {
     text-decoration: none;
 }
 
-.post-header-link {
-    h1 {
-        font-weight: 500;
-        font-size: 1.75em;
-    }
-    text-decoration: none;
-    text-align: left;
+h1 {
+    font-weight: 500;
+    font-size: 1.75em;
+    /* Lines up with .brand in the sidebar */
+    margin-top: 0;
 }
 
 :not(pre) > code {

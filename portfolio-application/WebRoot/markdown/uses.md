@@ -1,4 +1,5 @@
-A list of the hardware and software that I depend on in my daily work
+# My Uses Page
+A list of the hardware and software that I depend on in my daily work. Shown at [uses.tech](https://uses.tech/).
 ## Workstation
   - 14-inch 2024 MacbookPro, 12-core M4 Pro/24 GB RAM/16-core GPU/512 GB SSD
   - 2018 Mac Mini, 6-core Intel i7/64 GB RAM/512 GB SSD

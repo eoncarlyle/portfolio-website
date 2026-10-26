@@ -11,3 +11,8 @@ $ dotnet build && dotnet ./bin/Debug/net8.0/portfolio-website.App.dll 127.0.0.1 
 ```
 $ dotnet fsi createNewPost.fsx
 ```
+
+## CSS Hashing
+```
+md5 -q portfolio-application/WebRoot/css/index-*.css | cut -c1-8
+```

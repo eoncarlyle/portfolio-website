@@ -8,25 +8,25 @@ open Markdig.Syntax
 open System
 open Views
 
-let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
-    if line.StartsWith(prefix) then
-        Some(line.Substring(prefix.Length).Trim())
-    else
-        None
-
-let tryParsePostYamlHeader (lines: string array) =
-    let tryTitle =
-        lines
-        |> Array.tryPick (tryExtractPostYamlHeaderValue "title:")
-        //|> Option.map withoutTags
-
-    let tryDate = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "date:")
-
-    match tryTitle, tryDate with
-    | Some title, Some date -> Some { Title = title; Date = date }
-    | _ -> None
-
 let maybeYamlHeader (markdownPath: MarkdownPath) =
+    let tryExtractPostYamlHeaderValue (prefix: string) (line: string) =
+        if line.StartsWith(prefix) then
+            Some(line.Substring(prefix.Length).Trim())
+        else
+            None
+
+    let tryParsePostYamlHeader (lines: string array) =
+        let tryTitle =
+            lines
+            |> Array.tryPick (tryExtractPostYamlHeaderValue "title:")
+            //|> Option.map withoutTags
+
+        let tryDate = lines |> Array.tryPick (tryExtractPostYamlHeaderValue "date:")
+
+        match tryTitle, tryDate with
+        | Some title, Some date -> Some { Title = title; Date = date }
+        | _ -> None
+
     MarkdownPath.toString markdownPath
     |> File.ReadAllText
     |> (fun markdownContents ->
@@ -37,10 +37,8 @@ let maybeYamlHeader (markdownPath: MarkdownPath) =
     |> Option.map (fun yamlBlock -> yamlBlock.Lines.Lines |> Seq.map _.ToString() |> Seq.toArray)
     |> Option.bind tryParsePostYamlHeader
 
-let getHeaderHtml (pair: PostYamlHeaderPair) =
-    $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
 
-let getPostYamlHeaders markdownRoot : PostYamlHeaderPair array =
+let private getPostYamlHeaders markdownRoot : PostYamlHeaderPair array =
     getMarkdownPaths markdownRoot
     |> Array.map (fun markdownPath ->
         let maybeHeader = maybeYamlHeader markdownPath
@@ -52,9 +50,12 @@ let getPostYamlHeaders markdownRoot : PostYamlHeaderPair array =
     |> Array.sortBy (fun pair -> DateTime.Parse(pair.Header.Date))
 
 let postLinksFromYamlHeaders markdownRoot =
+    let getHeaderHtml (pair: PostYamlHeaderPair) =
+        $"  <li>{pair.Header.Date}: <a href=\"/post/{markdownFileName pair.Path}\">{pair.Header.Title}</a></li>"
+        
     getPostYamlHeaders markdownRoot |> Array.map getHeaderHtml |> Array.rev
 
-let rssChannel (baseUrl: string) (markdownRoot: string) =
+let rssChannel baseUrl markdownRoot =
     let posts = getPostYamlHeaders markdownRoot
 
     let items =
